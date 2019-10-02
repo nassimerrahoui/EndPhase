@@ -163,7 +163,7 @@ implements	PingPongTwoWayI
 	@Override
 	public void			pingPong() throws Exception
 	{
-		//System.out.println("PingPongTwoWayPort>>pingPong()") ;
+		System.out.println("PingPongTwoWayPort>>pingPong()") ;
 		this.owner.handleRequestAsync(
 				new AbstractComponent.AbstractService<Void>() {
 					@Override
