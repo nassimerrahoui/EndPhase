@@ -1,14 +1,19 @@
 package app.components;
 
 import app.interfaces.IFrigo;
+import fr.sorbonne_u.components.AbstractComponent;
 
-public class Frigo implements IFrigo {
+public class Frigo extends AbstractComponent implements IFrigo {
 	
 	Boolean isOn;
 	Double freezer_temperature;
 	Double freezer_temperature_cible;
 	Double fridge_temperature;
 	Double fridge_temperature_cible;
+	
+	protected Frigo(int nbThreads, int nbSchedulableThreads) {
+		super(nbThreads, nbSchedulableThreads);
+	}
 
 	@Override
 	public void setOn() {
