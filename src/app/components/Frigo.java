@@ -13,26 +13,9 @@ public class Frigo extends AbstractComponent implements IFrigo {
 	
 	protected Frigo(int nbThreads, int nbSchedulableThreads) {
 		super(nbThreads, nbSchedulableThreads);
-	}
-
-	@Override
-	public void setOn() {
-		isOn = true;
-	}
-
-	@Override
-	public void setOff() {
-		isOn = false;
-	}
-
-	@Override
-	public void setFreezerTemperatureCible(Double t) {
-		freezer_temperature_cible = t;
-	}
-
-	@Override
-	public void setFridgeTemperatureCible(Double t) {
-		fridge_temperature_cible = t;
+		createNewExecutorService("controleur_message", 10, true);
+		createNewExecutorService("compteur_message",10, true);
+		this.toggleTracing();
 	}
 	
 	private void freezerStabilize() {
@@ -51,11 +34,17 @@ public class Frigo extends AbstractComponent implements IFrigo {
 		}
 	}
 	
+	/** TODO **/
 	public void tick() {
 		if(isOn) {
 			freezerStabilize();
 			fridgeStabilize();
 		}
+	}
+
+	@Override
+	public void recevoirMessage(DataI d) throws Exception {
+		this.traceMessage("test");
 	}
 
 }

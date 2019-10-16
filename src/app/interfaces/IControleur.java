@@ -1,8 +1,7 @@
 package app.interfaces;
 
-import fr.sorbonne_u.components.interfaces.RequiredI;
+import fr.sorbonne_u.components.interfaces.DataRequiredI;
 
-public interface IControleur extends RequiredI {
+public interface IControleur extends DataRequiredI {
 
-	public void action(IAppareil appareil);
 }
