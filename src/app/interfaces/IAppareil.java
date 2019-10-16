@@ -1,9 +1,10 @@
 package app.interfaces;
 
-import fr.sorbonne_u.components.interfaces.DataOfferedI;
+import app.data.Message;
+import fr.sorbonne_u.components.interfaces.DataRequiredI;
 
-public interface IAppareil extends DataOfferedI {
+public interface IAppareil extends DataRequiredI {
 
-	public void recevoirMessage(DataI d) throws Exception;
+	public void recevoirMessage(Message m) throws Exception;
 
 }
