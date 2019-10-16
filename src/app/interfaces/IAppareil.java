@@ -1,9 +1,10 @@
 package app.interfaces;
 
-import fr.sorbonne_u.components.interfaces.OfferedI;
+import app.data.Message;
+import fr.sorbonne_u.components.interfaces.DataRequiredI;
 
-public interface IAppareil extends OfferedI {
-	
-	public void setOn() throws Exception;
-	public void setOff() throws Exception;
+public interface IAppareil extends DataRequiredI {
+
+	public void recevoirMessage(Message m) throws Exception;
+
 }

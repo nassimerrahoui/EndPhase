@@ -1,5 +1,5 @@
 package app.interfaces;
 
-public interface IOrdinateur extends IAppareil{
+public interface IOrdinateur extends IAppareil {
 
 }

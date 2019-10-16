@@ -1,8 +1,7 @@
 package app.interfaces;
 
-import fr.sorbonne_u.components.interfaces.RequiredI;
+import fr.sorbonne_u.components.interfaces.DataOfferedI;
 
-public interface IControleur extends RequiredI {
-
-	public void action(IAppareil appareil);
+public interface IControleur extends DataOfferedI {
+	public DataI getMessage(String uri) throws Exception;
 }
