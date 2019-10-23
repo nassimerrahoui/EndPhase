@@ -6,28 +6,37 @@ import app.data.Message;
 import app.interfaces.IControleur;
 import app.ports.ControleurDataInPort;
 import fr.sorbonne_u.components.AbstractComponent;
+import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.interfaces.DataOfferedI;
 
 public class Controleur extends AbstractComponent implements IControleur {
 
-	public ControleurDataInPort dataInPort;
+	public Vector<ControleurDataInPort> dataInPorts = new Vector<ControleurDataInPort>();
 	protected ConcurrentHashMap<String, Vector<Message>> appareil_messages = new ConcurrentHashMap<>();
 
-	public Controleur(String reflectionInboundPortURI, int nbThreads, int nbSchedulableThreads) throws Exception {
+	public Controleur(String reflectionInboundPortURI, int nbThreads, int nbSchedulableThreads, int nbAppareil) throws Exception {
 		super(reflectionInboundPortURI, nbThreads, nbSchedulableThreads);
 
 		this.addOfferedInterface(IControleur.class);
 		this.addOfferedInterface(DataOfferedI.PullI.class) ;
-		String dataInPortURI = java.util.UUID.randomUUID().toString();
-		dataInPort = new ControleurDataInPort(dataInPortURI, this);
-		this.addPort(dataInPort);
-		dataInPort.publishPort();
+		createDataInPorts(nbAppareil);
+	}
+	
+	protected void createDataInPorts(int nbAppareil) throws Exception {
+		if(nbAppareil > 0) {
+			for (int i = 0; i < nbAppareil; i++) {
+				String dataInPortURI = java.util.UUID.randomUUID().toString();
+				dataInPorts.add(new ControleurDataInPort(dataInPortURI, this));
+				this.addPort(dataInPorts.get(i));
+				dataInPorts.get(i).publishPort();
+			}
+		}
 	}
 
-	protected void envoyerMessage(String uri) throws Exception {
+	protected void envoyerMessage(String uri, int numero_appareil) throws Exception {
 		Message m = appareil_messages.get(uri).get(0);
 		appareil_messages.get(uri).remove(m);
-		this.dataInPort.send(m);
+		this.dataInPorts.get(numero_appareil).send(m);
 	}
 	
 	protected void addMessageToMap(String key, Message m) {
@@ -46,14 +55,40 @@ public class Controleur extends AbstractComponent implements IControleur {
 	@Override
 	public void execute() throws Exception {
 		super.execute();
+		Message m1 = new Message();
+		Message m2 = new Message();
+		Message m3 = new Message();
+		Message m4 = new Message();
+		m1.setContenu("Consommation stable...");
+		addMessageToMap("frigo", m1);
+		m2.setContenu("allumer");
+		addMessageToMap("ordinateur", m2);
+		m3.setContenu("eteindre");
+		addMessageToMap("ordinateur", m3);
+		m4.setContenu("fridge temperature cible : 5.0");
+		addMessageToMap("frigo", m4);
+		
 		this.runTask(new AbstractTask() {
-
 			public void run() {
 				try {
-					Message m = new Message();
-					m.setContenu("Consommation eleve d'energie, eteindre appareil.");
-					addMessageToMap("frigo", m);
-					envoyerMessage("frigo");
+					this.taskOwner.logMessage("Envoi message au frigo : " + m1.getContenu());
+					envoyerMessage("frigo", 0);
+//					this.taskOwner.logMessage("Envoi message au frigo : " + m4.getContenu());
+//					envoyerMessage("frigo", 0);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+			}
+		});
+
+		this.runTask(new AbstractTask() {
+			public void run() {
+				try {
+					this.taskOwner.logMessage("Envoi message a l'ordinateur : " + m2.getContenu());
+					envoyerMessage("ordinateur", 1);
+					this.taskOwner.logMessage("Envoi message a l'ordinateur : " + m3.getContenu());
+					envoyerMessage("ordinateur", 1);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -61,5 +96,10 @@ public class Controleur extends AbstractComponent implements IControleur {
 			}
 			
 		});
+	}
+	
+	@Override
+	public void shutdown() throws ComponentShutdownException {
+		super.shutdown();
 	}
 }
