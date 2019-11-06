@@ -11,7 +11,7 @@ import fr.sorbonne_u.components.exceptions.ComponentStartException;
 public class Frigo extends AbstractComponent implements IFrigo {
 
 	public AppareilDataOutPort dataOutPort;
-	Vector<Message> messages_recu = new Vector<>();
+	protected Vector<Message> messages_recu = new Vector<>();
 	
 	protected Boolean isOn;
 	protected Double freezer_temperature;
@@ -48,7 +48,6 @@ public class Frigo extends AbstractComponent implements IFrigo {
 		}
 	}
 	
-	/** TODO **/
 	protected void tick() {
 		if(isOn) {
 			freezerStabilize();
