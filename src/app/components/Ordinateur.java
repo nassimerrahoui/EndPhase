@@ -20,6 +20,8 @@ public class Ordinateur extends AbstractComponent implements IOrdinateur {
 		this.addPort(dataOutPort);
 		dataOutPort.publishPort();
 		isOn = false;
+		
+		createNewExecutorService("reception", 5, true);
 	}
 	
 	@Override

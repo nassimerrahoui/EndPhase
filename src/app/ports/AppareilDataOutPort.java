@@ -18,12 +18,15 @@ public class AppareilDataOutPort extends AbstractDataOutboundPort {
 
 	@Override
 	public void receive(DataRequiredI.DataI d) throws Exception {
-		this.owner.handleRequestAsync(new AbstractComponent.AbstractService<Void>() {
-			@Override
+		
+		AbstractComponent.AbstractService<Void> task = new AbstractComponent.AbstractService<Void>() {
+
 			public Void call() throws Exception {
 				((IAppareil) this.getServiceOwner()).recevoirMessage((Message) d);
 				return null;
 			}
-		});
+		};
+
+		this.owner.handleRequestAsync(0, task);
 	}
 }

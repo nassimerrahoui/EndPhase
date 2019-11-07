@@ -21,15 +21,21 @@ public class Frigo extends AbstractComponent implements IFrigo {
 	
 	public Frigo(String reflectionInboundPortURI, int nbThreads, int nbSchedulableThreads) throws Exception {
 		super(reflectionInboundPortURI, nbThreads, nbSchedulableThreads);
+		
 		String dataOutPortURI = java.util.UUID.randomUUID().toString();
 		dataOutPort = new AppareilDataOutPort(dataOutPortURI, this);
 		this.addPort(dataOutPort);
 		dataOutPort.publishPort();
+		
+		this.tracer.setRelativePosition(1, 1);
+		
 		isOn = true;
 		fridge_temperature = 4.4;
 		fridge_temperature_cible = 3.0;
 		freezer_temperature = 0.0;
 		freezer_temperature_cible = -10.0;
+		
+		createNewExecutorService("reception", 5, true);
 	}
 	
 	protected void freezerStabilize() {

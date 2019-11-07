@@ -20,6 +20,8 @@ public class Controleur extends AbstractComponent implements IControleur {
 		this.addOfferedInterface(IControleur.class);
 		this.addOfferedInterface(DataOfferedI.PullI.class) ;
 		createDataInPorts(nbAppareil);
+		
+		this.tracer.setRelativePosition(1, 1);
 	}
 	
 	protected void createDataInPorts(int nbAppareil) throws Exception {
@@ -55,35 +57,44 @@ public class Controleur extends AbstractComponent implements IControleur {
 	@Override
 	public void execute() throws Exception {
 		super.execute();
+		
 		Message m1 = new Message();
 		Message m2 = new Message();
 		Message m3 = new Message();
 		Message m4 = new Message();
+		Message m5 = new Message();
+		
 		m1.setContenu("Consommation stable...");
 		addMessageToMap("frigo", m1);
+		
 		m2.setContenu("allumer");
 		addMessageToMap("ordinateur", m2);
+		
 		m3.setContenu("eteindre");
 		addMessageToMap("ordinateur", m3);
+		
 		m4.setContenu("fridge temperature cible : 5.0");
 		addMessageToMap("frigo", m4);
+		
+		m5.setContenu("set pourcentage : 95");
+		addMessageToMap("chargeur", m5);
 		
 		this.runTask(new AbstractTask() {
 			public void run() {
 				try {
 					this.taskOwner.logMessage("Envoi message au frigo : " + m1.getContenu());
 					envoyerMessage("frigo", 0);
-//					this.taskOwner.logMessage("Envoi message au frigo : " + m4.getContenu());
-//					envoyerMessage("frigo", 0);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-
-			}
-		});
-
-		this.runTask(new AbstractTask() {
-			public void run() {
+				
+				try {
+					this.taskOwner.logMessage("Envoi message au frigo : " + m4.getContenu());
+					envoyerMessage("frigo", 0);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
 				try {
 					this.taskOwner.logMessage("Envoi message a l'ordinateur : " + m2.getContenu());
 					envoyerMessage("ordinateur", 1);
@@ -93,9 +104,15 @@ public class Controleur extends AbstractComponent implements IControleur {
 					e.printStackTrace();
 				}
 
+				try {
+					this.taskOwner.logMessage("Envoi message au chargeur : " + m5.getContenu());
+					envoyerMessage("chargeur", 2);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
-			
 		});
+		
 	}
 	
 	@Override
