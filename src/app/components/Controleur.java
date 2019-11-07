@@ -63,6 +63,8 @@ public class Controleur extends AbstractComponent implements IControleur {
 		Message m3 = new Message();
 		Message m4 = new Message();
 		Message m5 = new Message();
+		Message m6 = new Message();
+		Message m7 = new Message();
 		
 		m1.setContenu("Consommation stable...");
 		addMessageToMap("frigo", m1);
@@ -78,6 +80,13 @@ public class Controleur extends AbstractComponent implements IControleur {
 		
 		m5.setContenu("set pourcentage : 95");
 		addMessageToMap("chargeur", m5);
+		
+		m6.setContenu("allumer");
+		addMessageToMap("panneau", m6);
+		
+		m7.setContenu("allumer");
+		addMessageToMap("batterie", m7);
+		
 		
 		this.runTask(new AbstractTask() {
 			public void run() {
@@ -107,6 +116,20 @@ public class Controleur extends AbstractComponent implements IControleur {
 				try {
 					this.taskOwner.logMessage("Envoi message au chargeur : " + m5.getContenu());
 					envoyerMessage("chargeur", 2);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+				try {
+					this.taskOwner.logMessage("Envoi message au panneau solaire : " + m6.getContenu());
+					envoyerMessage("panneau", 3);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+				try {
+					this.taskOwner.logMessage("Envoi message a la batterie : " + m7.getContenu());
+					envoyerMessage("batterie", 4);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
