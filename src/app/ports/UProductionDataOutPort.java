@@ -1,7 +1,8 @@
 package app.ports;
 
 import app.data.Message;
-import app.interfaces.IAppareil;
+
+import app.interfaces.IUProduction;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.interfaces.DataOfferedI;
@@ -21,7 +22,7 @@ public class UProductionDataOutPort extends AbstractDataOutboundPort {
 		this.owner.handleRequestAsync(new AbstractComponent.AbstractService<Void>() {
 			@Override
 			public Void call() throws Exception {
-				((IAppareil) this.getServiceOwner()).recevoirMessage((Message) d);
+				((IUProduction) this.getServiceOwner()).recevoirMessage((Message) d);
 				return null;
 			}
 		});
