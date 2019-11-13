@@ -67,7 +67,7 @@ public class DistributedCVM extends AbstractDistributedCVM {
 			this.addDeployedComponent(chargeurURI,chargeur);
 			this.toggleTracing(chargeurURI);
 
-		} else System.out.println("JVM URI inconnu... " + thisJVMURI);
+		} else { System.out.println("JVM URI inconnu... " + thisJVMURI); }
 		
 		super.instantiateAndPublish();
 	}
@@ -94,7 +94,7 @@ public class DistributedCVM extends AbstractDistributedCVM {
 					AppareilServiceConnector.class.getCanonicalName()) ;
 
 
-		} else System.out.println("Unknown JVM URI... " + thisJVMURI);
+		}
 
 		super.interconnect();
 	}

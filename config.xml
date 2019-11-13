@@ -5,7 +5,7 @@
   </hosts>
   <cyclicBarrier   hostname="localhost" port="55253"/>
   <globalRegistry  hostname="localhost" port="55252"/>
-  <rmiRegistryPort no="55999"/>
+  <rmiRegistryPort no="55998"/>
   <jvms2hostnames>
     <jvm2hostname jvmuri="controleur"
         rmiRegistryCreator="true"
@@ -13,7 +13,7 @@
         mainclass="app.DistributedCVM"/>
     <jvm2hostname jvmuri="frigo"
         rmiRegistryCreator="false"
-        hostname="ppti-14-507-07" 
+        hostname="localhost" 
         mainclass="app.DistributedCVM"/>
     <jvm2hostname jvmuri="ordinateur"
         rmiRegistryCreator="false"
@@ -21,7 +21,7 @@
         mainclass="app.DistributedCVM"/>
     <jvm2hostname jvmuri="chargeur"
         rmiRegistryCreator="false"
-        hostname="localhost"
+        hostname="ppti-14-507-07"
         mainclass="app.DistributedCVM"/>
   </jvms2hostnames>
 </deployment>

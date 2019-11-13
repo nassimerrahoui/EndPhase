@@ -1,25 +1,25 @@
-1573663330050|DCVM Cyclic Barrier up and running!
-1573663343396|DCVM Cyclic Barrier accepts: controleur localhost 51016
-1573663343398|DCVM Cyclic Barrier has received 1 out of 4 expected.
-1573663353351|DCVM Cyclic Barrier accepts: frigo 169.254.38.63 51018
-1573663353352|DCVM Cyclic Barrier has received 2 out of 4 expected.
-1573663363073|DCVM Cyclic Barrier accepts: chargeur localhost 51020
-1573663363074|DCVM Cyclic Barrier has received 3 out of 4 expected.
-1573663371936|All connected!
-1573663371937|DCVM Cyclic Barrier accepts: ordinateur localhost 51022
-1573663371937|DCVM Cyclic Barrier has received 4 out of 4 expected.
-1573663371937|DCVM Cyclic Barrier releases 4 sites.
-1573663371940|DCVM Cyclic Barrier accepts: controleur localhost 51016
-1573663371941|DCVM Cyclic Barrier has received 1 out of 4 expected.
-1573663371956|DCVM Cyclic Barrier accepts: frigo 169.254.38.63 51018
-1573663371957|DCVM Cyclic Barrier has received 2 out of 4 expected.
-1573663371959|DCVM Cyclic Barrier accepts: chargeur localhost 51020
-1573663371959|DCVM Cyclic Barrier has received 3 out of 4 expected.
-1573663372000|DCVM Cyclic Barrier accepts: ordinateur localhost 51022
-1573663372000|DCVM Cyclic Barrier has received 4 out of 4 expected.
-1573663372000|DCVM Cyclic Barrier releases 4 sites.
-1573663382837|DCVMCyclicBarrier.run() finished.
-1573663382868|DCVMCyclicBarrier.run() finished.
-1573663382874|DCVMCyclicBarrier.run() finished.
-1573663382909|DCVMCyclicBarrier.run() finished.
-1573663382909|DCVM Cyclic Barrier shuts down!
+1573666783511|DCVM Cyclic Barrier up and running!
+1573666789678|DCVM Cyclic Barrier accepts: controleur localhost 51498
+1573666789679|DCVM Cyclic Barrier has received 1 out of 4 expected.
+1573666793596|DCVM Cyclic Barrier accepts: chargeur ppti-14-507-07 51500
+1573666793596|DCVM Cyclic Barrier has received 2 out of 4 expected.
+1573666796424|DCVM Cyclic Barrier accepts: frigo localhost 51502
+1573666796425|DCVM Cyclic Barrier has received 3 out of 4 expected.
+1573666800665|All connected!
+1573666800666|DCVM Cyclic Barrier accepts: ordinateur localhost 51504
+1573666800667|DCVM Cyclic Barrier has received 4 out of 4 expected.
+1573666800667|DCVM Cyclic Barrier releases 4 sites.
+1573666800669|DCVM Cyclic Barrier accepts: controleur localhost 51498
+1573666800670|DCVM Cyclic Barrier has received 1 out of 4 expected.
+1573666800686|DCVM Cyclic Barrier accepts: frigo localhost 51502
+1573666800687|DCVM Cyclic Barrier has received 2 out of 4 expected.
+1573666800687|DCVM Cyclic Barrier accepts: chargeur ppti-14-507-07 51500
+1573666800688|DCVM Cyclic Barrier has received 3 out of 4 expected.
+1573666800728|DCVM Cyclic Barrier accepts: ordinateur localhost 51504
+1573666800728|DCVM Cyclic Barrier has received 4 out of 4 expected.
+1573666800728|DCVM Cyclic Barrier releases 4 sites.
+1573666811534|DCVMCyclicBarrier.run() finished.
+1573666811567|DCVMCyclicBarrier.run() finished.
+1573666811573|DCVMCyclicBarrier.run() finished.
+1573666811645|DCVMCyclicBarrier.run() finished.
+1573666811645|DCVM Cyclic Barrier shuts down!
