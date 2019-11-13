@@ -1,7 +1,7 @@
 <deployment>
    <hosts>
     <host name="localhost"
-          dir="/Users/Grey/workspace/EndPhase/src/app"/>
+          dir="/users/nfs/Etu0/3703990/eclipse-workspace/EndPhase/src/app"/>
   </hosts>
   <cyclicBarrier   hostname="localhost" port="55253"/>
   <globalRegistry  hostname="localhost" port="55252"/>
@@ -13,7 +13,7 @@
         mainclass="app.DistributedCVM"/>
     <jvm2hostname jvmuri="frigo"
         rmiRegistryCreator="false"
-        hostname="localhost"
+        hostname="ppti-14-507-07" 
         mainclass="app.DistributedCVM"/>
     <jvm2hostname jvmuri="ordinateur"
         rmiRegistryCreator="false"

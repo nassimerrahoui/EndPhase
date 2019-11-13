@@ -3,4 +3,4 @@ if [ -z "$1" ]; then
   echo usage: $0 jvmName
   exit
  fi
-java -ea -cp 'jars/*' -Djava.security.manager -Djava.security.policy=dcvm.policy app.DistributedCVM $1 config.xml
+java -cp 'jars/*':'bin/' -Djava.security.manager -Djava.security.policy=dcvm.policy -Djava.rmi.server.hostname=$2 app.DistributedCVM $1 config.xml

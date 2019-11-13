@@ -28,7 +28,7 @@ public class DistributedCVM extends AbstractDistributedCVM {
 	protected static String JVM_4 = "chargeur";
 	
 	// URI Port des pour l'interconnexion des JVM
-	protected static String URI_DATAOUTPORT_FRIGO = "oport1";
+	protected String URI_DATAOUTPORT_FRIGO = "oport1";
 	protected static String URI_DATAOUTPORT_ORDINATEUR = "oport2";
 	protected static String URI_DATAOUTPORT_CHARGEUR = "oport3";
 

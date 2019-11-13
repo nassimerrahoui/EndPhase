@@ -120,19 +120,19 @@ public class Controleur extends AbstractComponent implements IControleur {
 					e.printStackTrace();
 				}
 				
-				try {
-					this.taskOwner.logMessage("Envoi message au panneau solaire : " + m6.getContenu());
-					envoyerMessage("panneau", 3);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				
-				try {
-					this.taskOwner.logMessage("Envoi message a la batterie : " + m7.getContenu());
-					envoyerMessage("batterie", 4);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+//				try {
+//					this.taskOwner.logMessage("Envoi message au panneau solaire : " + m6.getContenu());
+//					envoyerMessage("panneau", 3);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//				
+//				try {
+//					this.taskOwner.logMessage("Envoi message a la batterie : " + m7.getContenu());
+//					envoyerMessage("batterie", 4);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
 			}
 		});
 		
