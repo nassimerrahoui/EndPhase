@@ -24,17 +24,19 @@ public class CVM extends AbstractCVM {
 	String chargeurURI = "chargeur";
 	String panneauURI = "panneau";
 	String batterieURI = "batterie";
+	
+	protected static String URI_DATAOUTPORT_FRIGO = "oport1";
+	protected static String URI_DATAOUTPORT_ORDINATEUR = "oport2";
+	protected static String URI_DATAOUTPORT_CHARGEUR = "oport3";
 
-	public CVM() throws Exception {
-		super();
-	}
+	public CVM() throws Exception { super(); }
 
 	@Override
 	public void deploy() throws Exception {
 		this.controleur = new Controleur(controleurURI, 1, 0, 5);
-		this.frigo = new Frigo(frigoURI, 1, 0);
-		this.ordinateur = new Ordinateur(ordinateurURI, 1, 0);
-		this.chargeur = new Chargeur(chargeurURI, 1, 0);
+		this.frigo = new Frigo(frigoURI, 1, 0, URI_DATAOUTPORT_FRIGO);
+		this.ordinateur = new Ordinateur(ordinateurURI, 1, 0, URI_DATAOUTPORT_ORDINATEUR);
+		this.chargeur = new Chargeur(chargeurURI, 1, 0, URI_DATAOUTPORT_CHARGEUR);
 		this.panneau = new PanneauSolaire(panneauURI, 1, 0);
 		this.batterie = new Batterie(batterieURI, 1, 0);
 		

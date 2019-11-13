@@ -13,9 +13,9 @@ public class Ordinateur extends AbstractComponent implements IOrdinateur {
 	Vector<Message> messages_recu = new Vector<>();
 	protected boolean isOn;
 	
-	public Ordinateur(String reflectionInboundPortURI, int nbThreads, int nbSchedulableThreads) throws Exception {
+	public Ordinateur(String reflectionInboundPortURI, int nbThreads, int nbSchedulableThreads, String dataOutPortURI) throws Exception {
 		super(reflectionInboundPortURI, nbThreads, nbSchedulableThreads);
-		String dataOutPortURI = java.util.UUID.randomUUID().toString();
+
 		dataOutPort = new AppareilDataOutPort(dataOutPortURI, this);
 		this.addPort(dataOutPort);
 		dataOutPort.publishPort();

@@ -1,0 +1,45 @@
+1573609005427|Registry up and running!
+1573609122951|GlobalRegistry processing put controleurURI rmi=localhost
+1573609123025|GlobalRegistry processing put e7ca1724-177a-4481-bc9b-469249a0fafe rmi=localhost
+1573609123028|GlobalRegistry processing put a6c82dd8-23ab-4361-941b-177605d18ed4 rmi=localhost
+1573609123038|GlobalRegistry processing put e3fe26f5-9d37-4e96-856f-c653930a1d18 rmi=localhost
+1573609123268|GlobalRegistry processing put frigoURI rmi=localhost
+1573609123268|GlobalRegistry processing put chargeurURI rmi=localhost
+1573609123364|GlobalRegistry processing put oport3 rmi=localhost
+1573609123376|GlobalRegistry processing put oport1 rmi=localhost
+1573609123443|All connected!
+1573609123456|GlobalRegistry processing put ordinateurURI rmi=localhost
+1573609123502|GlobalRegistry processing put oport2 rmi=localhost
+1573609123858|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionI-6edaca4d-6e27-4997-958f-0dff75db9879 rmi=localhost
+1573609123895|GlobalRegistry processing put controleur-dcc rmi=localhost
+1573609124074|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionI-f345105e-ea99-41ec-8004-76f1da3ada5e rmi=localhost
+1573609124117|GlobalRegistry processing put frigo-dcc rmi=localhost
+1573609124165|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionI-9a673c10-8119-42e0-a98b-1317fa486fde rmi=localhost
+1573609124211|GlobalRegistry processing put chargeur-dcc rmi=localhost
+1573609124359|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionI-2491d70c-5264-49c8-b511-f4f2f02fccaa rmi=localhost
+1573609124409|GlobalRegistry processing put ordinateur-dcc rmi=localhost
+1573609124426|GlobalRegistry processing lookup oport1
+1573609124451|GlobalRegistry processing lookup e7ca1724-177a-4481-bc9b-469249a0fafe
+1573609124508|GlobalRegistry processing lookup oport2
+1573609124525|GlobalRegistry processing lookup a6c82dd8-23ab-4361-941b-177605d18ed4
+1573609124579|GlobalRegistry processing lookup oport3
+1573609124596|GlobalRegistry processing lookup e3fe26f5-9d37-4e96-856f-c653930a1d18
+1573609139683|GlobalRegistry processing remove controleurURI
+1573609139687|GlobalRegistry processing remove fr.sorbonne_u.components.reflection.interfaces.ReflectionI-6edaca4d-6e27-4997-958f-0dff75db9879
+1573609139687|GlobalRegistry processing remove ordinateurURI
+1573609139695|GlobalRegistry processing remove fr.sorbonne_u.components.reflection.interfaces.ReflectionI-2491d70c-5264-49c8-b511-f4f2f02fccaa
+1573609139701|GlobalRegistry processing remove fr.sorbonne_u.components.reflection.interfaces.ReflectionI-9a673c10-8119-42e0-a98b-1317fa486fde
+1573609139710|GlobalRegistry processing remove chargeurURI
+1573609139714|GlobalRegistry processing remove fr.sorbonne_u.components.reflection.interfaces.ReflectionI-f345105e-ea99-41ec-8004-76f1da3ada5e
+1573609139717|GlobalRegistry processing remove frigoURI
+1573609139725|GlobalRegistry processing remove controleur-dcc
+1573609139729|GlobalRegistry processing remove chargeur-dcc
+1573609139739|GlobalRegistry processing remove frigo-dcc
+1573609139743|GlobalRegistry processing remove oport2
+1573609139748|GlobalRegistry processing remove ordinateur-dcc
+1573609139749|GlobalRegistry processing remove oport1
+1573609139793|GlobalRegistry processing shutdown
+1573609139800|GlobalRegistry processing shutdown
+1573609139801|GlobalRegistry processing shutdown
+1573609139803|GlobalRegistry processing shutdown
+1573609139823|Global registry shuts down!

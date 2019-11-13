@@ -1,0 +1,79 @@
+1573609009992|DCVM Cyclic Barrier up and running!
+1573609023888|DCVM Cyclic Barrier accepts: controleur localhost 60716
+1573609023891|DCVM Cyclic Barrier has received 1 out of 4 expected.
+1573609039461|DCVM Cyclic Barrier accepts: ordinateur localhost 60717
+1573609039463|DCVM Cyclic Barrier has received 2 out of 4 expected.
+1573609052190|DCVM Cyclic Barrier accepts: chargeur localhost 60718
+1573609052191|DCVM Cyclic Barrier has received 3 out of 4 expected.
+1573609121859|All connected!
+1573609121862|DCVM Cyclic Barrier accepts: frigo localhost 60721
+1573609121864|DCVM Cyclic Barrier has received 4 out of 4 expected.
+1573609121864|DCVM Cyclic Barrier releases 4 sites.
+1573609121883|DCVM Cyclic Barrier accepts: controleur localhost 60716
+1573609121884|DCVM Cyclic Barrier has received 1 out of 4 expected.
+1573609122459|DCVM Cyclic Barrier accepts: ordinateur localhost 60717
+1573609122460|DCVM Cyclic Barrier has received 2 out of 4 expected.
+1573609122469|DCVM Cyclic Barrier accepts: frigo localhost 60721
+1573609122470|DCVM Cyclic Barrier has received 3 out of 4 expected.
+1573609122479|DCVM Cyclic Barrier accepts: chargeur localhost 60718
+1573609122481|DCVM Cyclic Barrier has received 4 out of 4 expected.
+1573609122481|DCVM Cyclic Barrier releases 4 sites.
+1573609123898|DCVM Cyclic Barrier accepts: controleur localhost 60716
+1573609123899|DCVM Cyclic Barrier has received 1 out of 4 expected.
+1573609124118|DCVM Cyclic Barrier accepts: frigo localhost 60721
+1573609124119|DCVM Cyclic Barrier has received 2 out of 4 expected.
+1573609124214|DCVM Cyclic Barrier accepts: chargeur localhost 60718
+1573609124215|DCVM Cyclic Barrier has received 3 out of 4 expected.
+1573609124412|DCVM Cyclic Barrier accepts: ordinateur localhost 60717
+1573609124413|DCVM Cyclic Barrier has received 4 out of 4 expected.
+1573609124413|DCVM Cyclic Barrier releases 4 sites.
+1573609124418|DCVM Cyclic Barrier accepts: frigo localhost 60721
+1573609124419|DCVM Cyclic Barrier has received 1 out of 4 expected.
+1573609124419|DCVM Cyclic Barrier accepts: ordinateur localhost 60717
+1573609124420|DCVM Cyclic Barrier has received 2 out of 4 expected.
+1573609124422|DCVM Cyclic Barrier accepts: chargeur localhost 60718
+1573609124424|DCVM Cyclic Barrier has received 3 out of 4 expected.
+1573609124645|DCVM Cyclic Barrier accepts: controleur localhost 60716
+1573609124646|DCVM Cyclic Barrier has received 4 out of 4 expected.
+1573609124646|DCVM Cyclic Barrier releases 4 sites.
+1573609124656|DCVM Cyclic Barrier accepts: controleur localhost 60716
+1573609124657|DCVM Cyclic Barrier accepts: frigo localhost 60721
+1573609124657|DCVM Cyclic Barrier has received 1 out of 4 expected.
+1573609124660|DCVM Cyclic Barrier has received 2 out of 4 expected.
+1573609124663|DCVM Cyclic Barrier accepts: chargeur localhost 60718
+1573609124665|DCVM Cyclic Barrier accepts: ordinateur localhost 60717
+1573609124665|DCVM Cyclic Barrier has received 3 out of 4 expected.
+1573609124667|DCVM Cyclic Barrier has received 4 out of 4 expected.
+1573609124667|DCVM Cyclic Barrier releases 4 sites.
+1573609139674|DCVM Cyclic Barrier accepts: frigo localhost 60721
+1573609139676|DCVM Cyclic Barrier has received 1 out of 4 expected.
+1573609139676|DCVM Cyclic Barrier accepts: ordinateur localhost 60717
+1573609139678|DCVM Cyclic Barrier accepts: chargeur localhost 60718
+1573609139678|DCVM Cyclic Barrier has received 2 out of 4 expected.
+1573609139679|DCVM Cyclic Barrier accepts: controleur localhost 60716
+1573609139680|DCVM Cyclic Barrier has received 3 out of 4 expected.
+1573609139681|DCVM Cyclic Barrier has received 4 out of 4 expected.
+1573609139681|DCVM Cyclic Barrier releases 4 sites.
+1573609139695|DCVM Cyclic Barrier accepts: controleur localhost 60716
+1573609139699|DCVM Cyclic Barrier has received 1 out of 4 expected.
+1573609139703|DCVM Cyclic Barrier accepts: ordinateur localhost 60717
+1573609139704|DCVM Cyclic Barrier has received 2 out of 4 expected.
+1573609139712|DCVM Cyclic Barrier accepts: chargeur localhost 60718
+1573609139713|DCVM Cyclic Barrier has received 3 out of 4 expected.
+1573609139719|DCVM Cyclic Barrier accepts: frigo localhost 60721
+1573609139721|DCVM Cyclic Barrier has received 4 out of 4 expected.
+1573609139721|DCVM Cyclic Barrier releases 4 sites.
+1573609139732|DCVM Cyclic Barrier accepts: chargeur localhost 60718
+1573609139733|DCVM Cyclic Barrier has received 1 out of 4 expected.
+1573609139734|DCVM Cyclic Barrier accepts: controleur localhost 60716
+1573609139736|DCVM Cyclic Barrier has received 2 out of 4 expected.
+1573609139750|DCVM Cyclic Barrier accepts: ordinateur localhost 60717
+1573609139751|DCVM Cyclic Barrier has received 3 out of 4 expected.
+1573609139766|DCVM Cyclic Barrier accepts: frigo localhost 60721
+1573609139767|DCVM Cyclic Barrier has received 4 out of 4 expected.
+1573609139767|DCVM Cyclic Barrier releases 4 sites.
+1573609139794|DCVMCyclicBarrier.run() finished.
+1573609139799|DCVMCyclicBarrier.run() finished.
+1573609139801|DCVMCyclicBarrier.run() finished.
+1573609139802|DCVMCyclicBarrier.run() finished.
+1573609139802|DCVM Cyclic Barrier shuts down!

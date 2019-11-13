@@ -19,10 +19,9 @@ public class Frigo extends AbstractComponent implements IFrigo {
 	protected Double fridge_temperature;
 	protected Double fridge_temperature_cible;
 	
-	public Frigo(String reflectionInboundPortURI, int nbThreads, int nbSchedulableThreads) throws Exception {
+	public Frigo(String reflectionInboundPortURI, int nbThreads, int nbSchedulableThreads, String dataOutPortURI) throws Exception {
 		super(reflectionInboundPortURI, nbThreads, nbSchedulableThreads);
 		
-		String dataOutPortURI = java.util.UUID.randomUUID().toString();
 		dataOutPort = new AppareilDataOutPort(dataOutPortURI, this);
 		this.addPort(dataOutPort);
 		dataOutPort.publishPort();
