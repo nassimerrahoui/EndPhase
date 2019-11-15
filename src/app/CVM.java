@@ -6,7 +6,7 @@ import app.components.Controleur;
 import app.components.Frigo;
 import app.components.Ordinateur;
 import app.components.PanneauSolaire;
-import app.connectors.AppareilServiceConnector;
+import app.connectors.DataServiceConnector;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 
 public class CVM extends AbstractCVM {
@@ -59,31 +59,31 @@ public class CVM extends AbstractCVM {
 				controleurURI,
 				this.controleur.dataInPorts.get(0).getPortURI(),
 				this.frigo.dataOutPort.getPortURI(),
-				AppareilServiceConnector.class.getCanonicalName()) ;
+				DataServiceConnector.class.getCanonicalName()) ;
 		
 		this.doPortConnection(
 				controleurURI,
 				this.controleur.dataInPorts.get(1).getPortURI(),
 				this.ordinateur.dataOutPort.getPortURI(),
-				AppareilServiceConnector.class.getCanonicalName()) ;
+				DataServiceConnector.class.getCanonicalName()) ;
 		
 		this.doPortConnection(
 				controleurURI,
 				this.controleur.dataInPorts.get(2).getPortURI(),
 				this.chargeur.dataOutPort.getPortURI(),
-				AppareilServiceConnector.class.getCanonicalName()) ;
+				DataServiceConnector.class.getCanonicalName()) ;
 		
 		this.doPortConnection(
 				controleurURI,
 				this.controleur.dataInPorts.get(3).getPortURI(),
 				this.panneau.dataOutPort.getPortURI(),
-				AppareilServiceConnector.class.getCanonicalName()) ;
+				DataServiceConnector.class.getCanonicalName()) ;
 		
 		this.doPortConnection(
 				controleurURI,
 				this.controleur.dataInPorts.get(4).getPortURI(),
 				this.batterie.dataOutPort.getPortURI(),
-				AppareilServiceConnector.class.getCanonicalName()) ;
+				DataServiceConnector.class.getCanonicalName()) ;
 		
 		super.deploy();
 	}

@@ -3,13 +3,16 @@ package app.components;
 import java.util.Vector;
 import app.data.Message;
 import app.interfaces.IFrigo;
+import app.ports.AppareilDataInPort;
 import app.ports.AppareilDataOutPort;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
+import fr.sorbonne_u.components.interfaces.DataOfferedI;
 
 public class Frigo extends AbstractComponent implements IFrigo {
 
+	public AppareilDataInPort dataInPort;
 	public AppareilDataOutPort dataOutPort;
 	protected Vector<Message> messages_recu = new Vector<>();
 	
@@ -18,6 +21,7 @@ public class Frigo extends AbstractComponent implements IFrigo {
 	protected Double freezer_temperature_cible;
 	protected Double fridge_temperature;
 	protected Double fridge_temperature_cible;
+	protected Double consommation;
 	
 	public Frigo(String reflectionInboundPortURI, int nbThreads, int nbSchedulableThreads, String dataOutPortURI) throws Exception {
 		super(reflectionInboundPortURI, nbThreads, nbSchedulableThreads);
@@ -33,6 +37,7 @@ public class Frigo extends AbstractComponent implements IFrigo {
 		fridge_temperature_cible = 3.0;
 		freezer_temperature = 0.0;
 		freezer_temperature_cible = -10.0;
+		consommation = 60.0;
 		
 		createNewExecutorService("reception", 5, true);
 	}
@@ -40,16 +45,20 @@ public class Frigo extends AbstractComponent implements IFrigo {
 	protected void freezerStabilize() {
 		if(freezer_temperature_cible - freezer_temperature > 0.5) {
 			freezer_temperature += 0.2;
+			consommation--;
 		} else if (freezer_temperature_cible - freezer_temperature < -0.5) {
 			freezer_temperature -= 0.2;
+			consommation++;
 		}
 	}
 	
 	protected void fridgeStabilize() {
 		if(fridge_temperature_cible - fridge_temperature > 0.5) {
 			fridge_temperature += 0.2;
+			consommation++;
 		} else if (fridge_temperature_cible - fridge_temperature < -0.5) {
 			fridge_temperature -= 0.2;
+			consommation--;
 		}
 	}
 	
@@ -92,6 +101,14 @@ public class Frigo extends AbstractComponent implements IFrigo {
 		this.logMessage("Message recu : " + m.getContenu());
 		messages_recu.add(m);
 		traitementMessage(m);
+	}
+	
+	@Override
+	public DataOfferedI.DataI getConsommation() throws Exception {
+		// 0.2 degre -> 1 Watt
+		Message m = new Message();
+		m.setContenu(consommation.toString());
+		return m;
 	}
 	
 	@Override

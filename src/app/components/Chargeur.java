@@ -3,18 +3,22 @@ package app.components;
 import java.util.Vector;
 import app.data.Message;
 import app.interfaces.IChargeur;
+import app.ports.AppareilDataInPort;
 import app.ports.AppareilDataOutPort;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
+import fr.sorbonne_u.components.interfaces.DataOfferedI;
 
 public class Chargeur extends AbstractComponent implements IChargeur {
 
+	public AppareilDataInPort dataInPort;
 	public AppareilDataOutPort dataOutPort;
 	protected Vector<Message> messages_recu = new Vector<>();
 
 	protected boolean isLoading;
 	protected int delai;
 	protected int pourcentage;
+	protected Double consommation;
 
 	public Chargeur(String reflectionInboundPortURI, int nbThreads, int nbSchedulableThreads, String dataOutPortURI) throws Exception {
 		super(reflectionInboundPortURI, nbThreads, nbSchedulableThreads);
@@ -23,11 +27,17 @@ public class Chargeur extends AbstractComponent implements IChargeur {
 		this.addPort(dataOutPort);
 		dataOutPort.publishPort();
 		
+		String dataInPortURI = java.util.UUID.randomUUID().toString();
+		dataInPort = new AppareilDataInPort(dataInPortURI, this);
+		this.addPort(dataInPort);
+		dataInPort.publishPort();
+		
 		this.tracer.setRelativePosition(1, 1);
 		
 		isLoading = false;
 		delai = 30;
 		pourcentage = 0;
+		consommation = 100.0;
 		
 		createNewExecutorService("reception", 5, true);
 	}
@@ -37,6 +47,19 @@ public class Chargeur extends AbstractComponent implements IChargeur {
 		this.logMessage("Message recu : " + m.getContenu());
 		messages_recu.add(m);
 		traitementMessage(m);
+	}
+	
+	@Override
+	public DataOfferedI.DataI getConsommation() throws Exception {
+		Message m = new Message();
+		if(isLoading) {
+			m.setContenu(consommation.toString());
+		}else {
+			double veille = consommation.doubleValue()/10;
+			consommation = veille;
+			m.setContenu(consommation.toString());
+		}	
+		return m;
 	}
 
 	protected void traitementMessage(Message m) {
@@ -97,8 +120,10 @@ public class Chargeur extends AbstractComponent implements IChargeur {
 							rechargement();
 						} else {
 							delai--;
-							if(delai == 0)
+							if(delai == 0) {
 								isLoading = true;
+								consommation = 100.0;
+							}
 						}
 					}
 				} catch (InterruptedException e) {

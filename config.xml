@@ -21,7 +21,7 @@
         mainclass="app.DistributedCVM"/>
     <jvm2hostname jvmuri="chargeur"
         rmiRegistryCreator="false"
-        hostname="ppti-14-507-07"
+        hostname="ppti-14-507-02"
         mainclass="app.DistributedCVM"/>
   </jvms2hostnames>
 </deployment>

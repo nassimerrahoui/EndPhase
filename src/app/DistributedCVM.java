@@ -4,7 +4,7 @@ import app.components.Chargeur;
 import app.components.Controleur;
 import app.components.Frigo;
 import app.components.Ordinateur;
-import app.connectors.AppareilServiceConnector;
+import app.connectors.DataServiceConnector;
 import fr.sorbonne_u.components.cvm.AbstractDistributedCVM;
 
 public class DistributedCVM extends AbstractDistributedCVM {
@@ -79,19 +79,19 @@ public class DistributedCVM extends AbstractDistributedCVM {
 					controleurURI,
 					controleur.dataInPorts.get(0).getPortURI(),
 					URI_DATAOUTPORT_FRIGO,
-					AppareilServiceConnector.class.getCanonicalName()) ;
+					DataServiceConnector.class.getCanonicalName()) ;
 			
 			this.doPortConnection(
 					controleurURI,
 					controleur.dataInPorts.get(1).getPortURI(),
 					URI_DATAOUTPORT_ORDINATEUR,
-					AppareilServiceConnector.class.getCanonicalName()) ;
+					DataServiceConnector.class.getCanonicalName()) ;
 			
 			this.doPortConnection(
 					controleurURI,
 					controleur.dataInPorts.get(2).getPortURI(),
 					URI_DATAOUTPORT_CHARGEUR,
-					AppareilServiceConnector.class.getCanonicalName()) ;
+					DataServiceConnector.class.getCanonicalName()) ;
 
 
 		}

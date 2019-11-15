@@ -3,15 +3,20 @@ package app.components;
 import java.util.Vector;
 import app.data.Message;
 import app.interfaces.IOrdinateur;
+import app.ports.AppareilDataInPort;
 import app.ports.AppareilDataOutPort;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
+import fr.sorbonne_u.components.interfaces.DataOfferedI;
 
 public class Ordinateur extends AbstractComponent implements IOrdinateur {
+	
+	public AppareilDataInPort dataInPort;
 	public AppareilDataOutPort dataOutPort;
 	Vector<Message> messages_recu = new Vector<>();
 	protected boolean isOn;
+	protected Double consommation;
 	
 	public Ordinateur(String reflectionInboundPortURI, int nbThreads, int nbSchedulableThreads, String dataOutPortURI) throws Exception {
 		super(reflectionInboundPortURI, nbThreads, nbSchedulableThreads);
@@ -20,6 +25,7 @@ public class Ordinateur extends AbstractComponent implements IOrdinateur {
 		this.addPort(dataOutPort);
 		dataOutPort.publishPort();
 		isOn = false;
+		consommation = 90.0;
 		
 		createNewExecutorService("reception", 5, true);
 	}
@@ -39,7 +45,22 @@ public class Ordinateur extends AbstractComponent implements IOrdinateur {
 		} else if (m.getContenu().equals("allumer")) {
 			this.logMessage("Ordinateur : Je demarre...");
 			isOn = true;
+			consommation = 90.0;
 		}
+	}
+	
+	@Override
+	public DataOfferedI.DataI getConsommation() throws Exception {
+		Message m = new Message();
+		if(isOn) {
+			m.setContenu(consommation.toString());
+		}else {
+			double veille = consommation.doubleValue()/3;
+			consommation = veille;
+			m.setContenu(consommation.toString());
+		}	
+		
+		return m;
 	}
 	
 	@Override
