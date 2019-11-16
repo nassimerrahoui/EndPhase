@@ -107,7 +107,7 @@ public class Frigo extends AbstractComponent implements IFrigo {
 	public DataOfferedI.DataI getConsommation() throws Exception {
 		// 0.2 degre -> 1 Watt
 		Message m = new Message();
-		m.setContenu(consommation.toString());
+		m.setContenu("- "+consommation.toString());
 		return m;
 	}
 	

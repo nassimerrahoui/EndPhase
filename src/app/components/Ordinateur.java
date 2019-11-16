@@ -53,11 +53,11 @@ public class Ordinateur extends AbstractComponent implements IOrdinateur {
 	public DataOfferedI.DataI getConsommation() throws Exception {
 		Message m = new Message();
 		if(isOn) {
-			m.setContenu(consommation.toString());
+			m.setContenu("- " + consommation.toString());
 		}else {
 			double veille = consommation.doubleValue()/3;
 			consommation = veille;
-			m.setContenu(consommation.toString());
+			m.setContenu("- " + consommation.toString());
 		}	
 		
 		return m;

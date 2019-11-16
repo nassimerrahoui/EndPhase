@@ -53,11 +53,11 @@ public class Chargeur extends AbstractComponent implements IChargeur {
 	public DataOfferedI.DataI getConsommation() throws Exception {
 		Message m = new Message();
 		if(isLoading) {
-			m.setContenu(consommation.toString());
+			m.setContenu("- " + consommation.toString());
 		}else {
 			double veille = consommation.doubleValue()/10;
 			consommation = veille;
-			m.setContenu(consommation.toString());
+			m.setContenu("- " + consommation.toString());
 		}	
 		return m;
 	}
