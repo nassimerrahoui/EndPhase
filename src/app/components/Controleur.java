@@ -8,6 +8,7 @@ import app.ports.ControleurDataInPort;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.interfaces.DataOfferedI;
+import fr.sorbonne_u.components.interfaces.DataRequiredI;
 
 public class Controleur extends AbstractComponent implements IControleur {
 
@@ -48,10 +49,16 @@ public class Controleur extends AbstractComponent implements IControleur {
 	}
 
 	@Override
-	public DataI getMessage(String uri) throws Exception {
+	public DataOfferedI.DataI getMessage(String uri) throws Exception {
 		Message m = appareil_messages.get(uri).get(0);
 		appareil_messages.get(uri).remove(m);
 		return m;
+	}
+	
+	@Override
+	public DataRequiredI.DataI getEnergie(Message m) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	@Override
@@ -142,4 +149,5 @@ public class Controleur extends AbstractComponent implements IControleur {
 	public void shutdown() throws ComponentShutdownException {
 		super.shutdown();
 	}
+
 }

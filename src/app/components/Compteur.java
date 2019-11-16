@@ -17,7 +17,7 @@ public class Compteur extends AbstractComponent implements ICompteur {
 	protected ConcurrentHashMap<String, Double> appareil_consommation = new ConcurrentHashMap<>();
 	protected ConcurrentHashMap<String, Double> unite_production = new ConcurrentHashMap<>();
 
-	protected Compteur(String reflectionInboundPortURI, int nbThreads, int nbSchedulableThreads, Vector<CompteurDataOutPort> dataOutPorts) throws Exception {
+	public Compteur(String reflectionInboundPortURI, int nbThreads, int nbSchedulableThreads, Vector<CompteurDataOutPort> dataOutPorts) throws Exception {
 		super(reflectionInboundPortURI, nbThreads, nbSchedulableThreads);
 		createDataOutPorts(dataOutPorts);
 	}

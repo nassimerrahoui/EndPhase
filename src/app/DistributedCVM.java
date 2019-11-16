@@ -1,9 +1,12 @@
 package app;
 
+import app.components.Batterie;
 import app.components.Chargeur;
+import app.components.Compteur;
 import app.components.Controleur;
 import app.components.Frigo;
 import app.components.Ordinateur;
+import app.components.PanneauSolaire;
 import app.connectors.DataServiceConnector;
 import fr.sorbonne_u.components.cvm.AbstractDistributedCVM;
 
@@ -14,23 +17,36 @@ public class DistributedCVM extends AbstractDistributedCVM {
 	protected static Frigo frigo;
 	protected static Ordinateur ordinateur;
 	protected static Chargeur chargeur;
+	protected static PanneauSolaire panneau;
+	protected static Batterie batterie;
+	protected static Compteur compteur;
 	
 	// URI des composants -> TODO a generer dans le constructeur des composants
 	String controleurURI = "controleurURI";
 	String frigoURI = "frigoURI";
 	String ordinateurURI = "ordinateurURI";
 	String chargeurURI = "chargeurURI";
+	String compteurURI = "compteurURI";
+	String panneauURI = "panneauURI";
+	String batterieURI = "batterieURI";
 
 	// URI des JVM defini dans le fichier config.xml
 	protected static String JVM_1 = "controleur";
 	protected static String JVM_2 = "frigo";
 	protected static String JVM_3 = "ordinateur";
 	protected static String JVM_4 = "chargeur";
+	protected static String JVM_5 = "compteur";
+	protected static String JVM_6 = "panneau";
+	protected static String JVM_7 = "batterie";
 	
 	// URI Port des pour l'interconnexion des JVM
-	protected String URI_DATAOUTPORT_FRIGO = "oport1";
+	protected static String URI_DATAOUTPORT_FRIGO = "oport1";
 	protected static String URI_DATAOUTPORT_ORDINATEUR = "oport2";
 	protected static String URI_DATAOUTPORT_CHARGEUR = "oport3";
+	protected static String URI_DATAOUTPORT_PANNEAU = "oport4";
+	protected static String URI_DATAOUTPORT_BATTERIE = "oport5";
+	protected static String URI_DATAOUTPORT_CONTROLEUR = "oport6";
+	protected static String URI_DATAOUTPORT_COMPTEUR = "oport7";
 
 	public DistributedCVM(String[] args, int xLayout, int yLayout) throws Exception {
 		super(args, xLayout, yLayout);
@@ -66,7 +82,22 @@ public class DistributedCVM extends AbstractDistributedCVM {
 			chargeur = new Chargeur(chargeurURI, 1, 0, URI_DATAOUTPORT_CHARGEUR);
 			this.addDeployedComponent(chargeurURI,chargeur);
 			this.toggleTracing(chargeurURI);
+		
+		} else if (thisJVMURI.equals(JVM_5)) {
+			panneau = new PanneauSolaire(panneauURI, 1, 0/*, URI_DATAOUTPORT_PANNEAU*/);
+			this.addDeployedComponent(panneauURI,panneau);
+			this.toggleTracing(chargeurURI);
 
+		} else if (thisJVMURI.equals(JVM_6)) {
+			batterie = new Batterie(batterieURI, 1, 0/*, URI_DATAOUTPORT_CHARGEUR*/);
+			this.addDeployedComponent(batterieURI,batterie);
+			this.toggleTracing(batterieURI);
+	
+		} else if (thisJVMURI.equals(JVM_7)) {
+			compteur = new Compteur(compteurURI, 1, 0, null/*, URI_DATAOUTPORT_CHARGEUR*/);
+			this.addDeployedComponent(compteurURI,compteur);
+			this.toggleTracing(compteurURI);
+	
 		} else { System.out.println("JVM URI inconnu... " + thisJVMURI); }
 		
 		super.instantiateAndPublish();
