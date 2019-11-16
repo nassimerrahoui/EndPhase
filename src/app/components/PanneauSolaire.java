@@ -7,12 +7,14 @@ import app.ports.UProductionDataOutPort;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
+import fr.sorbonne_u.components.interfaces.DataOfferedI;
 
 public class PanneauSolaire extends AbstractComponent implements IUProduction {
 
 	public UProductionDataOutPort dataOutPort;
 	Vector<Message> messages_recu = new Vector<>();
 	protected boolean isOn;
+	protected Double production;
 	
 	public PanneauSolaire(String reflectionInboundPortURI, int nbThreads, int nbSchedulableThreads) throws Exception {
 		
@@ -22,6 +24,7 @@ public class PanneauSolaire extends AbstractComponent implements IUProduction {
 		this.addPort(dataOutPort);
 		dataOutPort.publishPort();
 		isOn = false;
+		production = 0.0;
 	}
 	
 	@Override
@@ -32,6 +35,7 @@ public class PanneauSolaire extends AbstractComponent implements IUProduction {
 			if(m.getContenu().equals("eteindre")) {
 				this.logMessage("Panneau Solaire : je m'eteins...");
 				isOn = false;
+				production = 0.0;
 			}
 			
 			messages_recu.remove(m);
@@ -39,7 +43,15 @@ public class PanneauSolaire extends AbstractComponent implements IUProduction {
 		} else if (m.getContenu().equals("allumer")) {
 			this.logMessage("Panneau Solaire : demarre...");
 			isOn = true;
+			production = 150.0;
 		}
+	}
+	
+	@Override
+	public DataOfferedI.DataI getProduction() throws Exception {
+		Message m = new Message();
+		m.setContenu("+ " + production.toString());
+		return m;
 	}
 	
 	@Override
