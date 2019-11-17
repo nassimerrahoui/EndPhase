@@ -98,9 +98,9 @@ public class Batterie extends AbstractComponent implements IUProduction {
 						envoyerMessage((Message) getProduction());
 					}
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					Thread.currentThread().interrupt();
 				} catch (Exception e) {
-					e.printStackTrace();
+					//e.printStackTrace();
 				}
 			}
 			

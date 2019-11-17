@@ -137,9 +137,9 @@ public class Chargeur extends AbstractComponent implements IChargeur {
 						envoyerMessage((Message) getConsommation());
 					}
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					Thread.currentThread().interrupt();
 				} catch (Exception e) {
-					e.printStackTrace();
+					//e.printStackTrace();
 				}
 			}
 			

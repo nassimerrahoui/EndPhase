@@ -1,7 +1,7 @@
 <deployment>
    <hosts>
     <host name="localhost"
-          dir="/Users/Grey/workspace/EndPhase/src/app"/>
+          dir="/Users/Grey/workspace/EndPhase/src/app"/> <!--  Modifier le path ici -->
   </hosts>
   <cyclicBarrier   hostname="localhost" port="55253"/>
   <globalRegistry  hostname="localhost" port="55252"/>

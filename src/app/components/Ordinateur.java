@@ -107,9 +107,9 @@ public class Ordinateur extends AbstractComponent implements IOrdinateur {
 						envoyerMessage((Message) getConsommation());
 					}
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					Thread.currentThread().interrupt();
 				} catch (Exception e) {
-					e.printStackTrace();
+					//e.printStackTrace();
 				}
 			}
 			

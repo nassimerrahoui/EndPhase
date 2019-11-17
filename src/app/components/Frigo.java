@@ -154,9 +154,9 @@ public class Frigo extends AbstractComponent implements IFrigo {
 						this.taskOwner.logMessage("fridge : " + (Math.round(fridge_temperature*100.0)/100.0) + " °C");
 					}
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					Thread.currentThread().interrupt();
 				} catch (Exception e) {
-					e.printStackTrace();
+					//e.printStackTrace();
 				}
 			}
 			

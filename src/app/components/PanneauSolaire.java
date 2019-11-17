@@ -103,9 +103,9 @@ public class PanneauSolaire extends AbstractComponent implements IUProduction {
 					}
 					
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					Thread.currentThread().interrupt();
 				} catch (Exception e) {
-					e.printStackTrace();
+					//e.printStackTrace();
 				}
 			}
 			

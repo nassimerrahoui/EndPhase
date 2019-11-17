@@ -256,7 +256,7 @@ public class Controleur extends AbstractComponent implements IControleur {
 						Thread.sleep(4000);
 						make_decisions();
 					} catch (Exception e) {
-						e.printStackTrace();
+						Thread.currentThread().interrupt();
 					}
 				}
 			}

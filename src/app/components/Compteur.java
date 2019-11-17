@@ -105,9 +105,9 @@ public class Compteur extends AbstractComponent implements ICompteur {
 
 					}
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					Thread.currentThread().interrupt();
 				} catch (Exception e) {
-					e.printStackTrace();
+					//e.printStackTrace();
 				}
 			}
 
