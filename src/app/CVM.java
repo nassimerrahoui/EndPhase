@@ -48,6 +48,11 @@ public class CVM extends AbstractCVM {
 	Vector<String[]> priorites = new Vector<>();
 	Vector<String[]> uproductions = new Vector<>();
 
+	/**
+	 * 
+	 * @param nbAppareilAndProduction
+	 * @throws Exception
+	 */
 	public CVM(int nbAppareilAndProduction) throws Exception { 
 		super(); 
 		
@@ -68,13 +73,13 @@ public class CVM extends AbstractCVM {
 		uproductions.add(new String[]{panneauURI,"1"});
 		uproductions.add(new String[]{batterieURI,"2"});
 		
-		controleur = new Controleur(controleurURI, 1, 0, URI_DATAOUTPORT_CONTROLEUR, priorites, uproductions);
+		controleur = new Controleur(controleurURI, 20, 0, URI_DATAOUTPORT_CONTROLEUR, priorites, uproductions);
 		frigo = new Frigo(frigoURI, 1, 0, URI_DATAOUTPORT_FRIGO, TypeAppareil.CONSO_PERMANENTE);
 		ordinateur = new Ordinateur(ordinateurURI, 1, 0, URI_DATAOUTPORT_ORDINATEUR, TypeAppareil.CONSO_INCONTROLABLE);
 		chargeur = new Chargeur(chargeurURI, 1, 0, URI_DATAOUTPORT_CHARGEUR, TypeAppareil.CONSO_PLANIFIABLE);
 		panneau = new PanneauSolaire(panneauURI, 1, 0, URI_DATAOUTPORT_PANNEAU);
 		batterie = new Batterie(batterieURI, 1, 0, URI_DATAOUTPORT_BATTERIE);
-		compteur = new Compteur(compteurURI, 1, 0, URI_DATAOUTPORTS_COMPTEUR);
+		compteur = new Compteur(compteurURI, 20, 0, URI_DATAOUTPORTS_COMPTEUR);
 		
 		this.addDeployedComponent(controleurURI,controleur);
 		this.addDeployedComponent(frigoURI,frigo);

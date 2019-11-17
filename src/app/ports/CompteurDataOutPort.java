@@ -18,7 +18,6 @@ public class CompteurDataOutPort extends AbstractDataOutboundPort {
 
 	@Override
 	public void receive(DataRequiredI.DataI d) throws Exception {
-		
 		this.owner.handleRequestAsync(new AbstractComponent.AbstractService<Void>() {
 
 			public Void call() throws Exception {

@@ -7,5 +7,5 @@ import fr.sorbonne_u.components.interfaces.DataRequiredI;
 public interface IControleur extends DataOfferedI, DataRequiredI {
 	public DataOfferedI.DataI getMessage(String uri) throws Exception;
 	
-	public DataRequiredI.DataI getEnergie(Message m) throws Exception;
+	public void getEnergie(Message m) throws Exception;
 }

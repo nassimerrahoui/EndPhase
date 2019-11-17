@@ -7,6 +7,7 @@ import app.interfaces.ICompteur;
 import app.ports.CompteurDataInPort;
 import app.ports.CompteurDataOutPort;
 import fr.sorbonne_u.components.AbstractComponent;
+import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.interfaces.DataOfferedI;
 
@@ -26,6 +27,8 @@ public class Compteur extends AbstractComponent implements ICompteur {
 		dataInPort = new CompteurDataInPort(dataInPortURI, this);
 		this.addPort(dataInPort);
 		dataInPort.publishPort();
+		
+		this.tracer.setRelativePosition(1, 3);
 	}
 
 	protected void createDataOutPorts(Vector<String> dataOutPorts) throws Exception {
@@ -38,17 +41,17 @@ public class Compteur extends AbstractComponent implements ICompteur {
 
 	@Override
 	public void recevoirMessage(Message m) throws Exception {
-		System.out.println("contenu = " + m.getContenu());
-		if (m.getContenu().contains("-"))
+		if (m.getContenu().contains("-")) 
 			appareil_consommation.put(m.getAuteur(), Double.valueOf(m.getContenu().split("\\s")[1]));
 		if (m.getContenu().contains("+"))
 			unite_production.put(m.getAuteur(), Double.valueOf(m.getContenu().split("\\s")[1]));
 	}
 
 	/**
-	 * Renvoie un message sous cette forme : unite1 : 50 | unite2 : 150 | -
-	 * appareil1 : 30 | appareil2 : 70 | appareil3 : 90 |
+	 * Renvoie un message sous cette forme : 
+	 * unite1 : 50 | unite2 : 150 | - appareil1 : 30 | appareil2 : 70 | appareil3 : 90 |
 	 */
+	
 	@Override
 	public DataOfferedI.DataI getConsommation() throws Exception {
 		Message m = new Message();
@@ -59,9 +62,9 @@ public class Compteur extends AbstractComponent implements ICompteur {
 
 		energie += "- ";
 
-		for (String uri : appareil_consommation.keySet())
-			energie += uri + " : " + unite_production.get(uri) + " | ";
-
+		for (String uri : appareil_consommation.keySet()) 
+			energie += uri + " : " + appareil_consommation.get(uri) + " | ";
+		
 		m.setContenu(energie);
 		m.setAuteur("compteurURI");
 		return m;
@@ -109,6 +112,11 @@ public class Compteur extends AbstractComponent implements ICompteur {
 			}
 
 		});
+	}
+	
+	@Override
+	public void shutdown() throws ComponentShutdownException {
+		super.shutdown();
 	}
 
 }

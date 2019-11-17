@@ -33,6 +33,8 @@ public class PanneauSolaire extends AbstractComponent implements IUProduction {
 		
 		isOn = false;
 		production = 0.0;
+		
+		this.tracer.setRelativePosition(1, 2);
 	}
 	
 	@Override

@@ -36,7 +36,8 @@ public class Ordinateur extends AbstractComponent implements IOrdinateur {
 		consommation = 90.0;
 		this.type = type;
 		
-		createNewExecutorService("reception", 5, true);
+		this.tracer.setRelativePosition(2, 1);
+		
 	}
 	
 	@Override

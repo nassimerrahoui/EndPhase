@@ -37,7 +37,7 @@ public class Frigo extends AbstractComponent implements IFrigo {
 		this.addPort(dataInPort);
 		dataInPort.publishPort();
 		
-		this.tracer.setRelativePosition(1, 1);
+		this.tracer.setRelativePosition(0, 1);
 		
 		isOn = true;
 		fridge_temperature = 4.4;

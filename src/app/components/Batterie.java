@@ -33,6 +33,8 @@ public class Batterie extends AbstractComponent implements IUProduction {
 		
 		isOn = false;
 		production = 0.0;
+		
+		this.tracer.setRelativePosition(0, 2);
 	}
 	
 	@Override

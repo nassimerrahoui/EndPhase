@@ -10,8 +10,6 @@ import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.interfaces.DataOfferedI;
-import fr.sorbonne_u.components.interfaces.DataRequiredI;
-
 public class Controleur extends AbstractComponent implements IControleur {
 
 	public ControleurDataOutPort dataOutPort;
@@ -46,7 +44,7 @@ public class Controleur extends AbstractComponent implements IControleur {
 		
 		createDataInPorts();
 
-		this.tracer.setRelativePosition(1, 1);
+		this.tracer.setRelativePosition(1, 0);
 	}
 
 	protected void createDataInPorts() throws Exception {
@@ -90,7 +88,9 @@ public class Controleur extends AbstractComponent implements IControleur {
 	}
 
 	@Override
-	public DataRequiredI.DataI getEnergie(Message m) throws Exception {
+	public void getEnergie(Message m) throws Exception {
+		this.logMessage(m.getContenu());
+		
 		String partieProdu = m.getContenu().split("-")[0];
 		String partieConso = m.getContenu().split("-")[1];
 
@@ -99,8 +99,6 @@ public class Controleur extends AbstractComponent implements IControleur {
 
 		for (String appareil : partieConso.split("|"))
 			appareil_consommation.put(appareil.split("\\s")[0], Double.valueOf(appareil.split("\\s")[2]));
-
-		return null;
 	}
 
 	protected double getProduction() {
@@ -138,7 +136,7 @@ public class Controleur extends AbstractComponent implements IControleur {
 
 	protected void make_decisions() throws Exception {
 		if (getConsommation() <= getProduction() && !allume_appareil_permanent) {
-			// TOUT VA BIEN
+			System.out.println("ON PEUT ALLUMER UN APPAREIL");
 			allume_appareil_permanent = true;
 			for (int i = 0; i < priorites.size(); i++) {
 				if (!priorites.get(i)[1].equals("1"))
@@ -151,7 +149,7 @@ public class Controleur extends AbstractComponent implements IControleur {
 			}
 
 		} else if (getConsommation() > getProduction()) {
-			// TOUT VA MAL
+			System.out.println("ON DOIT ALLUMER LA BATTERIE");
 			allume_appareil_permanent = false;
 			if (!batterie) {
 				Message b = new Message();
@@ -161,6 +159,7 @@ public class Controleur extends AbstractComponent implements IControleur {
 				envoyerMessage("batterieURI");
 				batterie = true;
 			} else {
+				System.out.println("ON DOIT ETEINDRE UN APPAREIL");
 				for (int i = priorites.size() - 1; i > 0; i--) {
 					if (getConsommation(i) > getProduction()) {
 						Message m = new Message();
@@ -171,6 +170,8 @@ public class Controleur extends AbstractComponent implements IControleur {
 					}
 				}
 			}
+		}else{
+			System.out.println("RIP");
 		}
 	}
 
@@ -225,7 +226,7 @@ public class Controleur extends AbstractComponent implements IControleur {
 				Message m4 = new Message();
 				Message m5 = new Message();
 
-				m4.setContenu("fridge temperature cible : 5.0");
+				m4.setContenu("fridge temperature cible : 3.0");
 				m4.setAuteur("controleurURI");
 				addMessageToMap("frigoURI", m4);
 

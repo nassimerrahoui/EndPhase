@@ -42,7 +42,6 @@ public class Chargeur extends AbstractComponent implements IChargeur {
 		consommation = 100.0;
 		this.type = type;
 		
-		createNewExecutorService("reception", 5, true);
 	}
 
 	@Override
