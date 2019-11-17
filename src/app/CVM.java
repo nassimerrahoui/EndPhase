@@ -96,6 +96,14 @@ public class CVM extends AbstractCVM {
 		this.toggleTracing(panneauURI);
 		this.toggleTracing(batterieURI);
 		this.toggleTracing(compteurURI);
+		
+		this.toggleLogging(controleurURI);
+		this.toggleLogging(frigoURI);
+		this.toggleLogging(ordinateurURI);
+		this.toggleLogging(chargeurURI);
+		this.toggleLogging(panneauURI);
+		this.toggleLogging(batterieURI);
+		this.toggleLogging(compteurURI);
 
 		
 		this.doPortConnection(

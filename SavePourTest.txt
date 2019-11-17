@@ -1,0 +1,29 @@
+pour config.xml:
+
+<deployment>
+   <hosts>
+    <host name="localhost"
+          dir="/users/nfs/Etu0/3703990/eclipse-workspace/EndPhase/src/app"/>
+  </hosts>
+  <cyclicBarrier   hostname="localhost" port="55253"/>
+  <globalRegistry  hostname="localhost" port="55252"/>
+  <rmiRegistryPort no="55998"/>
+  <jvms2hostnames>
+    <jvm2hostname jvmuri="controleur"
+        rmiRegistryCreator="true"
+        hostname="localhost"
+        mainclass="app.DistributedCVM"/>
+    <jvm2hostname jvmuri="frigo"
+        rmiRegistryCreator="false"
+        hostname="localhost" 
+        mainclass="app.DistributedCVM"/>
+    <jvm2hostname jvmuri="ordinateur"
+        rmiRegistryCreator="false"
+        hostname="localhost"
+        mainclass="app.DistributedCVM"/>
+    <jvm2hostname jvmuri="chargeur"
+        rmiRegistryCreator="false"
+        hostname="ppti-14-507-02"
+        mainclass="app.DistributedCVM"/>
+  </jvms2hostnames>
+</deployment>
