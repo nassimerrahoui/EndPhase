@@ -18,14 +18,12 @@ public class ControleurDataOutPort extends AbstractDataOutboundPort {
 	@Override
 	public void receive(DataRequiredI.DataI d) throws Exception {
 		
-		AbstractComponent.AbstractService<Void> task = new AbstractComponent.AbstractService<Void>() {
+		this.owner.handleRequestAsync(new AbstractComponent.AbstractService<Void>() {
 
 			public Void call() throws Exception {
 				((IControleur) this.getServiceOwner()).getEnergie((Message) d);
 				return null;
 			}
-		};
-
-		this.owner.handleRequestAsync(0, task);
+		});
 	}
 }

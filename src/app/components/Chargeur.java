@@ -5,6 +5,7 @@ import app.data.Message;
 import app.interfaces.IChargeur;
 import app.ports.AppareilDataInPort;
 import app.ports.AppareilDataOutPort;
+import app.util.TypeAppareil;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.interfaces.DataOfferedI;
@@ -19,8 +20,9 @@ public class Chargeur extends AbstractComponent implements IChargeur {
 	protected int delai;
 	protected int pourcentage;
 	protected Double consommation;
+	protected TypeAppareil type;
 
-	public Chargeur(String reflectionInboundPortURI, int nbThreads, int nbSchedulableThreads, String dataOutPortURI) throws Exception {
+	public Chargeur(String reflectionInboundPortURI, int nbThreads, int nbSchedulableThreads, String dataOutPortURI, TypeAppareil type) throws Exception {
 		super(reflectionInboundPortURI, nbThreads, nbSchedulableThreads);
 
 		dataOutPort = new AppareilDataOutPort(dataOutPortURI, this);
@@ -38,6 +40,7 @@ public class Chargeur extends AbstractComponent implements IChargeur {
 		delai = 30;
 		pourcentage = 0;
 		consommation = 100.0;
+		this.type = type;
 		
 		createNewExecutorService("reception", 5, true);
 	}
@@ -49,15 +52,21 @@ public class Chargeur extends AbstractComponent implements IChargeur {
 		traitementMessage(m);
 	}
 	
+	protected void envoyerMessage(Message m) throws Exception {
+		this.dataInPort.send(m);
+	}
+	
 	@Override
 	public DataOfferedI.DataI getConsommation() throws Exception {
 		Message m = new Message();
 		if(isLoading) {
 			m.setContenu("- " + consommation.toString());
+			m.setAuteur("chargeurURI");
 		}else {
 			double veille = consommation.doubleValue()/10;
 			consommation = veille;
 			m.setContenu("- " + consommation.toString());
+			m.setAuteur("chargeurURI");
 		}	
 		return m;
 	}
@@ -125,8 +134,13 @@ public class Chargeur extends AbstractComponent implements IChargeur {
 								consommation = 100.0;
 							}
 						}
+						
+						Thread.sleep(1000);
+						envoyerMessage((Message) getConsommation());
 					}
 				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}

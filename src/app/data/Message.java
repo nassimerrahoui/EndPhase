@@ -25,4 +25,8 @@ public class Message implements DataOfferedI.DataI, DataRequiredI.DataI {
 	public String getAuteur() {
 		return auteur;
 	}
+	
+	public void setAuteur(String auteur) {
+		this.auteur = auteur;
+	}
 }

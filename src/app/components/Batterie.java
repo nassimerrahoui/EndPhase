@@ -59,6 +59,7 @@ public class Batterie extends AbstractComponent implements IUProduction {
 	public DataOfferedI.DataI getProduction() throws Exception {
 		Message m = new Message();
 		m.setContenu("+ " + production.toString());
+		m.setAuteur("batterieURI");
 		return m;
 	}
 	
@@ -75,6 +76,28 @@ public class Batterie extends AbstractComponent implements IUProduction {
 				try {
 					Thread.sleep(2500);
 				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			
+		});
+	}
+	
+	@Override
+	public void execute() throws Exception {
+		super.execute();
+		this.runTask(new AbstractTask() {
+
+			public void run() {
+				try {
+					while(true){
+						Thread.sleep(1000);
+						this.taskOwner.logMessage(" Envoi message au compteur : " + ((Message) getProduction()).getContenu());
+						envoyerMessage((Message) getProduction());
+					}
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}

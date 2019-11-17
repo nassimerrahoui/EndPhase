@@ -5,6 +5,7 @@ import app.data.Message;
 import app.interfaces.IFrigo;
 import app.ports.AppareilDataInPort;
 import app.ports.AppareilDataOutPort;
+import app.util.TypeAppareil;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
@@ -22,8 +23,9 @@ public class Frigo extends AbstractComponent implements IFrigo {
 	protected Double fridge_temperature;
 	protected Double fridge_temperature_cible;
 	protected Double consommation;
+	protected TypeAppareil type;
 	
-	public Frigo(String reflectionInboundPortURI, int nbThreads, int nbSchedulableThreads, String dataOutPortURI) throws Exception {
+	public Frigo(String reflectionInboundPortURI, int nbThreads, int nbSchedulableThreads, String dataOutPortURI, TypeAppareil type) throws Exception {
 		super(reflectionInboundPortURI, nbThreads, nbSchedulableThreads);
 		
 		dataOutPort = new AppareilDataOutPort(dataOutPortURI, this);
@@ -42,9 +44,8 @@ public class Frigo extends AbstractComponent implements IFrigo {
 		fridge_temperature_cible = 3.0;
 		freezer_temperature = 0.0;
 		freezer_temperature_cible = -10.0;
-		consommation = 60.0;
-		
-		createNewExecutorService("reception", 5, true);
+		consommation = 55.0;
+		this.type = type;
 	}
 	
 	protected void freezerStabilize() {
@@ -67,11 +68,12 @@ public class Frigo extends AbstractComponent implements IFrigo {
 		}
 	}
 	
-	protected void tick() {
+	protected void tick() throws Exception {
 		if(isOn) {
 			freezerStabilize();
 			fridgeStabilize();
 		}
+		envoyerMessage((Message) getConsommation());
 	}
 	
 	protected void traitementMessage(Message m) {
@@ -80,6 +82,7 @@ public class Frigo extends AbstractComponent implements IFrigo {
 			if(isOn) {
 				this.logMessage("Frigo : je m'eteins...");
 				isOn = false;
+				consommation = 5.0;
 			}
 			break;
 
@@ -87,6 +90,7 @@ public class Frigo extends AbstractComponent implements IFrigo {
 			if(!isOn) {
 				this.logMessage("Frigo : demarre...");
 				isOn = true;
+				consommation = 55.0;
 			}
 		default:
 			if(m.getContenu().contains("fridge temperature cible")) {
@@ -108,11 +112,16 @@ public class Frigo extends AbstractComponent implements IFrigo {
 		traitementMessage(m);
 	}
 	
+	protected void envoyerMessage(Message m) throws Exception {
+		this.dataInPort.send(m);
+	}
+	
 	@Override
 	public DataOfferedI.DataI getConsommation() throws Exception {
 		// 0.2 degre -> 1 Watt
 		Message m = new Message();
 		m.setContenu("- "+consommation.toString());
+		m.setAuteur("frigoURI");
 		return m;
 	}
 	
@@ -145,6 +154,8 @@ public class Frigo extends AbstractComponent implements IFrigo {
 						this.taskOwner.logMessage("fridge : " + (Math.round(fridge_temperature*100.0)/100.0) + " °C");
 					}
 				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
