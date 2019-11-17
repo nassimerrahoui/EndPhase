@@ -22,6 +22,7 @@ public class Controleur extends AbstractComponent implements IControleur {
 	protected Vector<String[]> uproductions = new Vector<String[]>();
 	
 	protected boolean allume_appareil_permanent;
+	protected boolean eteindre_appareil;
 	protected boolean batterie;
 
 	public Controleur(String reflectionInboundPortURI, int nbThreads, int nbSchedulableThreads, String dataOutPortURI,
@@ -40,6 +41,7 @@ public class Controleur extends AbstractComponent implements IControleur {
 		this.uproductions = uproductions;
 		
 		this.allume_appareil_permanent = false;
+		this.eteindre_appareil = false;
 		this.batterie = false;
 		
 		createDataInPorts();
@@ -91,14 +93,17 @@ public class Controleur extends AbstractComponent implements IControleur {
 	public void getEnergie(Message m) throws Exception {
 		this.logMessage(m.getContenu());
 		
-		String partieProdu = m.getContenu().split("-")[0];
-		String partieConso = m.getContenu().split("-")[1];
-
-		for (String unite : partieProdu.split("|"))
+		String partieProdu = m.getContenu().split("/ ")[0];
+		String partieConso = m.getContenu().split("/ ")[1];
+		
+		for (String unite : partieProdu.split("\\|(\\s)*")) {
 			unite_production.put(unite.split("\\s")[0], Double.valueOf(unite.split("\\s")[2]));
-
-		for (String appareil : partieConso.split("|"))
+			
+		}
+		
+		for (String appareil : partieConso.split("\\|(\\s)*")) {
 			appareil_consommation.put(appareil.split("\\s")[0], Double.valueOf(appareil.split("\\s")[2]));
+		}
 	}
 
 	protected double getProduction() {
@@ -113,8 +118,9 @@ public class Controleur extends AbstractComponent implements IControleur {
 	protected double getConsommation() {
 		double energie_consommee = 0.0;
 
-		for (String uri : appareil_consommation.keySet())
+		for (String uri : appareil_consommation.keySet()) {
 			energie_consommee += appareil_consommation.get(uri);
+		}
 
 		return energie_consommee;
 	}
@@ -136,8 +142,8 @@ public class Controleur extends AbstractComponent implements IControleur {
 
 	protected void make_decisions() throws Exception {
 		if (getConsommation() <= getProduction() && !allume_appareil_permanent) {
-			System.out.println("ON PEUT ALLUMER UN APPAREIL");
 			allume_appareil_permanent = true;
+			eteindre_appareil = false;
 			for (int i = 0; i < priorites.size(); i++) {
 				if (!priorites.get(i)[1].equals("1"))
 					break;
@@ -149,7 +155,6 @@ public class Controleur extends AbstractComponent implements IControleur {
 			}
 
 		} else if (getConsommation() > getProduction()) {
-			System.out.println("ON DOIT ALLUMER LA BATTERIE");
 			allume_appareil_permanent = false;
 			if (!batterie) {
 				Message b = new Message();
@@ -158,8 +163,8 @@ public class Controleur extends AbstractComponent implements IControleur {
 				addMessageToMap("batterieURI", b);
 				envoyerMessage("batterieURI");
 				batterie = true;
-			} else {
-				System.out.println("ON DOIT ETEINDRE UN APPAREIL");
+			} else if(!eteindre_appareil) {
+				eteindre_appareil = true;
 				for (int i = priorites.size() - 1; i > 0; i--) {
 					if (getConsommation(i) > getProduction()) {
 						Message m = new Message();
@@ -170,8 +175,6 @@ public class Controleur extends AbstractComponent implements IControleur {
 					}
 				}
 			}
-		}else{
-			System.out.println("RIP");
 		}
 	}
 
@@ -199,7 +202,7 @@ public class Controleur extends AbstractComponent implements IControleur {
 				m3.setAuteur("controleurURI");
 				addMessageToMap("ordinateurURI", m3);
 
-				m4.setContenu("allumer : 50");
+				m4.setContenu("allumer : 20");
 				m4.setAuteur("controleurURI");
 				addMessageToMap("chargeurURI", m4);
 				
@@ -250,6 +253,7 @@ public class Controleur extends AbstractComponent implements IControleur {
 				
 				while (true) {
 					try {
+						Thread.sleep(4000);
 						make_decisions();
 					} catch (Exception e) {
 						e.printStackTrace();

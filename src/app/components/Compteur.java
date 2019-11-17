@@ -49,7 +49,7 @@ public class Compteur extends AbstractComponent implements ICompteur {
 
 	/**
 	 * Renvoie un message sous cette forme : 
-	 * unite1 : 50 | unite2 : 150 | - appareil1 : 30 | appareil2 : 70 | appareil3 : 90 |
+	 * unite1 : 50 | unite2 : 150 | / appareil1 : 30 | appareil2 : 70 | appareil3 : 90 |
 	 */
 	
 	@Override
@@ -60,7 +60,7 @@ public class Compteur extends AbstractComponent implements ICompteur {
 		for (String uri : unite_production.keySet())
 			energie += uri + " : " + unite_production.get(uri) + " | ";
 
-		energie += "- ";
+		energie += "/ ";
 
 		for (String uri : appareil_consommation.keySet()) 
 			energie += uri + " : " + appareil_consommation.get(uri) + " | ";
@@ -99,7 +99,7 @@ public class Compteur extends AbstractComponent implements ICompteur {
 			public void run() {
 				try {
 					while (true) {
-						Thread.sleep(1000);
+						Thread.sleep(4000);
 						this.taskOwner.logMessage(" Envoi message au controleur : " + ((Message) getConsommation()).getContenu());
 						envoyerMessage((Message) getConsommation());
 

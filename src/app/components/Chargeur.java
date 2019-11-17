@@ -62,8 +62,7 @@ public class Chargeur extends AbstractComponent implements IChargeur {
 			m.setContenu("- " + consommation.toString());
 			m.setAuteur("chargeurURI");
 		}else {
-			double veille = consommation.doubleValue()/10;
-			consommation = veille;
+			consommation = 0.0;
 			m.setContenu("- " + consommation.toString());
 			m.setAuteur("chargeurURI");
 		}	

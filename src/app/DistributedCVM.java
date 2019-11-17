@@ -9,6 +9,7 @@ import app.components.Frigo;
 import app.components.Ordinateur;
 import app.components.PanneauSolaire;
 import app.connectors.DataServiceConnector;
+import app.util.TypeAppareil;
 import fr.sorbonne_u.components.cvm.AbstractDistributedCVM;
 
 public class DistributedCVM extends AbstractDistributedCVM {
@@ -48,6 +49,12 @@ public class DistributedCVM extends AbstractDistributedCVM {
 	protected static String URI_DATAOUTPORT_BATTERIE = "oport2";
 	protected static String URI_DATAOUTPORT_CONTROLEUR = "oport1";
 	protected static Vector<String> URI_DATAOUTPORTS_COMPTEUR;
+	
+	/** Priorite d'allumage par ordre croissant des appareils 
+	 ** Contient un tuple <URI de l'appareil, numero du typeappareil>
+	 **  **/
+	Vector<String[]> priorites = new Vector<>();
+	Vector<String[]> uproductions = new Vector<>();
 
 	public DistributedCVM(String[] args, int xLayout, int yLayout, int nbAppareilAndProduction) throws Exception {
 		super(args, xLayout, yLayout);
@@ -65,42 +72,48 @@ public class DistributedCVM extends AbstractDistributedCVM {
 		// AbstractCVM.DEBUG_MODE.add(CVMDebugModes.CONNECTING);
 		// AbstractCVM.DEBUG_MODE.add(CVMDebugModes.COMPONENT_DEPLOYMENT);
 		super.initialise();
+		priorites.add(new String[]{frigoURI,"1"});
+		priorites.add(new String[]{chargeurURI,"2"});
+		priorites.add(new String[]{ordinateurURI,"3"});
+		
+		uproductions.add(new String[]{panneauURI,"1"});
+		uproductions.add(new String[]{batterieURI,"2"});
 	}
 
 	@Override
 	public void instantiateAndPublish() throws Exception {
 		if (thisJVMURI.equals(JVM_1)) {
-			controleur = new Controleur(controleurURI, 1, 0, 3, URI_DATAOUTPORT_CONTROLEUR);
+			controleur = new Controleur(controleurURI, 10, 0, URI_DATAOUTPORT_CONTROLEUR, priorites, uproductions);
 			this.addDeployedComponent(controleurURI,controleur);
 			this.toggleTracing(controleurURI);
 
 		} else if (thisJVMURI.equals(JVM_2)) {
-			frigo = new Frigo(frigoURI, 1, 0, URI_DATAOUTPORT_FRIGO);
+			frigo = new Frigo(frigoURI, 1, 0, URI_DATAOUTPORT_FRIGO, TypeAppareil.CONSO_PERMANENTE);
 			this.addDeployedComponent(frigoURI,frigo);
 			this.toggleTracing(frigoURI);
 
 		} else if (thisJVMURI.equals(JVM_3)) {
-			ordinateur = new Ordinateur(ordinateurURI, 1, 0, URI_DATAOUTPORT_ORDINATEUR);
+			ordinateur = new Ordinateur(ordinateurURI, 1, 0, URI_DATAOUTPORT_ORDINATEUR, TypeAppareil.CONSO_INCONTROLABLE);
 			this.addDeployedComponent(ordinateurURI,ordinateur);
 			this.toggleTracing(ordinateurURI);
 
 		} else if (thisJVMURI.equals(JVM_4)) {
-			chargeur = new Chargeur(chargeurURI, 1, 0, URI_DATAOUTPORT_CHARGEUR);
+			chargeur = new Chargeur(chargeurURI, 1, 0, URI_DATAOUTPORT_CHARGEUR, TypeAppareil.CONSO_PLANIFIABLE);
 			this.addDeployedComponent(chargeurURI,chargeur);
 			this.toggleTracing(chargeurURI);
 		
 		} else if (thisJVMURI.equals(JVM_5)) {
-			panneau = new PanneauSolaire(panneauURI, 1, 0, URI_DATAOUTPORT_PANNEAU);
+			panneau = new PanneauSolaire(panneauURI, 5, 0, URI_DATAOUTPORT_PANNEAU);
 			this.addDeployedComponent(panneauURI,panneau);
 			this.toggleTracing(chargeurURI);
 
 		} else if (thisJVMURI.equals(JVM_6)) {
-			batterie = new Batterie(batterieURI, 1, 0, URI_DATAOUTPORT_CHARGEUR);
+			batterie = new Batterie(batterieURI, 5, 0, URI_DATAOUTPORT_BATTERIE);
 			this.addDeployedComponent(batterieURI,batterie);
 			this.toggleTracing(batterieURI);
 	
 		} else if (thisJVMURI.equals(JVM_7)) {
-			compteur = new Compteur(compteurURI, 1, 0, URI_DATAOUTPORTS_COMPTEUR);
+			compteur = new Compteur(compteurURI, 10, 0, URI_DATAOUTPORTS_COMPTEUR);
 			this.addDeployedComponent(compteurURI,compteur);
 			this.toggleTracing(compteurURI);
 	
@@ -114,31 +127,31 @@ public class DistributedCVM extends AbstractDistributedCVM {
 		if (thisJVMURI.equals(JVM_1)) {
 			this.doPortConnection(
 					controleurURI,
-					controleur.dataInPorts.get(0).getPortURI(),
+					controleur.dataInPorts.get(frigoURI).getPortURI(),
 					URI_DATAOUTPORT_FRIGO,
 					DataServiceConnector.class.getCanonicalName()) ;
 			
 			this.doPortConnection(
 					controleurURI,
-					controleur.dataInPorts.get(1).getPortURI(),
+					controleur.dataInPorts.get(ordinateurURI).getPortURI(),
 					URI_DATAOUTPORT_ORDINATEUR,
 					DataServiceConnector.class.getCanonicalName()) ;
 			
 			this.doPortConnection(
 					controleurURI,
-					controleur.dataInPorts.get(2).getPortURI(),
+					controleur.dataInPorts.get(chargeurURI).getPortURI(),
 					URI_DATAOUTPORT_CHARGEUR,
 					DataServiceConnector.class.getCanonicalName()) ;
 			
 			this.doPortConnection(
 					controleurURI,
-					controleur.dataInPorts.get(3).getPortURI(),
+					controleur.dataInPorts.get(batterieURI).getPortURI(),
 					URI_DATAOUTPORT_BATTERIE,
 					DataServiceConnector.class.getCanonicalName()) ;
 			
 			this.doPortConnection(
 					controleurURI,
-					controleur.dataInPorts.get(3).getPortURI(),
+					controleur.dataInPorts.get(panneauURI).getPortURI(),
 					URI_DATAOUTPORT_PANNEAU,
 					DataServiceConnector.class.getCanonicalName()) ;
 			

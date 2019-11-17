@@ -70,9 +70,8 @@ public class Ordinateur extends AbstractComponent implements IOrdinateur {
 			m.setContenu("- " + consommation.toString());
 			m.setAuteur("ordinateurURI");
 		}else {
-			double veille = consommation.doubleValue()/3;
-			consommation = veille;
-			m.setContenu("- " + consommation.toString());
+			consommation =  30.0;
+			m.setContenu("- " + consommation);
 			m.setAuteur("ordinateurURI");
 		}	
 		

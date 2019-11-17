@@ -94,7 +94,7 @@ public class Batterie extends AbstractComponent implements IUProduction {
 				try {
 					while(true){
 						Thread.sleep(1000);
-						this.taskOwner.logMessage(" Envoi message au compteur : " + ((Message) getProduction()).getContenu());
+						this.taskOwner.logMessage("Envoi message au compteur : " + ((Message) getProduction()).getContenu());
 						envoyerMessage((Message) getProduction());
 					}
 				} catch (InterruptedException e) {
