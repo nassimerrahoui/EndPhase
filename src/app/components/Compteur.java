@@ -12,20 +12,25 @@ import fr.sorbonne_u.components.interfaces.DataOfferedI;
 
 public class Compteur extends AbstractComponent implements ICompteur {
 	
-	CompteurDataInPort dataInPort;
+	public CompteurDataInPort dataInPort;
 	Vector<CompteurDataOutPort> dataOutPorts;
 	protected ConcurrentHashMap<String, Double> appareil_consommation = new ConcurrentHashMap<>();
 	protected ConcurrentHashMap<String, Double> unite_production = new ConcurrentHashMap<>();
 
-	public Compteur(String reflectionInboundPortURI, int nbThreads, int nbSchedulableThreads, Vector<CompteurDataOutPort> dataOutPorts) throws Exception {
+	public Compteur(String reflectionInboundPortURI, int nbThreads, int nbSchedulableThreads, Vector<String> dataOutPorts) throws Exception {
 		super(reflectionInboundPortURI, nbThreads, nbSchedulableThreads);
-		createDataOutPorts(dataOutPorts);
+		createDataOutPorts(dataOutPorts); 
+		
+		String dataInPortURI = java.util.UUID.randomUUID().toString();
+		dataInPort = new CompteurDataInPort(dataInPortURI, this);
+		this.addPort(dataInPort);
+		dataInPort.publishPort();
 	}
 	
-	protected void createDataOutPorts(Vector<CompteurDataOutPort> dataOutPorts) throws Exception {
+	protected void createDataOutPorts(Vector<String> dataOutPorts) throws Exception {
 		if(dataOutPorts.size() > 0) {
 			for (int i = 0; i < dataOutPorts.size(); i++) {
-				this.dataOutPorts.add(dataOutPorts.get(i));
+				this.dataOutPorts.add(new CompteurDataOutPort(dataOutPorts.get(i), this));
 				this.addPort(this.dataOutPorts.get(i));
 				this.dataOutPorts.get(i).publishPort();
 			}
@@ -63,6 +68,8 @@ public class Compteur extends AbstractComponent implements ICompteur {
 		return m;
 	}
 	
+	protected void envoyerMessage(Message m) throws Exception {
+		this.dataInPort.send(m);
+	}
 	
-
 }

@@ -3,6 +3,7 @@ package app.components;
 import java.util.Vector;
 import app.data.Message;
 import app.interfaces.IUProduction;
+import app.ports.UProductionDataInPort;
 import app.ports.UProductionDataOutPort;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
@@ -11,18 +12,25 @@ import fr.sorbonne_u.components.interfaces.DataOfferedI;
 
 public class PanneauSolaire extends AbstractComponent implements IUProduction {
 
+	public UProductionDataInPort dataInPort;
 	public UProductionDataOutPort dataOutPort;
 	Vector<Message> messages_recu = new Vector<>();
 	protected boolean isOn;
 	protected Double production;
 	
-	public PanneauSolaire(String reflectionInboundPortURI, int nbThreads, int nbSchedulableThreads) throws Exception {
+	public PanneauSolaire(String reflectionInboundPortURI, int nbThreads, int nbSchedulableThreads, String dataOutPortURI) throws Exception {
 		
 		super(reflectionInboundPortURI, nbThreads, nbSchedulableThreads);
-		String dataOutPortURI = java.util.UUID.randomUUID().toString();
+
 		dataOutPort = new UProductionDataOutPort(dataOutPortURI, this);
 		this.addPort(dataOutPort);
 		dataOutPort.publishPort();
+		
+		String dataInPortURI = java.util.UUID.randomUUID().toString();
+		dataInPort = new UProductionDataInPort(dataInPortURI, this);
+		this.addPort(dataInPort);
+		dataInPort.publishPort();
+		
 		isOn = false;
 		production = 0.0;
 	}
@@ -52,6 +60,10 @@ public class PanneauSolaire extends AbstractComponent implements IUProduction {
 		Message m = new Message();
 		m.setContenu("+ " + production.toString());
 		return m;
+	}
+	
+	protected void envoyerMessage(Message m) throws Exception {
+		this.dataInPort.send(m);
 	}
 	
 	@Override

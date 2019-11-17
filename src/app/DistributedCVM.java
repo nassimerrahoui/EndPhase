@@ -1,5 +1,6 @@
 package app;
 
+import java.util.Vector;
 import app.components.Batterie;
 import app.components.Chargeur;
 import app.components.Compteur;
@@ -40,16 +41,21 @@ public class DistributedCVM extends AbstractDistributedCVM {
 	protected static String JVM_7 = "batterie";
 	
 	// URI Port des pour l'interconnexion des JVM
-	protected static String URI_DATAOUTPORT_FRIGO = "oport1";
-	protected static String URI_DATAOUTPORT_ORDINATEUR = "oport2";
-	protected static String URI_DATAOUTPORT_CHARGEUR = "oport3";
-	protected static String URI_DATAOUTPORT_PANNEAU = "oport4";
-	protected static String URI_DATAOUTPORT_BATTERIE = "oport5";
-	protected static String URI_DATAOUTPORT_CONTROLEUR = "oport6";
-	protected static String URI_DATAOUTPORT_COMPTEUR = "oport7";
+	protected static String URI_DATAOUTPORT_FRIGO = "oport6";
+	protected static String URI_DATAOUTPORT_ORDINATEUR = "oport5";
+	protected static String URI_DATAOUTPORT_CHARGEUR = "oport4";
+	protected static String URI_DATAOUTPORT_PANNEAU = "oport3";
+	protected static String URI_DATAOUTPORT_BATTERIE = "oport2";
+	protected static String URI_DATAOUTPORT_CONTROLEUR = "oport1";
+	protected static Vector<String> URI_DATAOUTPORTS_COMPTEUR;
 
-	public DistributedCVM(String[] args, int xLayout, int yLayout) throws Exception {
+	public DistributedCVM(String[] args, int xLayout, int yLayout, int nbAppareilAndProduction) throws Exception {
 		super(args, xLayout, yLayout);
+		
+		/** Port Data Sortant pour le compteur **/
+		for (int i = 0; i < nbAppareilAndProduction; i++) {
+			URI_DATAOUTPORTS_COMPTEUR.add("compteur_oport"+i);
+		}
 	}
 
 	@Override
@@ -64,7 +70,7 @@ public class DistributedCVM extends AbstractDistributedCVM {
 	@Override
 	public void instantiateAndPublish() throws Exception {
 		if (thisJVMURI.equals(JVM_1)) {
-			controleur = new Controleur(controleurURI, 1, 0, 3);
+			controleur = new Controleur(controleurURI, 1, 0, 3, URI_DATAOUTPORT_CONTROLEUR);
 			this.addDeployedComponent(controleurURI,controleur);
 			this.toggleTracing(controleurURI);
 
@@ -84,17 +90,17 @@ public class DistributedCVM extends AbstractDistributedCVM {
 			this.toggleTracing(chargeurURI);
 		
 		} else if (thisJVMURI.equals(JVM_5)) {
-			panneau = new PanneauSolaire(panneauURI, 1, 0/*, URI_DATAOUTPORT_PANNEAU*/);
+			panneau = new PanneauSolaire(panneauURI, 1, 0, URI_DATAOUTPORT_PANNEAU);
 			this.addDeployedComponent(panneauURI,panneau);
 			this.toggleTracing(chargeurURI);
 
 		} else if (thisJVMURI.equals(JVM_6)) {
-			batterie = new Batterie(batterieURI, 1, 0/*, URI_DATAOUTPORT_CHARGEUR*/);
+			batterie = new Batterie(batterieURI, 1, 0, URI_DATAOUTPORT_CHARGEUR);
 			this.addDeployedComponent(batterieURI,batterie);
 			this.toggleTracing(batterieURI);
 	
 		} else if (thisJVMURI.equals(JVM_7)) {
-			compteur = new Compteur(compteurURI, 1, 0, null/*, URI_DATAOUTPORT_CHARGEUR*/);
+			compteur = new Compteur(compteurURI, 1, 0, URI_DATAOUTPORTS_COMPTEUR);
 			this.addDeployedComponent(compteurURI,compteur);
 			this.toggleTracing(compteurURI);
 	
@@ -123,7 +129,54 @@ public class DistributedCVM extends AbstractDistributedCVM {
 					controleur.dataInPorts.get(2).getPortURI(),
 					URI_DATAOUTPORT_CHARGEUR,
 					DataServiceConnector.class.getCanonicalName()) ;
-
+			
+			this.doPortConnection(
+					controleurURI,
+					controleur.dataInPorts.get(3).getPortURI(),
+					URI_DATAOUTPORT_BATTERIE,
+					DataServiceConnector.class.getCanonicalName()) ;
+			
+			this.doPortConnection(
+					controleurURI,
+					controleur.dataInPorts.get(3).getPortURI(),
+					URI_DATAOUTPORT_PANNEAU,
+					DataServiceConnector.class.getCanonicalName()) ;
+			
+			this.doPortConnection(
+					batterieURI,
+					batterie.dataInPort.getPortURI(),
+					URI_DATAOUTPORTS_COMPTEUR.get(0),
+					DataServiceConnector.class.getCanonicalName()) ;
+			
+			this.doPortConnection(
+					panneauURI,
+					panneau.dataInPort.getPortURI(),
+					URI_DATAOUTPORTS_COMPTEUR.get(1),
+					DataServiceConnector.class.getCanonicalName()) ;
+			
+			this.doPortConnection(
+					frigoURI,
+					frigo.dataInPort.getPortURI(),
+					URI_DATAOUTPORTS_COMPTEUR.get(2),
+					DataServiceConnector.class.getCanonicalName()) ;
+			
+			this.doPortConnection(
+					ordinateurURI,
+					ordinateur.dataInPort.getPortURI(),
+					URI_DATAOUTPORTS_COMPTEUR.get(3),
+					DataServiceConnector.class.getCanonicalName()) ;
+			
+			this.doPortConnection(
+					chargeurURI,
+					chargeur.dataInPort.getPortURI(),
+					URI_DATAOUTPORTS_COMPTEUR.get(4),
+					DataServiceConnector.class.getCanonicalName()) ;
+			
+			this.doPortConnection(
+					compteurURI,
+					compteur.dataInPort.getPortURI(),
+					URI_DATAOUTPORT_CONTROLEUR,
+					DataServiceConnector.class.getCanonicalName()) ;
 
 		}
 
@@ -132,7 +185,7 @@ public class DistributedCVM extends AbstractDistributedCVM {
 
 	public static void main(String[] args) {
 		try {
-			DistributedCVM da = new DistributedCVM(args, 2, 5);
+			DistributedCVM da = new DistributedCVM(args, 2, 5, 5);
 			da.startStandardLifeCycle(15000L);
 			Thread.sleep(10000L);
 			System.exit(0);

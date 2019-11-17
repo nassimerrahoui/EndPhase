@@ -24,6 +24,12 @@ public class Ordinateur extends AbstractComponent implements IOrdinateur {
 		dataOutPort = new AppareilDataOutPort(dataOutPortURI, this);
 		this.addPort(dataOutPort);
 		dataOutPort.publishPort();
+		
+		String dataInPortURI = java.util.UUID.randomUUID().toString();
+		dataInPort = new AppareilDataInPort(dataInPortURI, this);
+		this.addPort(dataInPort);
+		dataInPort.publishPort();
+		
 		isOn = false;
 		consommation = 90.0;
 		

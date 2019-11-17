@@ -25,20 +25,25 @@ public class CVM extends AbstractCVM {
 	String panneauURI = "panneau";
 	String batterieURI = "batterie";
 	
+	// URI Port des pour l'interconnexion des JVM
 	protected static String URI_DATAOUTPORT_FRIGO = "oport1";
 	protected static String URI_DATAOUTPORT_ORDINATEUR = "oport2";
 	protected static String URI_DATAOUTPORT_CHARGEUR = "oport3";
+	protected static String URI_DATAOUTPORT_PANNEAU = "oport4";
+	protected static String URI_DATAOUTPORT_BATTERIE = "oport5";
+	protected static String URI_DATAOUTPORT_CONTROLEUR = "oport6";
+	protected static String URI_DATAOUTPORT_COMPTEUR = "oport7";
 
 	public CVM() throws Exception { super(); }
 
 	@Override
 	public void deploy() throws Exception {
-		this.controleur = new Controleur(controleurURI, 1, 0, 5);
+		this.controleur = new Controleur(controleurURI, 1, 0, 5, URI_DATAOUTPORT_CONTROLEUR);
 		this.frigo = new Frigo(frigoURI, 1, 0, URI_DATAOUTPORT_FRIGO);
 		this.ordinateur = new Ordinateur(ordinateurURI, 1, 0, URI_DATAOUTPORT_ORDINATEUR);
 		this.chargeur = new Chargeur(chargeurURI, 1, 0, URI_DATAOUTPORT_CHARGEUR);
-		this.panneau = new PanneauSolaire(panneauURI, 1, 0);
-		this.batterie = new Batterie(batterieURI, 1, 0);
+		this.panneau = new PanneauSolaire(panneauURI, 1, 0, URI_DATAOUTPORT_PANNEAU);
+		this.batterie = new Batterie(batterieURI, 1, 0, URI_DATAOUTPORT_BATTERIE);
 		
 		this.addDeployedComponent(controleurURI,controleur);
 		this.addDeployedComponent(frigoURI,frigo);

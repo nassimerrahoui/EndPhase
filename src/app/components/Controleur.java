@@ -5,6 +5,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import app.data.Message;
 import app.interfaces.IControleur;
 import app.ports.ControleurDataInPort;
+import app.ports.ControleurDataOutPort;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.interfaces.DataOfferedI;
@@ -12,15 +13,20 @@ import fr.sorbonne_u.components.interfaces.DataRequiredI;
 
 public class Controleur extends AbstractComponent implements IControleur {
 
+	public ControleurDataOutPort dataOutPort;
 	public Vector<ControleurDataInPort> dataInPorts = new Vector<ControleurDataInPort>();
 	protected ConcurrentHashMap<String, Vector<Message>> appareil_messages = new ConcurrentHashMap<>();
 
-	public Controleur(String reflectionInboundPortURI, int nbThreads, int nbSchedulableThreads, int nbAppareil) throws Exception {
+	public Controleur(String reflectionInboundPortURI, int nbThreads, int nbSchedulableThreads, int nbAppareil,  String dataOutPortURI) throws Exception {
 		super(reflectionInboundPortURI, nbThreads, nbSchedulableThreads);
 
 		this.addOfferedInterface(IControleur.class);
 		this.addOfferedInterface(DataOfferedI.PullI.class) ;
 		createDataInPorts(nbAppareil);
+		
+		dataOutPort = new ControleurDataOutPort(dataOutPortURI, this);
+		this.addPort(dataOutPort);
+		dataOutPort.publishPort();
 		
 		this.tracer.setRelativePosition(1, 1);
 	}

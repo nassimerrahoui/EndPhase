@@ -30,6 +30,11 @@ public class Frigo extends AbstractComponent implements IFrigo {
 		this.addPort(dataOutPort);
 		dataOutPort.publishPort();
 		
+		String dataInPortURI = java.util.UUID.randomUUID().toString();
+		dataInPort = new AppareilDataInPort(dataInPortURI, this);
+		this.addPort(dataInPort);
+		dataInPort.publishPort();
+		
 		this.tracer.setRelativePosition(1, 1);
 		
 		isOn = true;
