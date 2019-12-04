@@ -1,6 +1,7 @@
 package app.util;
 
 public enum TypeAppareil {
+	
 	CONSO_PERMANENTE(1),
 	CONSO_PLANIFIABLE(2),
 	CONSO_INCONTROLABLE(3);
