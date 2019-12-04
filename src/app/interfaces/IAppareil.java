@@ -1,13 +1,23 @@
 package app.interfaces;
 
-import app.data.Message;
-import fr.sorbonne_u.components.interfaces.DataOfferedI;
-import fr.sorbonne_u.components.interfaces.DataRequiredI;
+import app.util.EtatAppareil;
+import fr.sorbonne_u.components.interfaces.OfferedI;
+import fr.sorbonne_u.components.interfaces.RequiredI;
 
-public interface IAppareil extends DataRequiredI, DataOfferedI{
+public interface IAppareil extends OfferedI, RequiredI {
 
-	public void recevoirMessage(Message m) throws Exception;
-
-	public DataOfferedI.DataI getConsommation() throws Exception;
-
+	/**
+	 * Permet d'eteindre ou allumer un appareil
+	 * @param etat
+	 * @throws Exception
+	 */
+	public void setEtatAppareil(EtatAppareil etat) throws Exception;
+	
+	/**
+	 * Permet de recuperer la consommation de l'appareil
+	 * @return
+	 * @throws Exception
+	 */
+	public double getConsomation() throws Exception;
+	
 }
