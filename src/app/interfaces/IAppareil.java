@@ -13,11 +13,4 @@ public interface IAppareil extends OfferedI, RequiredI {
 	 */
 	public void setEtatAppareil(EtatAppareil etat) throws Exception;
 	
-	/**
-	 * Permet de recuperer la consommation de l'appareil
-	 * @return
-	 * @throws Exception
-	 */
-	public double getConsomation() throws Exception;
-	
 }

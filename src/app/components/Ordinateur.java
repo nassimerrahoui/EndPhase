@@ -1,38 +1,41 @@
 package app.components;
 
-import java.util.Vector;
-import app.data.Message;
+import app.interfaces.IConsommation;
 import app.interfaces.IOrdinateur;
-import app.ports.AppareilDataInPort;
-import app.ports.AppareilDataOutPort;
+import app.ports.CompteurInPort;
+import app.ports.OrdinateurInPort;
+import app.util.EtatAppareil;
+import app.util.ModeOrdinateur;
 import app.util.TypeAppareil;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
-import fr.sorbonne_u.components.interfaces.DataOfferedI;
 
-public class Ordinateur extends AbstractComponent implements IOrdinateur {
+public class Ordinateur extends AbstractComponent implements IOrdinateur, IConsommation {
 	
-	public AppareilDataInPort dataInPort;
-	public AppareilDataOutPort dataOutPort;
-	Vector<Message> messages_recu = new Vector<>();
-	protected boolean isOn;
-	protected Double consommation;
+	protected OrdinateurInPort controleur_INPORT;
+	protected CompteurInPort compteur_INPORT;
+
 	protected TypeAppareil type;
+	protected EtatAppareil etat;
+	protected ModeOrdinateur mode;
+	
+	protected Double consommation;
+	
 	
 	public Ordinateur(String reflectionInboundPortURI, int nbThreads, int nbSchedulableThreads, String dataOutPortURI, TypeAppareil type) throws Exception {
 		super(reflectionInboundPortURI, nbThreads, nbSchedulableThreads);
 
-		dataOutPort = new AppareilDataOutPort(dataOutPortURI, this);
-		this.addPort(dataOutPort);
-		dataOutPort.publishPort();
+//		compteur_INPORT = new OrdinateurInPort(dataOutPortURI, this);
+//		this.addPort(compteur_INPORT);
+//		compteur_INPORT.publishPort();
+//		
+//		String dataInPortURI = java.util.UUID.randomUUID().toString();
+//		controleur_INPORT = new AppareilDataInPort(dataInPortURI, this);
+//		this.addPort(controleur_INPORT);
+//		controleur_INPORT.publishPort();
 		
-		String dataInPortURI = java.util.UUID.randomUUID().toString();
-		dataInPort = new AppareilDataInPort(dataInPortURI, this);
-		this.addPort(dataInPort);
-		dataInPort.publishPort();
-		
-		isOn = false;
+		etat = EtatAppareil.ON;
 		consommation = 90.0;
 		this.type = type;
 		
@@ -40,43 +43,28 @@ public class Ordinateur extends AbstractComponent implements IOrdinateur {
 		
 	}
 	
-	@Override
-	public void recevoirMessage(Message m) throws Exception {
-		this.logMessage("Message recu : " + m.getContenu());
-		if(isOn) {
-			messages_recu.add(m);
-			if(m.getContenu().equals("eteindre")) {
-				this.logMessage("Ordinateur : je m'eteins...");
-				isOn = false;
-			}
-			
-			messages_recu.remove(m);
-			
-		} else if (m.getContenu().equals("allumer")) {
-			this.logMessage("Ordinateur : Je demarre...");
-			isOn = true;
-			consommation = 90.0;
-		}
-	}
-	
-	protected void envoyerMessage(Message m) throws Exception {
-		this.dataInPort.send(m);
-	}
 	
 	@Override
-	public DataOfferedI.DataI getConsommation() throws Exception {
-		Message m = new Message();
-		if(isOn) {
-			m.setContenu("- " + consommation.toString());
-			m.setAuteur("ordinateurURI");
-		}else {
-			consommation =  30.0;
-			m.setContenu("- " + consommation);
-			m.setAuteur("ordinateurURI");
-		}	
+	public void setEtatAppareil(EtatAppareil etat) throws Exception {
+		// TODO Auto-generated method stub
 		
-		return m;
 	}
+
+
+	@Override
+	public double getConsommation() throws Exception {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
+	public void setMode(ModeOrdinateur mo) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
 	
 	@Override
 	public void start() throws ComponentStartException {
@@ -104,7 +92,7 @@ public class Ordinateur extends AbstractComponent implements IOrdinateur {
 				try {
 					while(true) {
 						Thread.sleep(1000);
-						envoyerMessage((Message) getConsommation());
+						//envoyerMessage((Message) getConsommation());
 					}
 				} catch (InterruptedException e) {
 					Thread.currentThread().interrupt();
@@ -120,10 +108,14 @@ public class Ordinateur extends AbstractComponent implements IOrdinateur {
 	public void shutdown() throws ComponentShutdownException {
 		super.shutdown();
 		try {
-			this.dataOutPort.unpublishPort();
+			this.controleur_INPORT.unpublishPort();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+
+
+
+	
 
 }

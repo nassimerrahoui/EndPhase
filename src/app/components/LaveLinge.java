@@ -1,102 +1,80 @@
 package app.components;
 
-import java.util.Vector;
-import app.data.Message;
-import app.interfaces.IChargeur;
-import app.ports.AppareilDataInPort;
-import app.ports.AppareilDataOutPort;
+import app.interfaces.IConsommation;
+import app.interfaces.ILaveLinge;
+import app.ports.CompteurInPort;
+import app.ports.LaveLingeInPort;
+import app.util.EtatAppareil;
+import app.util.ModeLaveLinge;
+import app.util.TemperatureLaveLinge;
 import app.util.TypeAppareil;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
-import fr.sorbonne_u.components.interfaces.DataOfferedI;
 
-public class LaveLinge extends AbstractComponent implements IChargeur {
+public class LaveLinge extends AbstractComponent implements ILaveLinge, IConsommation {
 
-	public AppareilDataInPort dataInPort;
-	public AppareilDataOutPort dataOutPort;
-	protected Vector<Message> messages_recu = new Vector<>();
+	protected LaveLingeInPort controleur_INPORT;
+	protected CompteurInPort compteur_INPORT;
 
-	protected boolean isLoading;
-	protected int delai;
-	protected int pourcentage;
-	protected Double consommation;
 	protected TypeAppareil type;
+	protected EtatAppareil etat;
+	protected ModeLaveLinge mode;
+	
+	protected int delai;
+	protected Double consommation;
+	
 
 	public LaveLinge(String reflectionInboundPortURI, int nbThreads, int nbSchedulableThreads, String dataOutPortURI, TypeAppareil type) throws Exception {
 		super(reflectionInboundPortURI, nbThreads, nbSchedulableThreads);
 
-		dataOutPort = new AppareilDataOutPort(dataOutPortURI, this);
-		this.addPort(dataOutPort);
-		dataOutPort.publishPort();
+		compteur_INPORT = new CompteurInPort(dataOutPortURI, this);
+		this.addPort(compteur_INPORT);
+		compteur_INPORT.publishPort();
 		
 		String dataInPortURI = java.util.UUID.randomUUID().toString();
-		dataInPort = new AppareilDataInPort(dataInPortURI, this);
-		this.addPort(dataInPort);
-		dataInPort.publishPort();
+		//controleur_INPORT = new Conto(dataInPortURI, this);
+		this.addPort(controleur_INPORT);
+		controleur_INPORT.publishPort();
 		
 		this.tracer.setRelativePosition(1, 1);
 		
-		isLoading = false;
 		delai = 30;
-		pourcentage = 0;
 		consommation = 100.0;
 		this.type = type;
 		
 	}
 
-	@Override
-	public void recevoirMessage(Message m) throws Exception {
-		this.logMessage("Message recu : " + m.getContenu());
-		messages_recu.add(m);
-		traitementMessage(m);
-	}
-	
-	protected void envoyerMessage(Message m) throws Exception {
-		this.dataInPort.send(m);
-	}
 	
 	@Override
-	public DataOfferedI.DataI getConsommation() throws Exception {
-		Message m = new Message();
-		if(isLoading) {
-			m.setContenu("- " + consommation.toString());
-			m.setAuteur("chargeurURI");
-		}else {
-			consommation = 0.0;
-			m.setContenu("- " + consommation.toString());
-			m.setAuteur("chargeurURI");
-		}	
-		return m;
+	public void setEtatAppareil(EtatAppareil etat) throws Exception {
+		// TODO Auto-generated method stub
+		
 	}
 
-	protected void traitementMessage(Message m) {
-		switch (m.getContenu()) {
-		case "eteindre":
-			if(isLoading) {
-				this.logMessage("Chargeur : je m'eteins...");
-				isLoading = false;
-			}
+	@Override
+	public double getConsommation() throws Exception {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void planifierCycle(double heure) throws Exception {
+		// TODO Auto-generated method stub
 		
-		default:
-			if(m.getContenu().contains("allumer")) {
-				delai = Integer.valueOf(m.getContenu().split("\\s+")[2]);
-			} else if(m.getContenu().contains("set")) {
-				pourcentage = Integer.valueOf(m.getContenu().split("\\s+")[3]);
-			}
-			break;
-		}
+	}
+
+	@Override
+	public void planifierMode(ModeLaveLinge ml, double heure) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setTemperature(TemperatureLaveLinge tl) {
+		// TODO Auto-generated method stub
+		
 	}
 	
-	protected void rechargement() throws InterruptedException {
-		if(pourcentage < 100) {
-			Thread.sleep(3000);
-			pourcentage++;
-			this.logMessage("Chargeur : " + pourcentage + " %...");
-		} else {
-			isLoading = false;
-			delai = 30;
-		}
-	}
 	
 	@Override
 	public void start() throws ComponentStartException {
@@ -124,17 +102,17 @@ public class LaveLinge extends AbstractComponent implements IChargeur {
 				try {
 					while(true) {
 						if(delai == 0) {
-							rechargement();
+							//rechargement();
 						} else {
 							delai--;
 							if(delai == 0) {
-								isLoading = true;
+								//isLoading = true;
 								consommation = 100.0;
 							}
 						}
 						
 						Thread.sleep(1000);
-						envoyerMessage((Message) getConsommation());
+						//envoyerMessage((Message) getConsommation());
 					}
 				} catch (InterruptedException e) {
 					Thread.currentThread().interrupt();
@@ -145,5 +123,10 @@ public class LaveLinge extends AbstractComponent implements IChargeur {
 			
 		});
 	}
+
+
+
+
+	
 
 }

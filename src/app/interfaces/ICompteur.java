@@ -1,12 +1,14 @@
 package app.interfaces;
 
-import app.data.Message;
-import fr.sorbonne_u.components.interfaces.DataOfferedI;
-import fr.sorbonne_u.components.interfaces.DataRequiredI;
+import fr.sorbonne_u.components.interfaces.OfferedI;
+import fr.sorbonne_u.components.interfaces.RequiredI;
 
-public interface ICompteur extends DataOfferedI, DataRequiredI {
+public interface ICompteur extends OfferedI, RequiredI {
 	
-	public void recevoirMessage(Message m) throws Exception;
-
-	public DataOfferedI.DataI getConsommation() throws Exception;
+	/**
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public double getConsommation() throws Exception;
 }

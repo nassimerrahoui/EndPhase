@@ -179,14 +179,14 @@ public class DistributedCVM extends AbstractDistributedCVM {
 		} else if (thisJVMURI.equals(JVM_3)) {
 			this.doPortConnection(
 					ordinateurURI,
-					ordinateur.dataInPort.getPortURI(),
+					ordinateur.controleur_INPORT.getPortURI(),
 					URI_DATAOUTPORTS_COMPTEUR.get(3),
 					DataServiceConnector.class.getCanonicalName()) ;
 			
 		} else if (thisJVMURI.equals(JVM_4)) {	
 			this.doPortConnection(
 					chargeurURI,
-					chargeur.dataInPort.getPortURI(),
+					chargeur.controleur_INPORT.getPortURI(),
 					URI_DATAOUTPORTS_COMPTEUR.get(4),
 					DataServiceConnector.class.getCanonicalName()) ;
 			

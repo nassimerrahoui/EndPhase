@@ -158,13 +158,13 @@ public class CVM extends AbstractCVM {
 		
 		this.doPortConnection(
 				ordinateurURI,
-				ordinateur.dataInPort.getPortURI(),
+				ordinateur.controleur_INPORT.getPortURI(),
 				URI_DATAOUTPORTS_COMPTEUR.get(3),
 				DataServiceConnector.class.getCanonicalName()) ;
 		
 		this.doPortConnection(
 				chargeurURI,
-				chargeur.dataInPort.getPortURI(),
+				chargeur.controleur_INPORT.getPortURI(),
 				URI_DATAOUTPORTS_COMPTEUR.get(4),
 				DataServiceConnector.class.getCanonicalName()) ;
 		
