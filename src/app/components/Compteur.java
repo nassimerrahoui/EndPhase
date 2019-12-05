@@ -39,10 +39,17 @@ public class Compteur extends AbstractComponent implements ICompteur {
 		}
 	}
 
-	protected void envoyerMessage(Message m) throws Exception {
-		this.dataInPort.send(m);
+	@Override
+	public double getAllConsommations() throws Exception {
+		return appareil_consommation.values().stream().mapToDouble(i -> i).sum();
 	}
-
+	
+	@Override
+	public void ajouterAppareil(String uri) throws Exception {
+		this.logMessage("Ajout appareil : " + uri);
+		appareil_consommation.put(uri, 0.0);
+	}
+	
 	@Override
 	public void start() throws ComponentStartException {
 		super.start();
@@ -80,22 +87,4 @@ public class Compteur extends AbstractComponent implements ICompteur {
 
 		});
 	}
-	
-	@Override
-	public void shutdown() throws ComponentShutdownException {
-		super.shutdown();
-	}
-
-	@Override
-	public void envoyerConsommation(double consommation) throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public double getConsommation() throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
 }

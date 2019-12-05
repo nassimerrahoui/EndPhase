@@ -1,4 +1,4 @@
-package app.ports;
+package app.ports.compteur;
 
 import app.components.Frigo;
 import app.interfaces.IConsommation;
@@ -13,13 +13,9 @@ public class CompteurInPort extends AbstractInboundPort implements IConsommation
 		super(uri, IConsommation.class, owner);
 	}
 
-	
 	@Override
 	public double getConsommation() throws Exception {
-		return this.getOwner().handleRequestSync(
-				owner -> ((Frigo)owner).getConsommation()) ;
-
+		return this.getOwner().handleRequestSync(owner -> ((Frigo) owner).getConsommation());
 	}
-	
 
 }

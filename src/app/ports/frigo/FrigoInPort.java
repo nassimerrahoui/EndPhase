@@ -1,4 +1,4 @@
-package app.ports;
+package app.ports.frigo;
 
 import app.components.Frigo;
 import app.interfaces.IFrigo;
@@ -18,23 +18,23 @@ public class FrigoInPort extends AbstractInboundPort implements IFrigo {
 
 	@Override
 	public void setEtatAppareil(EtatAppareil etat) throws Exception {
-		
+
 		AbstractComponent.AbstractService<Void> task = new AbstractComponent.AbstractService<Void>() {
 			public Void call() throws Exception {
-				((Frigo)owner).setEtatAppareil(etat);
+				((Frigo) owner).setEtatAppareil(etat);
 				return null;
 			}
 		};
 
 		this.owner.handleRequestAsync(0, task);
-		
+
 	}
 
 	@Override
 	public void setTemperature_Refrigerateur(double temperature) throws Exception {
 		AbstractComponent.AbstractService<Void> task = new AbstractComponent.AbstractService<Void>() {
 			public Void call() throws Exception {
-				((Frigo)owner).setTemperature_Refrigerateur(temperature);
+				((Frigo) owner).setTemperature_Refrigerateur(temperature);
 				return null;
 			}
 		};
@@ -46,7 +46,7 @@ public class FrigoInPort extends AbstractInboundPort implements IFrigo {
 	public void setTemperature_Congelateur(double temperature) throws Exception {
 		AbstractComponent.AbstractService<Void> task = new AbstractComponent.AbstractService<Void>() {
 			public Void call() throws Exception {
-				((Frigo)owner).setTemperature_Congelateur(temperature);
+				((Frigo) owner).setTemperature_Congelateur(temperature);
 				return null;
 			}
 		};
@@ -58,7 +58,7 @@ public class FrigoInPort extends AbstractInboundPort implements IFrigo {
 	public void setLumiere_Refrigerateur(ModeFrigo mf) throws Exception {
 		AbstractComponent.AbstractService<Void> task = new AbstractComponent.AbstractService<Void>() {
 			public Void call() throws Exception {
-				((Frigo)owner).setLumiere_Refrigerateur(mf);
+				((Frigo) owner).setLumiere_Refrigerateur(mf);
 				return null;
 			}
 		};
@@ -70,7 +70,7 @@ public class FrigoInPort extends AbstractInboundPort implements IFrigo {
 	public void setLumiere_Congelateur(ModeFrigo mf) throws Exception {
 		AbstractComponent.AbstractService<Void> task = new AbstractComponent.AbstractService<Void>() {
 			public Void call() throws Exception {
-				((Frigo)owner).setLumiere_Congelateur(mf);
+				((Frigo) owner).setLumiere_Congelateur(mf);
 				return null;
 			}
 		};

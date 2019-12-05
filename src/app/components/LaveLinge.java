@@ -2,8 +2,8 @@ package app.components;
 
 import app.interfaces.IConsommation;
 import app.interfaces.ILaveLinge;
-import app.ports.CompteurInPort;
 import app.ports.LaveLingeInPort;
+import app.ports.frigo.FrigoConsoInPort;
 import app.util.EtatAppareil;
 import app.util.ModeLaveLinge;
 import app.util.TemperatureLaveLinge;
@@ -14,7 +14,7 @@ import fr.sorbonne_u.components.exceptions.ComponentStartException;
 public class LaveLinge extends AbstractComponent implements ILaveLinge, IConsommation {
 
 	protected LaveLingeInPort controleur_INPORT;
-	protected CompteurInPort compteur_INPORT;
+	protected FrigoConsoInPort compteur_INPORT;
 
 	protected TypeAppareil type;
 	protected EtatAppareil etat;
@@ -27,7 +27,7 @@ public class LaveLinge extends AbstractComponent implements ILaveLinge, IConsomm
 	public LaveLinge(String reflectionInboundPortURI, int nbThreads, int nbSchedulableThreads, String dataOutPortURI, TypeAppareil type) throws Exception {
 		super(reflectionInboundPortURI, nbThreads, nbSchedulableThreads);
 
-		compteur_INPORT = new CompteurInPort(dataOutPortURI, this);
+		compteur_INPORT = new FrigoConsoInPort(dataOutPortURI, this);
 		this.addPort(compteur_INPORT);
 		compteur_INPORT.publishPort();
 		

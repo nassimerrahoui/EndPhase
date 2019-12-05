@@ -2,8 +2,8 @@ package app.components;
 
 import app.interfaces.IConsommation;
 import app.interfaces.IOrdinateur;
-import app.ports.CompteurInPort;
 import app.ports.OrdinateurInPort;
+import app.ports.frigo.FrigoConsoInPort;
 import app.util.EtatAppareil;
 import app.util.ModeOrdinateur;
 import app.util.TypeAppareil;
@@ -14,7 +14,7 @@ import fr.sorbonne_u.components.exceptions.ComponentStartException;
 public class Ordinateur extends AbstractComponent implements IOrdinateur, IConsommation {
 	
 	protected OrdinateurInPort controleur_INPORT;
-	protected CompteurInPort compteur_INPORT;
+	protected FrigoConsoInPort compteur_INPORT;
 
 	protected TypeAppareil type;
 	protected EtatAppareil etat;
