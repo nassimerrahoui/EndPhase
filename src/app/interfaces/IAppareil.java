@@ -18,4 +18,5 @@ public interface IAppareil extends OfferedI, RequiredI {
 	 */
 	public void setEtatAppareil(EtatAppareil etat) throws Exception;
 	
+
 }

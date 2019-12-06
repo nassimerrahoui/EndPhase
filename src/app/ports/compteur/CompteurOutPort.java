@@ -25,4 +25,10 @@ public class CompteurOutPort extends AbstractOutboundPort implements ICompteur {
 	public void ajouterAppareil(String uri) throws Exception {
 		((ICompteur) this.connector).ajouterAppareil(uri);
 	}
+
+	@Override
+	public void getAllProductions() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
 }

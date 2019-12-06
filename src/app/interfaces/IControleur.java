@@ -1,13 +1,15 @@
 package app.interfaces;
 
 import fr.sorbonne_u.components.interfaces.OfferedI;
-import fr.sorbonne_u.components.interfaces.RequiredI;
 
-public interface IControleur extends OfferedI, RequiredI {
-	//public DataOfferedI.DataI getMessage(String uri) throws Exception;
-	
-	//public void getEnergie(Message m) throws Exception;
-	
-	
+
+public interface IControleur extends OfferedI {
+
+	/**
+	 * Permet a un appareil de s'ajouter a la liste des appareils du controleur
+	 * @param uri
+	 * @throws Exception
+	 */
+	public void ajouterAppareil(String uri) throws Exception;
 	
 }

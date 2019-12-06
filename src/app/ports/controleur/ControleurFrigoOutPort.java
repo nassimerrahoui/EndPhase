@@ -4,12 +4,13 @@ import app.interfaces.IControleur;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 
-public class ControleurFrigoOutPort extends AbstractOutboundPort implements IControleur{
+public class ControleurFrigoOutPort extends AbstractOutboundPort implements IFrigo, I{
 
 	private static final long serialVersionUID = 1L;
 
 	public ControleurFrigoOutPort(String uri, ComponentI owner) throws Exception {
 		super(uri, IControleur.class, owner);
 	}
+
 
 }

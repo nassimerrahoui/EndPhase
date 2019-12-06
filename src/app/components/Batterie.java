@@ -5,15 +5,17 @@ import app.data.Message;
 import app.interfaces.IAppareil;
 import app.interfaces.IProduction;
 import app.interfaces.IUProduction;
+import app.interfaces.IUniteProduction;
 import app.ports.UProductionDataInPort;
 import app.ports.UProductionDataOutPort;
 import app.util.EtatAppareil;
+import app.util.EtatUniteProduction;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.interfaces.DataOfferedI;
 
-public class Batterie extends AbstractComponent implements IAppareil, IProduction {
+public class Batterie extends AbstractComponent implements IUniteProduction, IProduction {
 
 	public UProductionDataInPort dataInPort;
 	public UProductionDataOutPort dataOutPort;
@@ -47,7 +49,7 @@ public class Batterie extends AbstractComponent implements IAppareil, IProductio
 	}
 
 	@Override
-	public void setEtatAppareil(EtatAppareil etat) throws Exception {
+	public void setEtatUProduction(EtatUniteProduction etat) throws Exception {
 		// TODO Auto-generated method stub
 		
 	}
@@ -100,6 +102,8 @@ public class Batterie extends AbstractComponent implements IAppareil, IProductio
 			e.printStackTrace();
 		}
 	}
+
+	
 
 
 
