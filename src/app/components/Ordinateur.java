@@ -1,7 +1,7 @@
 package app.components;
 
-import app.interfaces.IConsommation;
-import app.interfaces.IOrdinateur;
+import app.interfaces.appareil.IConsommation;
+import app.interfaces.appareil.IOrdinateur;
 import app.ports.frigo.FrigoConsoInPort;
 import app.ports.ordi.OrdinateurInPort;
 import app.util.EtatAppareil;

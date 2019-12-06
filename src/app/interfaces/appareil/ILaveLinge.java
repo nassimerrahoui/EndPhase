@@ -1,8 +1,13 @@
-package app.interfaces;
+package app.interfaces.appareil;
 
 import app.util.ModeLaveLinge;
 import app.util.TemperatureLaveLinge;
 
+/**
+ * Permet au lave-linge de proposer une interface de controle pour le controleur
+ * @author Willy Nassim
+ *
+ */
 public interface ILaveLinge extends IAppareil {
 
 	/**

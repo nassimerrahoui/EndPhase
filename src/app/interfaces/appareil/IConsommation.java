@@ -1,4 +1,4 @@
-package app.interfaces;
+package app.interfaces.appareil;
 
 import fr.sorbonne_u.components.interfaces.OfferedI;
 
@@ -14,5 +14,5 @@ public interface IConsommation extends OfferedI {
 	 * @return
 	 * @throws Exception
 	 */
-	public double getConsommation() throws Exception;
+	public double envoyerConsommation() throws Exception;
 }

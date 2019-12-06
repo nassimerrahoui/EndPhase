@@ -1,7 +1,7 @@
 package app.ports.ordi;
 
 import app.components.Ordinateur;
-import app.interfaces.IOrdinateur;
+import app.interfaces.appareil.IOrdinateur;
 import app.util.EtatAppareil;
 import app.util.ModeOrdinateur;
 import fr.sorbonne_u.components.AbstractComponent;

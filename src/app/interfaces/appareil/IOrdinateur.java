@@ -1,7 +1,12 @@
-package app.interfaces;
+package app.interfaces.appareil;
 
 import app.util.ModeOrdinateur;
 
+/**
+ * Permet a l'ordinateur de proposer une interface de controle pour leur controleur
+ * @author Willy Nassim
+ *
+ */
 public interface IOrdinateur extends IAppareil {
 
 	/**

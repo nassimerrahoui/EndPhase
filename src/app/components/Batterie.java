@@ -2,10 +2,10 @@ package app.components;
 
 import java.util.Vector;
 import app.data.Message;
-import app.interfaces.IAppareil;
-import app.interfaces.IProduction;
 import app.interfaces.IUProduction;
-import app.interfaces.IUniteProduction;
+import app.interfaces.appareil.IAppareil;
+import app.interfaces.production.IProduction;
+import app.interfaces.production.IUniteProduction;
 import app.ports.UProductionDataInPort;
 import app.ports.UProductionDataOutPort;
 import app.util.EtatAppareil;

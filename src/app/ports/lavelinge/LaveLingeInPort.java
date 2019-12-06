@@ -1,7 +1,7 @@
 package app.ports.lavelinge;
 
 import app.components.LaveLinge;
-import app.interfaces.ILaveLinge;
+import app.interfaces.appareil.ILaveLinge;
 import app.util.EtatAppareil;
 import app.util.ModeLaveLinge;
 import app.util.TemperatureLaveLinge;

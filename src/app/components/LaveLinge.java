@@ -1,7 +1,7 @@
 package app.components;
 
-import app.interfaces.IConsommation;
-import app.interfaces.ILaveLinge;
+import app.interfaces.appareil.IConsommation;
+import app.interfaces.appareil.ILaveLinge;
 import app.ports.frigo.FrigoConsoInPort;
 import app.ports.lavelinge.LaveLingeInPort;
 import app.util.EtatAppareil;

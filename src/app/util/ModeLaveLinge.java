@@ -1,7 +1,7 @@
 package app.util;
 
 /**
- * Modes disponible pour le lave linge
+ * Modes disponible pour le lave-linge
  * @author Willy Nassim
  *
  */

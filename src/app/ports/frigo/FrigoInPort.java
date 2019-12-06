@@ -1,7 +1,7 @@
 package app.ports.frigo;
 
 import app.components.Frigo;
-import app.interfaces.IFrigo;
+import app.interfaces.appareil.IFrigo;
 import app.util.EtatAppareil;
 import app.util.ModeFrigo;
 import fr.sorbonne_u.components.AbstractComponent;

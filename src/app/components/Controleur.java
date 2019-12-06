@@ -3,7 +3,7 @@ package app.components;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 import app.data.Message;
-import app.interfaces.IControleur;
+import app.interfaces.controleur.IControleur;
 import app.ports.ControleurDataInPort;
 import app.ports.ControleurDataOutPort;
 import fr.sorbonne_u.components.AbstractComponent;

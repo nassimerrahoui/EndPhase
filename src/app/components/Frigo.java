@@ -1,9 +1,10 @@
 package app.components;
 
 import java.util.concurrent.TimeUnit;
-import app.interfaces.ICompteur;
-import app.interfaces.IConsommation;
-import app.interfaces.IFrigo;
+
+import app.interfaces.appareil.IConsommation;
+import app.interfaces.appareil.IFrigo;
+import app.interfaces.controleur.ICompteur;
 import app.ports.compteur.CompteurOutPort;
 import app.ports.frigo.FrigoConsoInPort;
 import app.ports.frigo.FrigoInPort;

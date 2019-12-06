@@ -1,7 +1,7 @@
 package app.ports.compteur;
 
 import app.components.Frigo;
-import app.interfaces.IConsommation;
+import app.interfaces.appareil.IConsommation;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
 
