@@ -1,4 +1,4 @@
-package app.ports;
+package app.ports.compteur;
 
 import app.interfaces.ICompteur;
 import fr.sorbonne_u.components.ComponentI;

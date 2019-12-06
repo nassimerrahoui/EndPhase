@@ -1,4 +1,4 @@
-package app.ports;
+package app.ports.lavelinge;
 
 import app.components.LaveLinge;
 import app.interfaces.ILaveLinge;

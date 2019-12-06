@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit;
 import app.interfaces.ICompteur;
 import app.interfaces.IConsommation;
 import app.interfaces.IFrigo;
-import app.ports.CompteurOutPort;
+import app.ports.compteur.CompteurOutPort;
 import app.ports.frigo.FrigoConsoInPort;
 import app.ports.frigo.FrigoInPort;
 import app.util.EtatAppareil;

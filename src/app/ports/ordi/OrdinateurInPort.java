@@ -1,4 +1,4 @@
-package app.ports;
+package app.ports.ordi;
 
 import app.components.Ordinateur;
 import app.interfaces.IOrdinateur;

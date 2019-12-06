@@ -1,11 +1,13 @@
 package app.interfaces;
 
-import app.data.Message;
-import fr.sorbonne_u.components.interfaces.DataOfferedI;
-import fr.sorbonne_u.components.interfaces.DataRequiredI;
+import fr.sorbonne_u.components.interfaces.OfferedI;
+import fr.sorbonne_u.components.interfaces.RequiredI;
 
-public interface IControleur extends DataOfferedI, DataRequiredI {
-	public DataOfferedI.DataI getMessage(String uri) throws Exception;
+public interface IControleur extends OfferedI, RequiredI {
+	//public DataOfferedI.DataI getMessage(String uri) throws Exception;
 	
-	public void getEnergie(Message m) throws Exception;
+	//public void getEnergie(Message m) throws Exception;
+	
+	
+	
 }

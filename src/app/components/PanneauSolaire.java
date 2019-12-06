@@ -2,15 +2,18 @@ package app.components;
 
 import java.util.Vector;
 import app.data.Message;
+import app.interfaces.IAppareil;
+import app.interfaces.IProduction;
 import app.interfaces.IUProduction;
 import app.ports.UProductionDataInPort;
 import app.ports.UProductionDataOutPort;
+import app.util.EtatAppareil;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.interfaces.DataOfferedI;
 
-public class PanneauSolaire extends AbstractComponent implements IUProduction {
+public class PanneauSolaire extends AbstractComponent implements IAppareil, IProduction {
 
 	public UProductionDataInPort dataInPort;
 	public UProductionDataOutPort dataOutPort;
@@ -38,35 +41,17 @@ public class PanneauSolaire extends AbstractComponent implements IUProduction {
 	}
 	
 	@Override
-	public void recevoirMessage(Message m) throws Exception {
-		this.logMessage("Message recu : " + m.getContenu());
-		if(isOn) {
-			messages_recu.add(m);
-			if(m.getContenu().equals("eteindre")) {
-				this.logMessage("Panneau Solaire : je m'eteins...");
-				isOn = false;
-				production = 0.0;
-			}
-			
-			messages_recu.remove(m);
-			
-		} else if (m.getContenu().equals("allumer")) {
-			this.logMessage("Panneau Solaire : demarre...");
-			isOn = true;
-			production = 150.0;
-		}
+	public double getProduction() throws Exception {
+		// TODO Auto-generated method stub
+		return 0;
 	}
-	
+
+
+
 	@Override
-	public DataOfferedI.DataI getProduction() throws Exception {
-		Message m = new Message();
-		m.setContenu("+ " + production.toString());
-		m.setAuteur("panneauURI");
-		return m;
-	}
-	
-	protected void envoyerMessage(Message m) throws Exception {
-		this.dataInPort.send(m);
+	public void setEtatAppareil(EtatAppareil etat) throws Exception {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	@Override
@@ -121,5 +106,9 @@ public class PanneauSolaire extends AbstractComponent implements IUProduction {
 			e.printStackTrace();
 		}
 	}
+
+
+
+	
 
 }
