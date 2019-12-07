@@ -1,132 +1,180 @@
 package app.components;
 
+import java.util.concurrent.TimeUnit;
+import app.interfaces.appareil.IAjoutAppareil;
 import app.interfaces.appareil.IConsommation;
+import app.interfaces.appareil.IFrigo;
 import app.interfaces.appareil.ILaveLinge;
-import app.ports.frigo.FrigoConsoInPort;
+import app.ports.lavelinge.LaveLingeConsoInPort;
+import app.ports.lavelinge.LaveLingeControleurOutPort;
 import app.ports.lavelinge.LaveLingeInPort;
 import app.util.EtatAppareil;
 import app.util.ModeLaveLinge;
 import app.util.TemperatureLaveLinge;
 import app.util.TypeAppareil;
 import fr.sorbonne_u.components.AbstractComponent;
+import fr.sorbonne_u.components.annotations.OfferedInterfaces;
+import fr.sorbonne_u.components.annotations.RequiredInterfaces;
+import fr.sorbonne_u.components.cvm.AbstractCVM;
+import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
+import fr.sorbonne_u.components.ports.PortI;
 
-public class LaveLinge extends AbstractComponent implements ILaveLinge, IConsommation {
+@OfferedInterfaces(offered = { IFrigo.class, IConsommation.class })
+@RequiredInterfaces(required = { IAjoutAppareil.class })
+public class LaveLinge extends AbstractComponent {
 
-	protected LaveLingeInPort controleur_INPORT;
-	protected FrigoConsoInPort compteur_INPORT;
+	/** port sortant permettant a l'appareil de s'inscrire sur la liste des appareil du controleur */
+	protected LaveLingeControleurOutPort controleur_OUTPORT;
 
 	protected TypeAppareil type;
 	protected EtatAppareil etat;
 	protected ModeLaveLinge mode;
 	
-	protected int delai;
+	protected int heure;
+	protected int minutes;
 	protected Double consommation;
-	
+	protected TemperatureLaveLinge temperature;
 
-	public LaveLinge(String reflectionInboundPortURI, int nbThreads, int nbSchedulableThreads, String dataOutPortURI, TypeAppareil type) throws Exception {
-		super(reflectionInboundPortURI, nbThreads, nbSchedulableThreads);
+	public LaveLinge(String lavelingeURI, 
+			int nbThreads, int nbSchedulableThreads, 
+			TypeAppareil type) throws Exception {
+		super(lavelingeURI, nbThreads, nbSchedulableThreads);
 
-		compteur_INPORT = new FrigoConsoInPort(dataOutPortURI, this);
-		this.addPort(compteur_INPORT);
-		compteur_INPORT.publishPort();
+		// port entrant permettant au controleur d'effectuer des actions sur le lave-linge
+		LaveLingeInPort action_INPORT = new LaveLingeInPort(this);
 		
-		String dataInPortURI = java.util.UUID.randomUUID().toString();
-		//controleur_INPORT = new Conto(dataInPortURI, this);
-		this.addPort(controleur_INPORT);
-		controleur_INPORT.publishPort();
+		// port entrant permettant au compteur de recupere la consommation du lave-linge
+		LaveLingeConsoInPort consommation_INPORT = new LaveLingeConsoInPort(this);
 		
+		this.addPort(controleur_OUTPORT);
+		this.addPort(action_INPORT);
+		this.addPort(consommation_INPORT);
+		
+		controleur_OUTPORT.publishPort();
+		consommation_INPORT.publishPort();
+		consommation_INPORT.publishPort();
+		
+		if (AbstractCVM.isDistributed) {
+			this.executionLog.setDirectory(System.getProperty("user.dir")) ;
+		} else {
+			this.executionLog.setDirectory(System.getProperty("user.home")) ;
+		}
+		
+		/** TODO definir pool de thread */
+		
+		// affichage
+		this.tracer.setTitle("LaveLinge");
 		this.tracer.setRelativePosition(1, 1);
 		
-		delai = 30;
-		consommation = 100.0;
+		// attributs
+		this.heure = 0;
+		this.minutes = 0;
+		this.etat = EtatAppareil.OFF;
+		this.consommation = 100.0;
 		this.type = type;
-		
+		this.temperature = TemperatureLaveLinge.QUARANTE_DEGRES;
 	}
 
-	
-	@Override
+	public void demandeAjoutControleur(String uri) throws Exception {
+		this.controleur_OUTPORT.demandeAjoutControleur(uri);
+	}
+
+	public double envoyerConsommation() throws Exception {
+		return consommation;
+	}
+
 	public void setEtatAppareil(EtatAppareil etat) throws Exception {
-		// TODO Auto-generated method stub
-		
+		this.etat = etat;
 	}
 
-	@Override
-	public double getConsommation() throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+	public void planifierCycle(int heure, int min) throws Exception {
+		planifierMode(ModeLaveLinge.Veille, heure, min);
+		planifierMode(ModeLaveLinge.Lavage, heure, min);
+		planifierMode(ModeLaveLinge.Rincage, heure, min);
+		planifierMode(ModeLaveLinge.Essorage, heure, min);
 	}
 
-	@Override
-	public void planifierCycle(double heure) throws Exception {
-		// TODO Auto-generated method stub
-		
+	public void planifierMode(ModeLaveLinge ml, int heure, int min) throws Exception {
+		if(etat == EtatAppareil.ON) {
+			this.heure = heure;
+			this.minutes = min;
+			this.mode = ml;
+		}
 	}
 
-	@Override
-	public void planifierMode(ModeLaveLinge ml, double heure) throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void setTemperature(TemperatureLaveLinge tl) {
-		// TODO Auto-generated method stub
-		
+		this.temperature = tl;
 	}
 	
-	
+	// ************* Cycle de vie du composant ************* 
+
 	@Override
 	public void start() throws ComponentStartException {
 		super.start();
-		this.runTask(new AbstractTask() {
+		
+		this.logMessage("Demarrage du lave-linge...");
 
+		this.scheduleTask(new AbstractComponent.AbstractTask() {
+			@Override
 			public void run() {
-				try {
-					Thread.sleep(2500);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+				try { ((LaveLinge) this.getTaskOwner()).demandeAjoutControleur("CONSTANTE URI A METTRE ICI"); }
+				catch (Exception e) { throw new RuntimeException(e); }
 			}
-			
-		});
+		}, 1000, TimeUnit.MILLISECONDS);
 	}
-	
+
 	@Override
 	public void execute() throws Exception {
 		super.execute();
 		
-		this.runTask(new AbstractTask() {
-
+		this.logMessage("Phase d'execution du lave-linge.");
+		
+		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
+			@Override
 			public void run() {
-				try {
-					while(true) {
-						if(delai == 0) {
-							//rechargement();
-						} else {
-							delai--;
-							if(delai == 0) {
-								//isLoading = true;
-								consommation = 100.0;
-							}
-						}
-						
-						Thread.sleep(1000);
-						//envoyerMessage((Message) getConsommation());
-					}
-				} catch (InterruptedException e) {
-					Thread.currentThread().interrupt();
-				} catch (Exception e) {
-					//e.printStackTrace();
-				}
+				/** TODO remplacer heure pas constante heure */
+				int heure = 7;
+				int minutes = 30;
+				try { ((LaveLinge) this.getTaskOwner()).planifierCycle(heure, minutes); } 
+				catch (Exception e) { throw new RuntimeException(e); }
 			}
+		}, 2000, 1000, TimeUnit.MILLISECONDS);
+	}
+	
+	@Override
+	public void finalise() throws Exception {
+		this.logMessage("Arret du composant lave-linge...") ;
+		super.finalise();
+	}
+	
+	@Override
+	public void	shutdown() throws ComponentShutdownException
+	{
+		try {
+			PortI[] port_controleur = this.findPortsFromInterface(ILaveLinge.class);
+			PortI[] port_consommation = this.findPortsFromInterface(IConsommation.class);
+			PortI[] port_ajoutappareil = this.findPortsFromInterface(IAjoutAppareil.class);
 			
-		});
+			port_controleur[0].unpublishPort() ;
+			port_consommation[0].unpublishPort();
+			port_ajoutappareil[0].unpublishPort();
+		} catch (Exception e) { throw new ComponentShutdownException(e); }
+		super.shutdown();
 	}
 
-
-
-
-	
-
+	@Override
+	public void shutdownNow() throws ComponentShutdownException
+	{
+		try {
+			PortI[] port_controleur = this.findPortsFromInterface(ILaveLinge.class);
+			PortI[] port_consommation = this.findPortsFromInterface(IConsommation.class);
+			PortI[] port_ajoutappareil = this.findPortsFromInterface(IAjoutAppareil.class);
+			
+			port_controleur[0].unpublishPort() ;
+			port_consommation[0].unpublishPort();
+			port_ajoutappareil[0].unpublishPort();
+		} catch (Exception e) { throw new ComponentShutdownException(e); }
+		super.shutdownNow();
+	}
 }

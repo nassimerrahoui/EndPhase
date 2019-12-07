@@ -15,6 +15,10 @@ public class FrigoInPort extends AbstractInboundPort implements IFrigo {
 	public FrigoInPort(String uri, ComponentI owner) throws Exception {
 		super(uri, IFrigo.class, owner);
 	}
+	
+	public FrigoInPort(ComponentI owner) throws Exception {
+		super(IFrigo.class, owner);
+	}
 
 	@Override
 	public void setEtatAppareil(EtatAppareil etat) throws Exception {

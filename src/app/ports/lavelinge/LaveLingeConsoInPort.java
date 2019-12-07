@@ -13,9 +13,12 @@ public class LaveLingeConsoInPort extends AbstractInboundPort implements IConsom
 		super(uri, IConsommation.class, owner);
 	}
 
-	@Override
-	public double getConsommation() throws Exception {
-		return this.getOwner().handleRequestSync(owner -> ((LaveLinge) owner).getConsommation());
+	public LaveLingeConsoInPort(ComponentI owner) throws Exception {
+		super(IConsommation.class, owner);
 	}
 
+	@Override
+	public double envoyerConsommation() throws Exception {
+		return this.getOwner().handleRequestSync(owner -> ((LaveLinge) owner).envoyerConsommation());
+	}
 }

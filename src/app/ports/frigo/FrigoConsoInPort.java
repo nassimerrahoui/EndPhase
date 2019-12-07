@@ -12,10 +12,14 @@ public class FrigoConsoInPort extends AbstractInboundPort implements IConsommati
 	public FrigoConsoInPort(String uri, ComponentI owner) throws Exception {
 		super(uri, IConsommation.class, owner);
 	}
+	
+	public FrigoConsoInPort(ComponentI owner) throws Exception {
+		super(IConsommation.class, owner);
+	}
 
 	@Override
-	public double getConsommation() throws Exception {
-		return this.getOwner().handleRequestSync(owner -> ((Frigo) owner).getConsommation());
+	public double envoyerConsommation() throws Exception {
+		return this.getOwner().handleRequestSync(owner -> ((Frigo) owner).envoyerConsommation());
 	}
 
 }

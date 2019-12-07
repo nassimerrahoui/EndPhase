@@ -3,7 +3,7 @@ package app.interfaces.appareil;
 import app.util.ModeFrigo;
 
 /**
- * Permet au frigo de proposer une interface de controle pour le controleur
+ * Defini une interface offerte pour donner le controle au controleur
  * @author Willy Nassim
  *
  */

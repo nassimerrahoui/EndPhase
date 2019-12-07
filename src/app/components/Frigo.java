@@ -1,12 +1,11 @@
 package app.components;
 
 import java.util.concurrent.TimeUnit;
-
+import app.interfaces.appareil.IAjoutAppareil;
 import app.interfaces.appareil.IConsommation;
 import app.interfaces.appareil.IFrigo;
-import app.interfaces.controleur.ICompteur;
-import app.ports.compteur.CompteurOutPort;
 import app.ports.frigo.FrigoConsoInPort;
+import app.ports.frigo.FrigoControleurOutPort;
 import app.ports.frigo.FrigoInPort;
 import app.util.EtatAppareil;
 import app.util.ModeFrigo;
@@ -14,22 +13,17 @@ import app.util.TypeAppareil;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
+import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
 
 @OfferedInterfaces(offered = { IFrigo.class, IConsommation.class })
-@RequiredInterfaces(required = { ICompteur.class })
-public class Frigo extends AbstractComponent implements IFrigo, IConsommation {
-
-	/** port entrant permettant d'offrir les services du composant */
-	protected FrigoInPort service_INPORT;
+@RequiredInterfaces(required = { IAjoutAppareil.class })
+public class Frigo extends AbstractComponent {
 	
-	/** port entrant permettant d'offrir l'acces a la consommation de l'appareil */
-	protected FrigoConsoInPort consommation_INPORT;
-	
-	/** port sortant permettant a l'appareil de s'inscrire sur la liste des appareil du compteur */
-	protected CompteurOutPort compteur_OUTPORT;
+	/** port sortant permettant a l'appareil de s'inscrire sur la liste des appareil du controleur */
+	protected FrigoControleurOutPort controleur_OUTPORT;	
 
 	protected TypeAppareil type;
 	protected EtatAppareil etat;
@@ -40,72 +34,74 @@ public class Frigo extends AbstractComponent implements IFrigo, IConsommation {
 	protected Double refrigerateur_temperature_cible;
 	protected Double consommation;
 
-	protected Frigo(String reflectionInboundPortURI, 
-			int nbThreads, int nbSchedulableThreads, 
-			String dataOutPortURI,
+	protected Frigo(String frigoURI, 
+			int nbThreads, int nbSchedulableThreads,
 			TypeAppareil type) throws Exception {
-		super(reflectionInboundPortURI, nbThreads, nbSchedulableThreads);
+		super(frigoURI, nbThreads, nbSchedulableThreads);
 
-		service_INPORT = new FrigoInPort(dataOutPortURI, this);
-		consommation_INPORT = new FrigoConsoInPort(dataOutPortURI, this);
-		compteur_OUTPORT = new CompteurOutPort(dataOutPortURI, this);
+		controleur_OUTPORT = new FrigoControleurOutPort(this);
 		
-		this.addPort(service_INPORT);
+		// port entrant permettant au controleur d'effectuer des actions sur le frigo
+		FrigoInPort action_INPORT = new FrigoInPort(this);
+		
+		// port entrant permettant au compteur de recupere la consommation du frigo
+		FrigoConsoInPort consommation_INPORT = new FrigoConsoInPort(this);
+		
+		this.addPort(controleur_OUTPORT);
+		this.addPort(action_INPORT);
 		this.addPort(consommation_INPORT);
-		this.addPort(compteur_OUTPORT);
 		
-		service_INPORT.publishPort();
+		controleur_OUTPORT.publishPort();
 		consommation_INPORT.publishPort();
-		compteur_OUTPORT.publishPort();
+		consommation_INPORT.publishPort();
 		
+		if (AbstractCVM.isDistributed) {
+			this.executionLog.setDirectory(System.getProperty("user.dir")) ;
+		} else {
+			this.executionLog.setDirectory(System.getProperty("user.home")) ;
+		}
+		
+		/** TODO definir pool de thread */
+		
+		// affichage
 		this.tracer.setTitle("Frigo");
 		this.tracer.setRelativePosition(0, 1);
 
-		etat = EtatAppareil.ON;
-		refrigerateur_temperature_cible = 3.0;
-		congelateur_temperature_cible = -10.0;
-		consommation = 55.0;
+		// attributs
 		this.type = type;
+		this.etat = EtatAppareil.OFF;
+		this.refrigerateur_temperature_cible = 3.0;
+		this.congelateur_temperature_cible = -10.0;
+		this.consommation = 55.0;
+	}
+	
+
+	public void demandeAjoutControleur(String uri) throws Exception {
+		this.controleur_OUTPORT.demandeAjoutControleur(uri);
 	}
 
-	@Override
+	public double envoyerConsommation() throws Exception {
+		return consommation;
+	}
+
 	public void setEtatAppareil(EtatAppareil etat) throws Exception {
 		this.etat = etat;
 	}
 
-	@Override
-	public double getConsommation() throws Exception {
-		return consommation;
-	}
-
-	@Override
 	public void setTemperature_Refrigerateur(double temperature) throws Exception {
 		this.refrigerateur_temperature_cible = temperature;
 	}
 
-	@Override
 	public void setTemperature_Congelateur(double temperature) throws Exception {
 		this.congelateur_temperature_cible = temperature;
 	}
 
-	@Override
 	public void setLumiere_Refrigerateur(ModeFrigo mf) throws Exception {
 		this.lumiere_refrigerateur = mf;
 	}
 
-	@Override
 	public void setLumiere_Congelateur(ModeFrigo mf) throws Exception {
 		this.lumiere_congelateur = mf;
-	}
-
-	/**
-	 * Permet de s'inscrire sur la liste des appareils du compteur
-	 * @param uri
-	 * @throws Exception
-	 */
-	protected void ajouterAppareil() throws Exception {
-		this.compteur_OUTPORT.ajouterAppareil("FAIRE CONSTANTE");
-		/** TODO **/
 	}
 
 	/**
@@ -115,6 +111,8 @@ public class Frigo extends AbstractComponent implements IFrigo, IConsommation {
 		this.logMessage("regulation de la temperature...");
 		/** TODO **/
 	}
+	
+	// ************* Cycle de vie du composant ************* 
 
 	@Override
 	public void start() throws ComponentStartException {
@@ -125,7 +123,7 @@ public class Frigo extends AbstractComponent implements IFrigo, IConsommation {
 		this.scheduleTask(new AbstractComponent.AbstractTask() {
 			@Override
 			public void run() {
-				try { ((Frigo) this.getTaskOwner()).ajouterAppareil(); }
+				try { ((Frigo) this.getTaskOwner()).demandeAjoutControleur("CONSTANTE A METTRE ICI"); }
 				catch (Exception e) { throw new RuntimeException(e); }
 			}
 		}, 1000, TimeUnit.MILLISECONDS);
@@ -156,13 +154,13 @@ public class Frigo extends AbstractComponent implements IFrigo, IConsommation {
 	public void	shutdown() throws ComponentShutdownException
 	{
 		try {
-			PortI[] port_service = this.findPortsFromInterface(IFrigo.class);
+			PortI[] port_controleur = this.findPortsFromInterface(IFrigo.class);
 			PortI[] port_consommation = this.findPortsFromInterface(IConsommation.class);
-			PortI[] port_compteur = this.findPortsFromInterface(ICompteur.class);
+			PortI[] port_ajoutappareil = this.findPortsFromInterface(IAjoutAppareil.class);
 			
-			port_service[0].unpublishPort() ;
+			port_controleur[0].unpublishPort() ;
 			port_consommation[0].unpublishPort();
-			port_compteur[0].unpublishPort();
+			port_ajoutappareil[0].unpublishPort();
 		} catch (Exception e) { throw new ComponentShutdownException(e); }
 		super.shutdown();
 	}
@@ -171,14 +169,15 @@ public class Frigo extends AbstractComponent implements IFrigo, IConsommation {
 	public void shutdownNow() throws ComponentShutdownException
 	{
 		try {
-			PortI[] port_service = this.findPortsFromInterface(IFrigo.class);
+			PortI[] port_controleur = this.findPortsFromInterface(IFrigo.class);
 			PortI[] port_consommation = this.findPortsFromInterface(IConsommation.class);
-			PortI[] port_compteur = this.findPortsFromInterface(ICompteur.class);
+			PortI[] port_ajoutappareil = this.findPortsFromInterface(IAjoutAppareil.class);
 			
-			port_service[0].unpublishPort() ;
+			port_controleur[0].unpublishPort() ;
 			port_consommation[0].unpublishPort();
-			port_compteur[0].unpublishPort();
+			port_ajoutappareil[0].unpublishPort();
 		} catch (Exception e) { throw new ComponentShutdownException(e); }
 		super.shutdownNow();
 	}
+
 }

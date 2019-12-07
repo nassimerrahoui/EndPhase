@@ -6,11 +6,12 @@ import fr.sorbonne_u.components.interfaces.OfferedI;
 import fr.sorbonne_u.components.interfaces.RequiredI;
 
 /**
- * Permet au controleur d'envoyer une ou plusieurs actions aux appareils
+ * Offre une interface pour que les appareils s'ajoute au systeme.
  * 
  * Requiert des informations sur la consommation des appareils
- * ainsi que de la production de unités de productions
- * depuis le compteur
+ * ainsi la production de unités de productions depuis le compteur
+ * 
+ * Requiert des appareils pour envoyer des actions.
  * 
  * @author Willy Nassim
  *

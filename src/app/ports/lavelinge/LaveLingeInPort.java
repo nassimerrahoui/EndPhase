@@ -17,57 +17,60 @@ public class LaveLingeInPort extends AbstractInboundPort implements ILaveLinge {
 		super(uri, ILaveLinge.class, owner);
 	}
 
+	public LaveLingeInPort(ComponentI owner) throws Exception {
+		super(ILaveLinge.class, owner);
+	}
+
 	@Override
 	public void setEtatAppareil(EtatAppareil etat) throws Exception {
 		AbstractComponent.AbstractService<Void> task = new AbstractComponent.AbstractService<Void>() {
 			public Void call() throws Exception {
-				((LaveLinge)owner).setEtatAppareil(etat);
+				((LaveLinge) owner).setEtatAppareil(etat);
 				return null;
 			}
 		};
 
 		this.owner.handleRequestAsync(0, task);
-		
+
 	}
 
 	@Override
-	public void planifierCycle(double heure) throws Exception {
+	public void planifierCycle(int heure, int minutes) throws Exception {
 		AbstractComponent.AbstractService<Void> task = new AbstractComponent.AbstractService<Void>() {
 			public Void call() throws Exception {
-				((LaveLinge)owner).planifierCycle(heure);
+				((LaveLinge) owner).planifierCycle(heure, minutes);
 				return null;
 			}
 		};
 
 		this.owner.handleRequestAsync(0, task);
-		
+
 	}
 
 	@Override
-	public void planifierMode(ModeLaveLinge ml, double heure) throws Exception {
+	public void planifierMode(ModeLaveLinge ml, int heure, int minutes) throws Exception {
 		AbstractComponent.AbstractService<Void> task = new AbstractComponent.AbstractService<Void>() {
 			public Void call() throws Exception {
-				((LaveLinge)owner).planifierMode(ml, heure);
+				((LaveLinge) owner).planifierMode(ml, heure, minutes);
 				return null;
 			}
 		};
 
 		this.owner.handleRequestAsync(0, task);
-		
+
 	}
 
 	@Override
 	public void setTemperature(TemperatureLaveLinge tl) throws Exception {
 		AbstractComponent.AbstractService<Void> task = new AbstractComponent.AbstractService<Void>() {
 			public Void call() throws Exception {
-				((LaveLinge)owner).setTemperature(tl);
+				((LaveLinge) owner).setTemperature(tl);
 				return null;
 			}
 		};
 
 		this.owner.handleRequestAsync(0, task);
-		
-		
+
 	}
 
 }

@@ -1,23 +1,23 @@
 package app.ports.lavelinge;
 
-import app.interfaces.controleur.IControleur;
+import app.interfaces.appareil.IAjoutAppareil;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 
-public class LaveLingeControleurOutPort extends AbstractOutboundPort implements IControleur {
+public class LaveLingeControleurOutPort extends AbstractOutboundPort implements IAjoutAppareil {
 
 	private static final long serialVersionUID = 1L;
 
 	public LaveLingeControleurOutPort(String uri, ComponentI owner) throws Exception {
-		super(uri, IControleur.class, owner);
+		super(uri, IAjoutAppareil.class, owner);
 	}
 	
 	public LaveLingeControleurOutPort(ComponentI owner) throws Exception {
-		super(IControleur.class, owner);
+		super(IAjoutAppareil.class, owner);
 	}
 
 	@Override
-	public void ajouterAppareil(String uri) throws Exception {
-		((LaveLingeControleurOutPort) this.connector).ajouterAppareil(uri);
+	public void demandeAjoutControleur(String uri) throws Exception {
+		((LaveLingeControleurOutPort) this.connector).demandeAjoutControleur(uri);
 	}
 }
