@@ -135,6 +135,8 @@ public class Frigo extends AbstractComponent {
 		
 		this.logMessage("Phase d'execution du frigo.");
 		
+		this.logMessage("Execution en cours...");
+		
 		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
 			@Override
 			public void run() {

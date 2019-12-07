@@ -3,7 +3,6 @@ package app.components;
 import java.util.concurrent.TimeUnit;
 import app.interfaces.appareil.IAjoutAppareil;
 import app.interfaces.appareil.IConsommation;
-import app.interfaces.appareil.IFrigo;
 import app.interfaces.appareil.ILaveLinge;
 import app.ports.lavelinge.LaveLingeConsoInPort;
 import app.ports.lavelinge.LaveLingeControleurOutPort;
@@ -20,7 +19,7 @@ import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
 
-@OfferedInterfaces(offered = { IFrigo.class, IConsommation.class })
+@OfferedInterfaces(offered = { ILaveLinge.class, IConsommation.class })
 @RequiredInterfaces(required = { IAjoutAppareil.class })
 public class LaveLinge extends AbstractComponent {
 
@@ -107,6 +106,16 @@ public class LaveLinge extends AbstractComponent {
 		this.temperature = tl;
 	}
 	
+	/**
+	 * Gerer et afficher ce qui se passe pendant un mode
+	 */
+	public void runningAndPrint() {
+		/** TODO Redefinir toString a la place de name */
+		this.logMessage("Mode actuel : " + mode.name());
+		
+		/** TODO code pour gerer ce qui se passe pendant un mode */
+	}
+	
 	// ************* Cycle de vie du composant ************* 
 
 	@Override
@@ -130,16 +139,28 @@ public class LaveLinge extends AbstractComponent {
 		
 		this.logMessage("Phase d'execution du lave-linge.");
 		
-		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
+		this.logMessage("Planification du lave-linge.");
+		
+		this.scheduleTask(new AbstractComponent.AbstractTask() {
 			@Override
 			public void run() {
-				/** TODO remplacer heure pas constante heure */
+				/** TODO remplacer heure et minutes pas constante */
 				int heure = 7;
 				int minutes = 30;
 				try { ((LaveLinge) this.getTaskOwner()).planifierCycle(heure, minutes); } 
 				catch (Exception e) { throw new RuntimeException(e); }
 			}
-		}, 2000, 1000, TimeUnit.MILLISECONDS);
+		}, 2000, TimeUnit.MILLISECONDS);
+		
+		this.logMessage("Execution en cours...");
+		
+		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
+			@Override
+			public void run() {
+				try { ((LaveLinge) this.getTaskOwner()).runningAndPrint(); } 
+				catch (Exception e) { throw new RuntimeException(e); }
+			}
+		}, 4000, 1000, TimeUnit.MILLISECONDS);
 	}
 	
 	@Override
