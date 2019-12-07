@@ -1,14 +1,15 @@
 package app.interfaces.controleur;
 
 import app.util.ModeFrigo;
+import fr.sorbonne_u.components.interfaces.RequiredI;
 
 /**
- * Permet au controleur d'envoyer une ou plusieurs actions au frigo
+ * Interface requise pour que le controleur envoi une ou plusieurs actions au frigo
  * 
  * @author Willy Nassim
  *
  */
-public interface IControleFrigo extends IControleur {
+public interface IControleFrigo extends RequiredI {
 
 	/**
 	 * Permet d'etablir la temperature a atteindre pour le refrigerateur 
