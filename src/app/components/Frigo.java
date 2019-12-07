@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit;
 import app.interfaces.appareil.IAjoutAppareil;
 import app.interfaces.appareil.IConsommation;
 import app.interfaces.appareil.IFrigo;
-import app.ports.frigo.FrigoConsoInPort;
+import app.ports.frigo.FrigoCompteurInPort;
 import app.ports.frigo.FrigoControleurOutPort;
 import app.ports.frigo.FrigoInPort;
 import app.util.EtatAppareil;
@@ -45,7 +45,7 @@ public class Frigo extends AbstractComponent {
 		FrigoInPort action_INPORT = new FrigoInPort(this);
 		
 		// port entrant permettant au compteur de recupere la consommation du frigo
-		FrigoConsoInPort consommation_INPORT = new FrigoConsoInPort(this);
+		FrigoCompteurInPort consommation_INPORT = new FrigoCompteurInPort(this);
 		
 		this.addPort(controleur_OUTPORT);
 		this.addPort(action_INPORT);

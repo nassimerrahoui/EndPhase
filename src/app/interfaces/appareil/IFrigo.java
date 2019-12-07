@@ -1,13 +1,22 @@
 package app.interfaces.appareil;
 
+import app.util.EtatAppareil;
 import app.util.ModeFrigo;
+import fr.sorbonne_u.components.interfaces.OfferedI;
 
 /**
- * Defini une interface offerte pour donner le controle au controleur
+ * Definit une interface offerte pour donner le controle au controleur
  * @author Willy Nassim
  *
  */
-public interface IFrigo extends IAppareil {
+public interface IFrigo extends OfferedI  {
+	
+	/**
+	 * Permet d'eteindre ou allumer un appareil
+	 * @param etat
+	 * @throws Exception
+	 */
+	public void setEtatAppareil(EtatAppareil etat) throws Exception;
 	
 	/**
 	 * Permet d'etablir la temperature a atteindre pour le refrigerateur 

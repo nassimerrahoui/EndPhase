@@ -1,6 +1,7 @@
 package app.ports.controleur;
 
 import app.interfaces.controleur.IControleOrdinateur;
+import app.util.EtatAppareil;
 import app.util.ModeOrdinateur;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
@@ -15,6 +16,11 @@ public class ControleurOrdiOutPort extends AbstractOutboundPort implements ICont
 	
 	public ControleurOrdiOutPort(ComponentI owner) throws Exception {
 		super(IControleOrdinateur.class, owner);
+	}
+	
+	@Override
+	public void envoyerEtatAppareil(EtatAppareil etat) throws Exception {
+		((ControleurOrdiOutPort)this.connector).envoyerEtatAppareil(etat);
 	}
 
 	@Override

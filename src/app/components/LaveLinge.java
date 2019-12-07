@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit;
 import app.interfaces.appareil.IAjoutAppareil;
 import app.interfaces.appareil.IConsommation;
 import app.interfaces.appareil.ILaveLinge;
-import app.ports.lavelinge.LaveLingeConsoInPort;
+import app.ports.lavelinge.LaveLingeCompteurInPort;
 import app.ports.lavelinge.LaveLingeControleurOutPort;
 import app.ports.lavelinge.LaveLingeInPort;
 import app.util.EtatAppareil;
@@ -44,7 +44,7 @@ public class LaveLinge extends AbstractComponent {
 		LaveLingeInPort action_INPORT = new LaveLingeInPort(this);
 		
 		// port entrant permettant au compteur de recupere la consommation du lave-linge
-		LaveLingeConsoInPort consommation_INPORT = new LaveLingeConsoInPort(this);
+		LaveLingeCompteurInPort consommation_INPORT = new LaveLingeCompteurInPort(this);
 		
 		this.addPort(controleur_OUTPORT);
 		this.addPort(action_INPORT);
@@ -88,10 +88,12 @@ public class LaveLinge extends AbstractComponent {
 	}
 
 	public void planifierCycle(int heure, int min) throws Exception {
+		/** TODO */
 		planifierMode(ModeLaveLinge.Veille, heure, min);
-		planifierMode(ModeLaveLinge.Lavage, heure, min);
-		planifierMode(ModeLaveLinge.Rincage, heure, min);
-		planifierMode(ModeLaveLinge.Essorage, heure, min);
+		planifierMode(ModeLaveLinge.Lavage, heure, min+10);
+		planifierMode(ModeLaveLinge.Rincage, heure, min+20);
+		planifierMode(ModeLaveLinge.Essorage, heure, min+30);
+		planifierMode(ModeLaveLinge.Veille, heure, min+40);
 	}
 
 	public void planifierMode(ModeLaveLinge ml, int heure, int min) throws Exception {

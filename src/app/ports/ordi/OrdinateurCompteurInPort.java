@@ -5,14 +5,14 @@ import app.interfaces.appareil.IConsommation;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
 
-public class OrdinateurConsoInPort extends AbstractInboundPort implements IConsommation {
+public class OrdinateurCompteurInPort extends AbstractInboundPort implements IConsommation {
 	private static final long serialVersionUID = 1L;
 
-	public OrdinateurConsoInPort(String uri, ComponentI owner) throws Exception {
+	public OrdinateurCompteurInPort(String uri, ComponentI owner) throws Exception {
 		super(uri, IConsommation.class, owner);
 	}
 
-	public OrdinateurConsoInPort(ComponentI owner) throws Exception {
+	public OrdinateurCompteurInPort(ComponentI owner) throws Exception {
 		super(IConsommation.class, owner);
 	}
 

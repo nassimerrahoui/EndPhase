@@ -4,6 +4,7 @@ import app.util.EtatAppareil;
 import fr.sorbonne_u.components.interfaces.OfferedI;
 
 /**
+ * NON UTILISE !!!!!!
  * Offre la possibilite au controleur de definir un etat
  * @author Willy Nassim
  *

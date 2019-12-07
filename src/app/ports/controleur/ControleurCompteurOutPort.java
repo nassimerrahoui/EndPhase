@@ -1,24 +1,19 @@
 package app.ports.controleur;
 
-import app.interfaces.controleur.ICompteur;
+import app.interfaces.controleur.IControleCompteur;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 
-public class ControleurCompteurOutPort extends AbstractOutboundPort implements ICompteur {
+public class ControleurCompteurOutPort extends AbstractOutboundPort implements IControleCompteur {
 
 	private static final long serialVersionUID = 1L;
 
 	public ControleurCompteurOutPort(String uri, ComponentI owner) throws Exception {
-		super(uri, ICompteur.class, owner);
-	}
-	
-	public ControleurCompteurOutPort(ComponentI owner) throws Exception {
-		super(ICompteur.class, owner);
+		super(uri, IControleCompteur.class, owner);
 	}
 
-	@Override
-	public void ajouterAppareil(String uri) throws Exception {
-		((ControleurCompteurOutPort) this.connector).ajouterAppareil(uri);
+	public ControleurCompteurOutPort(ComponentI owner) throws Exception {
+		super(IControleCompteur.class, owner);
 	}
 
 	@Override

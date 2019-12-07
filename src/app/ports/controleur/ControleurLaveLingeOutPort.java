@@ -1,13 +1,14 @@
 package app.ports.controleur;
 
 import app.interfaces.appareil.ILaveLinge;
+import app.interfaces.controleur.IControleLaveLinge;
 import app.util.EtatAppareil;
 import app.util.ModeLaveLinge;
 import app.util.TemperatureLaveLinge;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 
-public class ControleurLaveLingeOutPort extends AbstractOutboundPort implements ILaveLinge {
+public class ControleurLaveLingeOutPort extends AbstractOutboundPort implements IControleLaveLinge {
 
 	private static final long serialVersionUID = 1L;
 
@@ -20,23 +21,23 @@ public class ControleurLaveLingeOutPort extends AbstractOutboundPort implements 
 	}
 
 	@Override
-	public void setEtatAppareil(EtatAppareil etat) throws Exception {
-		((ControleurLaveLingeOutPort)this.connector).setEtatAppareil(etat);
+	public void envoyerEtatAppareil(EtatAppareil etat) throws Exception {
+		((ControleurLaveLingeOutPort)this.connector).envoyerEtatAppareil(etat);
+	}
+	
+	@Override
+	public void envoyerPlanificationCycle(int heure, int minutes) throws Exception {
+		((ControleurLaveLingeOutPort)this.connector).envoyerPlanificationCycle(heure, minutes);
 	}
 
 	@Override
-	public void planifierCycle(double heure) throws Exception {
-		((ControleurLaveLingeOutPort)this.connector).planifierCycle(heure);
+	public void envoyerPlanificationMode(ModeLaveLinge ml, int heure, int minutes) throws Exception {
+		((ControleurLaveLingeOutPort)this.connector).envoyerPlanificationMode(ml, heure, minutes);
 	}
 
 	@Override
-	public void planifierMode(ModeLaveLinge ml, double heure) throws Exception {
-		((ControleurLaveLingeOutPort)this.connector).planifierMode(ml, heure);
-	}
-
-	@Override
-	public void setTemperature(TemperatureLaveLinge tl) throws Exception {
-		((ControleurLaveLingeOutPort)this.connector).setTemperature(tl);
+	public void envoyerTemperature(TemperatureLaveLinge tl) throws Exception {
+		((ControleurLaveLingeOutPort)this.connector).envoyerTemperature(tl);
 	}
 
 }

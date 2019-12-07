@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit;
 import app.interfaces.appareil.IAjoutAppareil;
 import app.interfaces.appareil.IConsommation;
 import app.interfaces.appareil.IOrdinateur;
-import app.ports.ordi.OrdinateurConsoInPort;
+import app.ports.ordi.OrdinateurCompteurInPort;
 import app.ports.ordi.OrdinateurControleurOutPort;
 import app.ports.ordi.OrdinateurInPort;
 import app.util.EtatAppareil;
@@ -39,7 +39,7 @@ public class Ordinateur extends AbstractComponent {
 		OrdinateurInPort action_INPORT = new OrdinateurInPort(this);
 		
 		// port entrant permettant au compteur de recupere la consommation de l'ordinateur
-		OrdinateurConsoInPort consommation_INPORT = new OrdinateurConsoInPort(this);
+		OrdinateurCompteurInPort consommation_INPORT = new OrdinateurCompteurInPort(this);
 		
 		this.addPort(controleur_OUTPORT);
 		this.addPort(action_INPORT);

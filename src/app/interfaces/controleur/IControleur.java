@@ -1,7 +1,5 @@
 package app.interfaces.controleur;
 
-import app.util.EtatAppareil;
-import app.util.EtatUniteProduction;
 import fr.sorbonne_u.components.interfaces.OfferedI;
 import fr.sorbonne_u.components.interfaces.RequiredI;
 
@@ -31,22 +29,7 @@ public interface IControleur extends OfferedI, RequiredI {
 	 * @throws Exception
 	 */
 	public void ajouterUniteProduction(String uri) throws Exception;
-	
-	/**
-	 * Permet d'allumer ou eteindre un appareil
-	 * requiert au moins un appareil
-	 * @param etat
-	 * @throws Exception
-	 */
-	public void envoyerEtatAppareil(EtatAppareil etat) throws Exception;
-	
-	/**
-	 * Permet d'allumer ou eteindre une unite de production
-	 * requiert au moins une unite de production
-	 * @param etat
-	 * @throws Exception
-	 */
-	public void envoyerEtatUniteProduction(EtatUniteProduction etat) throws Exception;
+
 	
 	/**
 	 * Permet de récupérer la consommation totale des appareils depuis le compteur

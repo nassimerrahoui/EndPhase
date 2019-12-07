@@ -1,7 +1,9 @@
 package app.interfaces.controleur;
 
+import app.util.EtatAppareil;
 import app.util.ModeLaveLinge;
 import app.util.TemperatureLaveLinge;
+import fr.sorbonne_u.components.interfaces.RequiredI;
 
 /**
  * Permet au controleur d'envoyer une ou plusieurs actions au lave-linge
@@ -9,14 +11,22 @@ import app.util.TemperatureLaveLinge;
  * @author Willy Nassim
  *
  */
-public interface IControleLaveLinge extends IControleur {
+public interface IControleLaveLinge extends RequiredI {
+	
+	/**
+	 * Permet d'allumer ou eteindre un appareil
+	 * requiert au moins un appareil
+	 * @param etat
+	 * @throws Exception
+	 */
+	public void envoyerEtatAppareil(EtatAppareil etat) throws Exception;
 	
 	/**
 	 * Enclenche le cycle du lave-linge (lavage, rincage, essorage) a une heure donnee
 	 * @param heure
 	 * @throws Exception
 	 */
-	public void envoyerPlanificationCycle(double heure) throws Exception;
+	public void envoyerPlanificationCycle(int heure, int minutes) throws Exception;
 	
 	/**
 	 * Enclenche un seul mode du lave-linge a une heure donnee
@@ -24,7 +34,7 @@ public interface IControleLaveLinge extends IControleur {
 	 * @param heure
 	 * @throws Exception
 	 */
-	public void envoyerPlanificationMode(ModeLaveLinge ml, double heure) throws Exception;
+	public void envoyerPlanificationMode(ModeLaveLinge ml, int heure, int minutes) throws Exception;
 	
 	/**
 	 * Permet de definir la temperature des prochains lavages

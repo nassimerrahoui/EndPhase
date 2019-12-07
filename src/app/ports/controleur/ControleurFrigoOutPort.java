@@ -1,6 +1,7 @@
 package app.ports.controleur;
 
 import app.interfaces.controleur.IControleFrigo;
+import app.util.EtatAppareil;
 import app.util.ModeFrigo;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
@@ -15,6 +16,11 @@ public class ControleurFrigoOutPort extends AbstractOutboundPort implements ICon
 	
 	public ControleurFrigoOutPort(ComponentI owner) throws Exception {
 		super(IControleFrigo.class, owner);
+	}
+	
+	@Override
+	public void envoyerEtatAppareil(EtatAppareil etat) throws Exception {
+		((ControleurFrigoOutPort)this.connector).envoyerEtatAppareil(etat);
 	}
 
 	@Override
