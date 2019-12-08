@@ -2,9 +2,6 @@ package app.components;
 
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
-import app.interfaces.appareil.IAjoutAppareil;
-import app.interfaces.appareil.IConsommation;
-import app.interfaces.appareil.ILaveLinge;
 import app.interfaces.controleur.IControleBatterie;
 import app.interfaces.controleur.IControleCompteur;
 import app.interfaces.controleur.IControleFrigo;
@@ -15,6 +12,7 @@ import app.interfaces.controleur.IControleur;
 import app.ports.controleur.ControleurBatterieOutPort;
 import app.ports.controleur.ControleurCompteurOutPort;
 import app.ports.controleur.ControleurFrigoOutPort;
+import app.ports.controleur.ControleurInPort;
 import app.ports.controleur.ControleurLaveLingeOutPort;
 import app.ports.controleur.ControleurOrdiOutPort;
 import app.ports.controleur.ControleurPanneauoOutPort;
@@ -52,8 +50,35 @@ public class Controleur extends AbstractComponent {
 	protected Vector<String> unitesProduction = new Vector<>();
 	protected Vector<String> appareils = new Vector<>();
 
-	public Controleur(String controleurURI, int nbThreads, int nbSchedulableThreads) throws Exception {
+	public Controleur(String controleurURI, 
+			int nbThreads, int nbSchedulableThreads) throws Exception {
 		super(controleurURI, nbThreads, nbSchedulableThreads);
+		
+		frigo_OUTPORT = new ControleurFrigoOutPort(this);
+		lavelinge_OUTPORT = new ControleurLaveLingeOutPort(this);
+		ordinateur_OUTPORT = new ControleurOrdiOutPort(this);
+		panneausolaire_OUTPORT = new ControleurPanneauoOutPort(this);
+		batterie_OUTPORT = new ControleurBatterieOutPort(this);
+		compteur_OUTPORT = new ControleurCompteurOutPort(this);
+		
+		// port entrant permettant aux appareils et unites de production de s'inscrire
+		ControleurInPort inscription_INPORT = new ControleurInPort(this);
+		
+		this.addPort(frigo_OUTPORT);
+		this.addPort(lavelinge_OUTPORT);
+		this.addPort(ordinateur_OUTPORT);
+		this.addPort(panneausolaire_OUTPORT);
+		this.addPort(batterie_OUTPORT);
+		this.addPort(compteur_OUTPORT);
+		this.addPort(inscription_INPORT);
+		
+		frigo_OUTPORT.publishPort();
+		lavelinge_OUTPORT.publishPort();
+		ordinateur_OUTPORT.publishPort();
+		panneausolaire_OUTPORT.publishPort();
+		batterie_OUTPORT.publishPort();
+		compteur_OUTPORT.publishPort();
+		inscription_INPORT.publishPort();
 
 		if (AbstractCVM.isDistributed) {
 			this.executionLog.setDirectory(System.getProperty("user.dir")) ;
@@ -144,12 +169,14 @@ public class Controleur extends AbstractComponent {
 
 	public void ajouterAppareil(String uri) throws Exception {
 		this.appareils.add(uri);
+		this.compteur_OUTPORT.demanderAjoutAppareil(uri);
 	}
 	
 	// ******* Service offert pour les unites de production  *********
 
 	public void ajouterUniteProduction(String uri) throws Exception {
 		this.unitesProduction.add(uri);
+		this.compteur_OUTPORT.demanderAjoutUniteProduction(uri);
 	}
 	
 	/**
@@ -175,7 +202,7 @@ public class Controleur extends AbstractComponent {
 				try { ((Controleur) this.getTaskOwner()).envoyerEtatPanneauSolaire(EtatUniteProduction.ON); }
 				catch (Exception e) { throw new RuntimeException(e); }
 			}
-		}, 1000, TimeUnit.MILLISECONDS);
+		}, 3000, TimeUnit.MILLISECONDS);
 		
 		this.scheduleTask(new AbstractComponent.AbstractTask() {
 			@Override
@@ -183,7 +210,7 @@ public class Controleur extends AbstractComponent {
 				try { ((Controleur) this.getTaskOwner()).envoyerEtatBatterie(EtatUniteProduction.ON); }
 				catch (Exception e) { throw new RuntimeException(e); }
 			}
-		}, 1000, TimeUnit.MILLISECONDS);
+		}, 3000, TimeUnit.MILLISECONDS);
 		
 		this.scheduleTask(new AbstractComponent.AbstractTask() {
 			@Override
@@ -191,7 +218,7 @@ public class Controleur extends AbstractComponent {
 				try { ((Controleur) this.getTaskOwner()).envoyerEtatFrigo(EtatAppareil.ON); }
 				catch (Exception e) { throw new RuntimeException(e); }
 			}
-		}, 2000, TimeUnit.MILLISECONDS);
+		}, 3000, TimeUnit.MILLISECONDS);
 		
 		this.scheduleTask(new AbstractComponent.AbstractTask() {
 			@Override
@@ -199,7 +226,7 @@ public class Controleur extends AbstractComponent {
 				try { ((Controleur) this.getTaskOwner()).envoyerEtatOrdinateur(EtatAppareil.ON); }
 				catch (Exception e) { throw new RuntimeException(e); }
 			}
-		}, 2000, TimeUnit.MILLISECONDS);
+		}, 3000, TimeUnit.MILLISECONDS);
 	}
 
 	@Override
@@ -229,13 +256,22 @@ public class Controleur extends AbstractComponent {
 	public void	shutdown() throws ComponentShutdownException
 	{
 		try {
-			PortI[] port_controleur = this.findPortsFromInterface(ILaveLinge.class);
-			PortI[] port_consommation = this.findPortsFromInterface(IConsommation.class);
-			PortI[] port_ajoutappareil = this.findPortsFromInterface(IAjoutAppareil.class);
+			PortI[] p1 = this.findPortsFromInterface(IControleur.class);
+			PortI[] p2 = this.findPortsFromInterface(IControleFrigo.class);
+			PortI[] p3 = this.findPortsFromInterface(IControleLaveLinge.class);
+			PortI[] p4 = this.findPortsFromInterface(IControleOrdinateur.class);
+			PortI[] p5 = this.findPortsFromInterface(IControlePanneau.class);
+			PortI[] p6 = this.findPortsFromInterface(IControleBatterie.class);
+			PortI[] p7 = this.findPortsFromInterface(IControleCompteur.class);
 			
-			port_controleur[0].unpublishPort() ;
-			port_consommation[0].unpublishPort();
-			port_ajoutappareil[0].unpublishPort();
+			p1[0].unpublishPort() ;
+			p2[0].unpublishPort();
+			p3[0].unpublishPort();
+			p4[0].unpublishPort() ;
+			p5[0].unpublishPort();
+			p6[0].unpublishPort();
+			p7[0].unpublishPort() ;
+			
 		} catch (Exception e) { throw new ComponentShutdownException(e); }
 		super.shutdown();
 	}
@@ -244,13 +280,22 @@ public class Controleur extends AbstractComponent {
 	public void shutdownNow() throws ComponentShutdownException
 	{
 		try {
-			PortI[] port_controleur = this.findPortsFromInterface(ILaveLinge.class);
-			PortI[] port_consommation = this.findPortsFromInterface(IConsommation.class);
-			PortI[] port_ajoutappareil = this.findPortsFromInterface(IAjoutAppareil.class);
+			PortI[] p1 = this.findPortsFromInterface(IControleur.class);
+			PortI[] p2 = this.findPortsFromInterface(IControleFrigo.class);
+			PortI[] p3 = this.findPortsFromInterface(IControleLaveLinge.class);
+			PortI[] p4 = this.findPortsFromInterface(IControleOrdinateur.class);
+			PortI[] p5 = this.findPortsFromInterface(IControlePanneau.class);
+			PortI[] p6 = this.findPortsFromInterface(IControleBatterie.class);
+			PortI[] p7 = this.findPortsFromInterface(IControleCompteur.class);
 			
-			port_controleur[0].unpublishPort() ;
-			port_consommation[0].unpublishPort();
-			port_ajoutappareil[0].unpublishPort();
+			p1[0].unpublishPort() ;
+			p2[0].unpublishPort();
+			p3[0].unpublishPort();
+			p4[0].unpublishPort() ;
+			p5[0].unpublishPort();
+			p6[0].unpublishPort();
+			p7[0].unpublishPort() ;
+			
 		} catch (Exception e) { throw new ComponentShutdownException(e); }
 		super.shutdownNow();
 	}

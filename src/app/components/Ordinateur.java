@@ -1,10 +1,11 @@
 package app.components;
 
 import java.util.concurrent.TimeUnit;
+
 import app.interfaces.appareil.IAjoutAppareil;
 import app.interfaces.appareil.IConsommation;
 import app.interfaces.appareil.IOrdinateur;
-import app.ports.ordi.OrdinateurCompteurInPort;
+import app.ports.ordi.OrdinateurCompteurOutPort;
 import app.ports.ordi.OrdinateurControleurOutPort;
 import app.ports.ordi.OrdinateurInPort;
 import app.util.EtatAppareil;
@@ -18,12 +19,15 @@ import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
 
-@OfferedInterfaces(offered = { IOrdinateur.class, IConsommation.class })
-@RequiredInterfaces(required = { IAjoutAppareil.class })
+@OfferedInterfaces(offered = { IOrdinateur.class })
+@RequiredInterfaces(required = { IAjoutAppareil.class, IConsommation.class })
 public class Ordinateur extends AbstractComponent {
 
 	/** port sortant permettant a l'appareil de s'inscrire sur la liste des appareil du controleur */
 	protected OrdinateurControleurOutPort controleur_OUTPORT;
+	
+	/** port sortant permettant au compteur de recupere la consommation de l'ordinateur */
+	protected OrdinateurCompteurOutPort consommation_OUTPORT;
 
 	protected TypeAppareil type;
 	protected EtatAppareil etat;
@@ -35,19 +39,19 @@ public class Ordinateur extends AbstractComponent {
 			TypeAppareil type) throws Exception {
 		super(ordiURI, nbThreads, nbSchedulableThreads);
 
+		controleur_OUTPORT = new OrdinateurControleurOutPort(this);
+		consommation_OUTPORT = new OrdinateurCompteurOutPort(this);
+		
 		// port entrant permettant au controleur d'effectuer des actions sur l'ordinateur
 		OrdinateurInPort action_INPORT = new OrdinateurInPort(this);
 		
-		// port entrant permettant au compteur de recupere la consommation de l'ordinateur
-		OrdinateurCompteurInPort consommation_INPORT = new OrdinateurCompteurInPort(this);
-		
 		this.addPort(controleur_OUTPORT);
+		this.addPort(consommation_OUTPORT);
 		this.addPort(action_INPORT);
-		this.addPort(consommation_INPORT);
 		
 		controleur_OUTPORT.publishPort();
-		consommation_INPORT.publishPort();
-		consommation_INPORT.publishPort();
+		consommation_OUTPORT.publishPort();
+		action_INPORT.publishPort();
 		
 		if (AbstractCVM.isDistributed) {
 			this.executionLog.setDirectory(System.getProperty("user.dir")) ;

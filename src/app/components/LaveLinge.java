@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit;
 import app.interfaces.appareil.IAjoutAppareil;
 import app.interfaces.appareil.IConsommation;
 import app.interfaces.appareil.ILaveLinge;
-import app.ports.lavelinge.LaveLingeCompteurInPort;
+import app.ports.lavelinge.LaveLingeCompteurOutPort;
 import app.ports.lavelinge.LaveLingeControleurOutPort;
 import app.ports.lavelinge.LaveLingeInPort;
 import app.util.EtatAppareil;
@@ -19,12 +19,15 @@ import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
 
-@OfferedInterfaces(offered = { ILaveLinge.class, IConsommation.class })
-@RequiredInterfaces(required = { IAjoutAppareil.class })
+@OfferedInterfaces(offered = { ILaveLinge.class })
+@RequiredInterfaces(required = { IAjoutAppareil.class, IConsommation.class })
 public class LaveLinge extends AbstractComponent {
 
 	/** port sortant permettant a l'appareil de s'inscrire sur la liste des appareil du controleur */
 	protected LaveLingeControleurOutPort controleur_OUTPORT;
+	
+	/** port sortant permettant au compteur de recupere la consommation du lave-linge */
+	protected LaveLingeCompteurOutPort consommation_OUTPORT;
 
 	protected TypeAppareil type;
 	protected EtatAppareil etat;
@@ -40,19 +43,19 @@ public class LaveLinge extends AbstractComponent {
 			TypeAppareil type) throws Exception {
 		super(lavelingeURI, nbThreads, nbSchedulableThreads);
 
+		controleur_OUTPORT = new LaveLingeControleurOutPort(this);
+		consommation_OUTPORT = new LaveLingeCompteurOutPort(this);
+		
 		// port entrant permettant au controleur d'effectuer des actions sur le lave-linge
 		LaveLingeInPort action_INPORT = new LaveLingeInPort(this);
 		
-		// port entrant permettant au compteur de recupere la consommation du lave-linge
-		LaveLingeCompteurInPort consommation_INPORT = new LaveLingeCompteurInPort(this);
-		
 		this.addPort(controleur_OUTPORT);
+		this.addPort(consommation_OUTPORT);
 		this.addPort(action_INPORT);
-		this.addPort(consommation_INPORT);
 		
 		controleur_OUTPORT.publishPort();
-		consommation_INPORT.publishPort();
-		consommation_INPORT.publishPort();
+		consommation_OUTPORT.publishPort();
+		action_INPORT.publishPort();
 		
 		if (AbstractCVM.isDistributed) {
 			this.executionLog.setDirectory(System.getProperty("user.dir")) ;
