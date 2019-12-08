@@ -1,21 +1,55 @@
 package app.ports.compteur;
 
-import app.components.Frigo;
-import app.interfaces.appareil.IConsommation;
+import app.components.Compteur;
+import app.interfaces.compteur.ICompteurControleur;
+import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
 
-public class CompteurInPort extends AbstractInboundPort implements IConsommation {
+public class CompteurInPort extends AbstractInboundPort implements ICompteurControleur {
 
 	private static final long serialVersionUID = 1L;
 
 	public CompteurInPort(String uri, ComponentI owner) throws Exception {
-		super(uri, IConsommation.class, owner);
+		super(uri, ICompteurControleur.class, owner);
+	}
+	
+	public CompteurInPort(ComponentI owner) throws Exception {
+		super(ICompteurControleur.class, owner);
 	}
 
 	@Override
-	public double getConsommation() throws Exception {
-		return this.getOwner().handleRequestSync(owner -> ((Frigo) owner).getConsommation());
+	public void ajouterAppareil(String uri) throws Exception {
+		AbstractComponent.AbstractService<Void> task = new AbstractComponent.AbstractService<Void>() {
+			public Void call() throws Exception {
+				((Compteur) owner).ajouterAppareil(uri);
+				return null;
+			}
+		};
+
+		this.owner.handleRequestAsync(0, task);
+	}
+
+	@Override
+	public void ajouterUniteProduction(String uri) throws Exception {
+		AbstractComponent.AbstractService<Void> task = new AbstractComponent.AbstractService<Void>() {
+			public Void call() throws Exception {
+				((Compteur) owner).ajouterUniteProduction(uri);
+				return null;
+			}
+		};
+
+		this.owner.handleRequestAsync(0, task);
+	}
+
+	@Override
+	public double envoyerConsommationGlobale() throws Exception {
+		return this.getOwner().handleRequestSync(owner -> ((Compteur) owner).envoyerConsommationGlobale());
+	}
+
+	@Override
+	public double envoyerProductionGlobale() throws Exception {
+		return this.getOwner().handleRequestSync(owner -> ((Compteur) owner).envoyerProductionGlobale());
 	}
 
 }

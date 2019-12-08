@@ -19,6 +19,6 @@ public class ControleurBatterieOutPort extends AbstractOutboundPort implements I
 
 	@Override
 	public void envoyerEtatUniteProduction(EtatUniteProduction etat) throws Exception {
-		((ControleurBatterieOutPort) this.connector).envoyerEtatUniteProduction(etat);
+		((IControleBatterie) this.connector).envoyerEtatUniteProduction(etat);
 	}
 }

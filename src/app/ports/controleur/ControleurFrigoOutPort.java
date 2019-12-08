@@ -20,27 +20,27 @@ public class ControleurFrigoOutPort extends AbstractOutboundPort implements ICon
 	
 	@Override
 	public void envoyerEtatAppareil(EtatAppareil etat) throws Exception {
-		((ControleurFrigoOutPort)this.connector).envoyerEtatAppareil(etat);
+		((IControleFrigo)this.connector).envoyerEtatAppareil(etat);
 	}
 
 	@Override
 	public void envoyerTemperature_Refrigerateur(double temperature) throws Exception {
-		((ControleurFrigoOutPort)this.connector).envoyerTemperature_Refrigerateur(temperature);
+		((IControleFrigo)this.connector).envoyerTemperature_Refrigerateur(temperature);
 	}
 
 	@Override
 	public void envoyerTemperature_Congelateur(double temperature) throws Exception {
-		((ControleurFrigoOutPort)this.connector).envoyerTemperature_Congelateur(temperature);
+		((IControleFrigo)this.connector).envoyerTemperature_Congelateur(temperature);
 	}
 
 	@Override
 	public void envoyerLumiere_Refrigerateur(ModeFrigo mf) throws Exception {
-		((ControleurFrigoOutPort)this.connector).envoyerLumiere_Refrigerateur(mf);
+		((IControleFrigo)this.connector).envoyerLumiere_Refrigerateur(mf);
 	}
 
 	@Override
 	public void envoyerLumiere_Congelateur(ModeFrigo mf) throws Exception {
-		((ControleurFrigoOutPort)this.connector).envoyerLumiere_Congelateur(mf);
+		((IControleFrigo)this.connector).envoyerLumiere_Congelateur(mf);
 	}
 
 }

@@ -19,7 +19,7 @@ public class ControleurPanneauoOutPort extends AbstractOutboundPort implements I
 
 	@Override
 	public void envoyerEtatUniteProduction(EtatUniteProduction etat) throws Exception {
-		((ControleurPanneauoOutPort) this.connector).envoyerEtatUniteProduction(etat);
+		((IControlePanneau) this.connector).envoyerEtatUniteProduction(etat);
 	}
 
 }

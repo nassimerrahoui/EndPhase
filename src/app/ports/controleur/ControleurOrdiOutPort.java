@@ -20,11 +20,11 @@ public class ControleurOrdiOutPort extends AbstractOutboundPort implements ICont
 	
 	@Override
 	public void envoyerEtatAppareil(EtatAppareil etat) throws Exception {
-		((ControleurOrdiOutPort)this.connector).envoyerEtatAppareil(etat);
+		((IControleOrdinateur)this.connector).envoyerEtatAppareil(etat);
 	}
 
 	@Override
 	public void envoyerMode(ModeOrdinateur mo) throws Exception {
-		((ControleurOrdiOutPort)this.connector).envoyerMode(mo);
+		((IControleOrdinateur)this.connector).envoyerMode(mo);
 	}
 }

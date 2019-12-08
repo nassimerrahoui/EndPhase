@@ -14,5 +14,5 @@ public interface IProduction extends OfferedI {
 	 * @return
 	 * @throws Exception
 	 */
-	public double getProduction() throws Exception;
+	public double envoyerProduction() throws Exception;
 }

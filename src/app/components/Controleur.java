@@ -129,12 +129,12 @@ public class Controleur extends AbstractComponent {
 	
 	// ******* Services requis pour recuperer les informations du compteur *********
 	
-	public void getAllConsommations() throws Exception {
-		this.compteur_OUTPORT.getAllConsommations();
+	public void getConsommationGlobale() throws Exception {
+		this.compteur_OUTPORT.getConsommationGlobale();
 	}
 
-	public void getAllProductions() throws Exception {
-		this.compteur_OUTPORT.getAllProductions();
+	public void getProductionGlobale() throws Exception {
+		this.compteur_OUTPORT.getProductionGlobale();
 	}
 	
 	// ******* Service offert pour les appareils *********

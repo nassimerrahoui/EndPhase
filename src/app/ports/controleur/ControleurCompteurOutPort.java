@@ -17,12 +17,22 @@ public class ControleurCompteurOutPort extends AbstractOutboundPort implements I
 	}
 
 	@Override
-	public double getAllConsommations() throws Exception {
-		return ((ControleurCompteurOutPort) this.connector).getAllConsommations();
+	public void demanderAjoutAppareil(String uri) throws Exception {
+		((IControleCompteur) this.connector).demanderAjoutAppareil(uri);
+	}
+	
+	@Override
+	public void demanderAjoutUniteProduction(String uri) throws Exception {
+		((IControleCompteur) this.connector).demanderAjoutUniteProduction(uri);
 	}
 
 	@Override
-	public double getAllProductions() throws Exception {
-		return ((ControleurCompteurOutPort) this.connector).getAllProductions();
+	public double getConsommationGlobale() throws Exception {
+		return ((IControleCompteur) this.connector).getConsommationGlobale();
+	}
+
+	@Override
+	public double getProductionGlobale() throws Exception {
+		return ((IControleCompteur) this.connector).getProductionGlobale();
 	}
 }
