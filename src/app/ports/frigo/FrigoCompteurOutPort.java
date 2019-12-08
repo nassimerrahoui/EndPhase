@@ -17,7 +17,7 @@ public class FrigoCompteurOutPort extends AbstractOutboundPort implements IConso
 	}
 
 	@Override
-	public double envoyerConsommation(String uri) throws Exception {
-		return ((IConsommation) this.connector).envoyerConsommation(uri);
+	public void envoyerConsommation(String uri, double consommation) throws Exception {
+		((IConsommation) this.connector).envoyerConsommation(uri, consommation);
 	}
 }

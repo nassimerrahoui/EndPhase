@@ -75,8 +75,8 @@ public class Ordinateur extends AbstractComponent {
 		this.controleur_OUTPORT.demandeAjoutControleur(uri);
 	}
 
-	public double envoyerConsommation() throws Exception {
-		return consommation;
+	public void envoyerConsommation(String uri, double consommation) throws Exception {
+		this.consommation_OUTPORT.envoyerConsommation(uri, consommation);
 	}
 
 	public void setEtatAppareil(EtatAppareil etat) throws Exception {
