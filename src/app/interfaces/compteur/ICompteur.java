@@ -11,17 +11,37 @@ import fr.sorbonne_u.components.interfaces.RequiredI;
 public interface ICompteur extends RequiredI {
 	
 	/**
-	 * Recupere la consommation d'un appareil
+	 * Recupere la consommation de l'appareil
 	 * @return
 	 * @throws Exception
 	 */
-	public double getAppareilConsommation() throws Exception;
+	public double getFrigoConsommation() throws Exception;
 	
 	/**
-	 * Recupere la production d'energie d'une unite de production
+	 * Recupere la consommation de l'appareil
 	 * @return
 	 * @throws Exception
 	 */
-	public double getUniteProduction() throws Exception;
+	public double getLaveLingeConsommation() throws Exception;
 	
+	/**
+	 * Recupere la consommation de l'appareil
+	 * @return
+	 * @throws Exception
+	 */
+	public double getOrdinateurConsommation() throws Exception;
+	
+	/**
+	 * Recupere la production d'energie de l'unite de production
+	 * @return
+	 * @throws Exception
+	 */
+	public double getPanneauProduction() throws Exception;
+	
+	/**
+	 * Recupere la production d'energie de l'unite de production
+	 * @return
+	 * @throws Exception
+	 */
+	public double getBatterieProduction() throws Exception;
 }

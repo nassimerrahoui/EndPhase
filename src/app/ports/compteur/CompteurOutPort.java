@@ -17,12 +17,27 @@ public class CompteurOutPort extends AbstractOutboundPort implements ICompteur {
 	}
 
 	@Override
-	public double getAppareilConsommation() throws Exception {
-		return ((ICompteur) this.connector).getAppareilConsommation();
+	public double getFrigoConsommation() throws Exception {
+		return ((ICompteur) this.connector).getFrigoConsommation();
 	}
 
 	@Override
-	public double getUniteProduction() throws Exception {
-		return ((ICompteur) this.connector).getUniteProduction();
+	public double getLaveLingeConsommation() throws Exception {
+		return ((ICompteur) this.connector).getLaveLingeConsommation();
+	}
+
+	@Override
+	public double getOrdinateurConsommation() throws Exception {
+		return ((ICompteur) this.connector).getOrdinateurConsommation();
+	}
+
+	@Override
+	public double getPanneauProduction() throws Exception {
+		return ((ICompteur) this.connector).getPanneauProduction();
+	}
+
+	@Override
+	public double getBatterieProduction() throws Exception {
+		return ((ICompteur) this.connector).getBatterieProduction();
 	}
 }

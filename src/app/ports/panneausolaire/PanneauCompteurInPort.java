@@ -5,7 +5,7 @@ import app.interfaces.production.IProduction;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
 
-public class PanneauCompteurInPort extends AbstractInboundPort implements IProduction{
+public class PanneauCompteurInPort extends AbstractInboundPort implements IProduction {
 	private static final long serialVersionUID = 1L;
 
 	public PanneauCompteurInPort(String uri, ComponentI owner) throws Exception {
@@ -16,9 +16,8 @@ public class PanneauCompteurInPort extends AbstractInboundPort implements IProdu
 		super(IProduction.class, owner);
 	}
 
-
 	@Override
-	public double getProduction() throws Exception {
+	public double envoyerProduction() throws Exception {
 		return this.getOwner().handleRequestSync(owner -> ((PanneauSolaire) owner).getProduction());
 	}
 }

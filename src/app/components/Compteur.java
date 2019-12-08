@@ -6,9 +6,13 @@ import app.interfaces.compteur.ICompteurControleur;
 import app.ports.compteur.CompteurInPort;
 import app.ports.compteur.CompteurOutPort;
 import fr.sorbonne_u.components.AbstractComponent;
+import fr.sorbonne_u.components.annotations.OfferedInterfaces;
+import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 
-public class Compteur extends AbstractComponent implements ICompteur, ICompteurControleur {
+@OfferedInterfaces(offered = { ICompteurControleur.class })
+@RequiredInterfaces(required = { ICompteur.class })
+public class Compteur extends AbstractComponent {
 
 	protected ConcurrentHashMap<String, Double> appareil_consommation = new ConcurrentHashMap<>();
 	protected ConcurrentHashMap<String, Double> unite_production = new ConcurrentHashMap<>();
@@ -59,35 +63,39 @@ public class Compteur extends AbstractComponent implements ICompteur, ICompteurC
 		this.tracer.setRelativePosition(1, 3);
 	}
 
-	@Override
 	public void ajouterAppareil(String uri) throws Exception {
 		this.appareil_consommation.put(uri, 0.0);
 	}
 	
-	@Override
 	public void ajouterUniteProduction(String uri) throws Exception {
 		this.unite_production.put(uri, 0.0);
 	}
 
-	@Override
 	public double envoyerConsommationGlobale() throws Exception {
 		return appareil_consommation.values().stream().mapToDouble(i -> i).sum();
 	}
 
-	@Override
 	public double envoyerProductionGlobale() throws Exception {
 		return unite_production.values().stream().mapToDouble(i -> i).sum();
 	}
 
-	@Override
-	public double getAppareilConsommation() throws Exception {
-		this.frigo_OUTPORT.getAppareilConsommation();
+	public double getFrigoConsommation() throws Exception {
+		return this.frigo_OUTPORT.getFrigoConsommation();
 	}
 
-	@Override
-	public double getUniteProduction() throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+	public double getLaveLingeConsommation() throws Exception {
+		return this.lavelinge_OUTPORT.getLaveLingeConsommation();
 	}
-	
+
+	public double getOrdinateurConsommation() throws Exception {
+		return this.ordinateur_OUTPORT.getOrdinateurConsommation();
+	}
+
+	public double getPanneauProduction() throws Exception {
+		return this.panneau_OUTPORT.getPanneauProduction();
+	}
+
+	public double getBatterieProduction() throws Exception {
+		return this.batterie_OUTPORT.getBatterieProduction();
+	}
 }

@@ -5,10 +5,12 @@ import java.util.concurrent.TimeUnit;
 import app.interfaces.appareil.IAjoutAppareil;
 import app.interfaces.appareil.IConsommation;
 import app.interfaces.appareil.ILaveLinge;
+import app.interfaces.controleur.IControleBatterie;
 import app.interfaces.controleur.IControleCompteur;
 import app.interfaces.controleur.IControleFrigo;
 import app.interfaces.controleur.IControleLaveLinge;
 import app.interfaces.controleur.IControleOrdinateur;
+import app.interfaces.controleur.IControlePanneau;
 import app.interfaces.controleur.IControleur;
 import app.ports.controleur.ControleurBatterieOutPort;
 import app.ports.controleur.ControleurCompteurOutPort;
@@ -35,8 +37,9 @@ import fr.sorbonne_u.components.ports.PortI;
 		IControleCompteur.class, 
 		IControleFrigo.class, 
 		IControleLaveLinge.class, 
-		IControleOrdinateur.class })
-
+		IControleOrdinateur.class,
+		IControlePanneau.class,
+		IControleBatterie.class })
 public class Controleur extends AbstractComponent {
 	
 	protected ControleurFrigoOutPort frigo_OUTPORT;
