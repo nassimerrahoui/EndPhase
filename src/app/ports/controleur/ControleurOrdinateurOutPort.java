@@ -6,15 +6,15 @@ import app.util.ModeOrdinateur;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 
-public class ControleurOrdiOutPort extends AbstractOutboundPort implements IControleOrdinateur {
+public class ControleurOrdinateurOutPort extends AbstractOutboundPort implements IControleOrdinateur {
 
 	private static final long serialVersionUID = 1L;
 
-	public ControleurOrdiOutPort(String uri, ComponentI owner) throws Exception {
+	public ControleurOrdinateurOutPort(String uri, ComponentI owner) throws Exception {
 		super(uri, IControleOrdinateur.class, owner);
 	}
 	
-	public ControleurOrdiOutPort(ComponentI owner) throws Exception {
+	public ControleurOrdinateurOutPort(ComponentI owner) throws Exception {
 		super(IControleOrdinateur.class, owner);
 	}
 	

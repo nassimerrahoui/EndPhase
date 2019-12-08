@@ -14,7 +14,7 @@ import app.ports.controleur.ControleurCompteurOutPort;
 import app.ports.controleur.ControleurFrigoOutPort;
 import app.ports.controleur.ControleurInPort;
 import app.ports.controleur.ControleurLaveLingeOutPort;
-import app.ports.controleur.ControleurOrdiOutPort;
+import app.ports.controleur.ControleurOrdinateurOutPort;
 import app.ports.controleur.ControleurPanneauoOutPort;
 import app.util.EtatAppareil;
 import app.util.EtatUniteProduction;
@@ -42,7 +42,7 @@ public class Controleur extends AbstractComponent {
 	
 	protected ControleurFrigoOutPort frigo_OUTPORT;
 	protected ControleurLaveLingeOutPort lavelinge_OUTPORT;
-	protected ControleurOrdiOutPort ordinateur_OUTPORT;
+	protected ControleurOrdinateurOutPort ordinateur_OUTPORT;
 	protected ControleurPanneauoOutPort panneausolaire_OUTPORT;
 	protected ControleurBatterieOutPort batterie_OUTPORT;
 	protected ControleurCompteurOutPort compteur_OUTPORT;
@@ -56,7 +56,7 @@ public class Controleur extends AbstractComponent {
 		
 		frigo_OUTPORT = new ControleurFrigoOutPort(this);
 		lavelinge_OUTPORT = new ControleurLaveLingeOutPort(this);
-		ordinateur_OUTPORT = new ControleurOrdiOutPort(this);
+		ordinateur_OUTPORT = new ControleurOrdinateurOutPort(this);
 		panneausolaire_OUTPORT = new ControleurPanneauoOutPort(this);
 		batterie_OUTPORT = new ControleurBatterieOutPort(this);
 		compteur_OUTPORT = new ControleurCompteurOutPort(this);
