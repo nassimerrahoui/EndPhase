@@ -2,7 +2,7 @@ package app;
 
 import java.util.Vector;
 import app.components.Batterie;
-import app.components.Chargeur;
+import app.components.LaveLinge;
 import app.components.Compteur;
 import app.components.Controleur;
 import app.components.Frigo;
@@ -18,7 +18,7 @@ public class DistributedCVM extends AbstractDistributedCVM {
 	protected static Controleur controleur;
 	protected static Frigo frigo;
 	protected static Ordinateur ordinateur;
-	protected static Chargeur chargeur;
+	protected static LaveLinge chargeur;
 	protected static PanneauSolaire panneau;
 	protected static Batterie batterie;
 	protected static Compteur compteur;
@@ -98,7 +98,7 @@ public class DistributedCVM extends AbstractDistributedCVM {
 			this.toggleTracing(ordinateurURI);
 
 		} else if (thisJVMURI.equals(JVM_4)) {
-			chargeur = new Chargeur(chargeurURI, 1, 0, URI_DATAOUTPORT_CHARGEUR, TypeAppareil.CONSO_PLANIFIABLE);
+			chargeur = new LaveLinge(chargeurURI, 1, 0, URI_DATAOUTPORT_CHARGEUR, TypeAppareil.CONSO_PLANIFIABLE);
 			this.addDeployedComponent(chargeurURI,chargeur);
 			this.toggleTracing(chargeurURI);
 		
@@ -179,14 +179,14 @@ public class DistributedCVM extends AbstractDistributedCVM {
 		} else if (thisJVMURI.equals(JVM_3)) {
 			this.doPortConnection(
 					ordinateurURI,
-					ordinateur.dataInPort.getPortURI(),
+					ordinateur.controleur_INPORT.getPortURI(),
 					URI_DATAOUTPORTS_COMPTEUR.get(3),
 					DataServiceConnector.class.getCanonicalName()) ;
 			
 		} else if (thisJVMURI.equals(JVM_4)) {	
 			this.doPortConnection(
 					chargeurURI,
-					chargeur.dataInPort.getPortURI(),
+					chargeur.controleur_INPORT.getPortURI(),
 					URI_DATAOUTPORTS_COMPTEUR.get(4),
 					DataServiceConnector.class.getCanonicalName()) ;
 			

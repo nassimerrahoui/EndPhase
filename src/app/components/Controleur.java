@@ -1,271 +1,257 @@
 package app.components;
 
 import java.util.Vector;
-import java.util.concurrent.ConcurrentHashMap;
-import app.data.Message;
-import app.interfaces.IControleur;
-import app.ports.ControleurDataInPort;
-import app.ports.ControleurDataOutPort;
+import java.util.concurrent.TimeUnit;
+import app.interfaces.appareil.IAjoutAppareil;
+import app.interfaces.appareil.IConsommation;
+import app.interfaces.appareil.ILaveLinge;
+import app.interfaces.controleur.IControleBatterie;
+import app.interfaces.controleur.IControleCompteur;
+import app.interfaces.controleur.IControleFrigo;
+import app.interfaces.controleur.IControleLaveLinge;
+import app.interfaces.controleur.IControleOrdinateur;
+import app.interfaces.controleur.IControlePanneau;
+import app.interfaces.controleur.IControleur;
+import app.ports.controleur.ControleurBatterieOutPort;
+import app.ports.controleur.ControleurCompteurOutPort;
+import app.ports.controleur.ControleurFrigoOutPort;
+import app.ports.controleur.ControleurLaveLingeOutPort;
+import app.ports.controleur.ControleurOrdiOutPort;
+import app.ports.controleur.ControleurPanneauoOutPort;
+import app.util.EtatAppareil;
+import app.util.EtatUniteProduction;
+import app.util.ModeFrigo;
+import app.util.ModeLaveLinge;
+import app.util.ModeOrdinateur;
+import app.util.TemperatureLaveLinge;
 import fr.sorbonne_u.components.AbstractComponent;
+import fr.sorbonne_u.components.annotations.OfferedInterfaces;
+import fr.sorbonne_u.components.annotations.RequiredInterfaces;
+import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
-import fr.sorbonne_u.components.interfaces.DataOfferedI;
-public class Controleur extends AbstractComponent implements IControleur {
+import fr.sorbonne_u.components.ports.PortI;
 
-	public ControleurDataOutPort dataOutPort;
-	public ConcurrentHashMap<String, ControleurDataInPort> dataInPorts = new ConcurrentHashMap<>();
-	protected ConcurrentHashMap<String, Vector<Message>> appareil_messages = new ConcurrentHashMap<>();
-	protected ConcurrentHashMap<String, Double> appareil_consommation = new ConcurrentHashMap<>();
-	protected ConcurrentHashMap<String, Double> unite_production = new ConcurrentHashMap<>();
+@OfferedInterfaces(offered = { IControleur.class })
+@RequiredInterfaces(required = { 
+		IControleCompteur.class, 
+		IControleFrigo.class, 
+		IControleLaveLinge.class, 
+		IControleOrdinateur.class,
+		IControlePanneau.class,
+		IControleBatterie.class })
+public class Controleur extends AbstractComponent {
 	
-	protected Vector<String[]> priorites = new Vector<String[]>();
-	protected Vector<String[]> uproductions = new Vector<String[]>();
-	
-	protected boolean allume_appareil_permanent;
-	protected boolean eteindre_appareil;
-	protected boolean batterie;
+	protected ControleurFrigoOutPort frigo_OUTPORT;
+	protected ControleurLaveLingeOutPort lavelinge_OUTPORT;
+	protected ControleurOrdiOutPort ordinateur_OUTPORT;
+	protected ControleurPanneauoOutPort panneausolaire_OUTPORT;
+	protected ControleurBatterieOutPort batterie_OUTPORT;
+	protected ControleurCompteurOutPort compteur_OUTPORT;
 
-	public Controleur(String reflectionInboundPortURI, int nbThreads, int nbSchedulableThreads, String dataOutPortURI,
-			Vector<String[]> priorites,
-			Vector<String[]> uproductions) throws Exception {
-		super(reflectionInboundPortURI, nbThreads, nbSchedulableThreads);
+	protected Vector<String> unitesProduction = new Vector<>();
+	protected Vector<String> appareils = new Vector<>();
 
-		this.addOfferedInterface(IControleur.class);
-		this.addOfferedInterface(DataOfferedI.PullI.class);
+	public Controleur(String controleurURI, int nbThreads, int nbSchedulableThreads) throws Exception {
+		super(controleurURI, nbThreads, nbSchedulableThreads);
 
-		dataOutPort = new ControleurDataOutPort(dataOutPortURI, this);
-		this.addPort(dataOutPort);
-		dataOutPort.publishPort();
-
-		this.priorites = priorites;
-		this.uproductions = uproductions;
+		if (AbstractCVM.isDistributed) {
+			this.executionLog.setDirectory(System.getProperty("user.dir")) ;
+		} else {
+			this.executionLog.setDirectory(System.getProperty("user.home")) ;
+		}
 		
-		this.allume_appareil_permanent = false;
-		this.eteindre_appareil = false;
-		this.batterie = false;
+		/** TODO definir pool de thread */
 		
-		createDataInPorts();
-
+		// affichage
+		this.tracer.setTitle("Controleur");
 		this.tracer.setRelativePosition(1, 0);
 	}
+	
+	// ******* Services requis pour allumer ou eteindre des appareils *********
 
-	protected void createDataInPorts() throws Exception {
-		if (priorites.size() > 0) {
-			for (int i = 0; i < priorites.size(); i++) {
-				String dataInPortURI = java.util.UUID.randomUUID().toString();
-				dataInPorts.put(priorites.get(i)[0], new ControleurDataInPort(dataInPortURI, this));
-				this.addPort(dataInPorts.get(priorites.get(i)[0]));
-				dataInPorts.get(priorites.get(i)[0]).publishPort();
-			}
-		}
-		if (uproductions.size() > 0) {
-			for (int i = 0; i < uproductions.size(); i++) {
-				String dataInPortURI = java.util.UUID.randomUUID().toString();
-				dataInPorts.put(uproductions.get(i)[0], new ControleurDataInPort(dataInPortURI, this));
-				this.addPort(dataInPorts.get(uproductions.get(i)[0]));
-				dataInPorts.get(uproductions.get(i)[0]).publishPort();
-			}
-		}
+	public void envoyerEtatFrigo(EtatAppareil etat) throws Exception {
+		this.frigo_OUTPORT.envoyerEtatAppareil(etat);
+	}
+	
+	public void envoyerEtatLaveLinge(EtatAppareil etat) throws Exception {
+		this.lavelinge_OUTPORT.envoyerEtatAppareil(etat);
+	}
+	
+	public void envoyerEtatOrdinateur(EtatAppareil etat) throws Exception {
+		this.ordinateur_OUTPORT.envoyerEtatAppareil(etat);
 	}
 
-	protected void envoyerMessage(String uri) throws Exception {
-		if(appareil_messages.get(uri).size() > 0) {
-			Message m = appareil_messages.get(uri).get(0);
-			appareil_messages.get(uri).remove(m);
-			this.dataInPorts.get(uri).send(m);
-		}
+	// ******* Services requis pour allumer ou eteindre des unites de production *********
+	
+	public void envoyerEtatPanneauSolaire(EtatUniteProduction etat) throws Exception {
+		this.panneausolaire_OUTPORT.envoyerEtatUniteProduction(etat);	
+	}
+	
+	public void envoyerEtatBatterie(EtatUniteProduction etat) throws Exception {
+		this.batterie_OUTPORT.envoyerEtatUniteProduction(etat);	
 	}
 
-	protected void addMessageToMap(String key, Message m) {
-		if (!appareil_messages.containsKey(key))
-			appareil_messages.put(key, new Vector<Message>());
-		appareil_messages.get(key).add(m);
+	// ******* Services requis pour effectuer des actions sur lave-linge *********
+	
+	public void envoyerPlanificationCycle(int heure, int minutes) throws Exception {
+		this.lavelinge_OUTPORT.envoyerPlanificationCycle(heure, minutes);		
 	}
 
-	@Override
-	public DataOfferedI.DataI getMessage(String uri) throws Exception {
-		Message m = appareil_messages.get(uri).get(0);
-		appareil_messages.get(uri).remove(m);
-		return m;
+	public void envoyerPlanificationMode(ModeLaveLinge ml, int heure, int minutes) throws Exception {
+		this.lavelinge_OUTPORT.envoyerPlanificationMode(ml, heure, minutes);
 	}
 
-	@Override
-	public void getEnergie(Message m) throws Exception {
-		this.logMessage(m.getContenu());
+	public void envoyerTemperature(TemperatureLaveLinge tl) throws Exception {
+		this.lavelinge_OUTPORT.envoyerTemperature(tl);
+	}
+	
+	// ******* Services requis pour effectuer des actions sur frigo *********
+
+	public void envoyerTemperature_Refrigerateur(double temperature) throws Exception {
+		this.frigo_OUTPORT.envoyerTemperature_Refrigerateur(temperature);
+	}
+
+	public void envoyerTemperature_Congelateur(double temperature) throws Exception {
+		this.frigo_OUTPORT.envoyerTemperature_Congelateur(temperature);
+	}
+
+	public void envoyerLumiere_Refrigerateur(ModeFrigo mf) throws Exception {
+		this.frigo_OUTPORT.envoyerLumiere_Refrigerateur(mf);
+	}
+
+	public void envoyerLumiere_Congelateur(ModeFrigo mf) throws Exception {
+		this.frigo_OUTPORT.envoyerLumiere_Congelateur(mf);		
+	}
+	
+	// ******* Services requis pour effectuer des actions sur ordinateur *********
+
+	public void envoyerMode(ModeOrdinateur mo) throws Exception {
+		this.ordinateur_OUTPORT.envoyerMode(mo);	
+	}
+	
+	// ******* Services requis pour recuperer les informations du compteur *********
+	
+	public void getConsommationGlobale() throws Exception {
+		this.compteur_OUTPORT.getConsommationGlobale();
+	}
+
+	public void getProductionGlobale() throws Exception {
+		this.compteur_OUTPORT.getProductionGlobale();
+	}
+	
+	// ******* Service offert pour les appareils *********
+
+	public void ajouterAppareil(String uri) throws Exception {
+		this.appareils.add(uri);
+	}
+	
+	// ******* Service offert pour les unites de production  *********
+
+	public void ajouterUniteProduction(String uri) throws Exception {
+		this.unitesProduction.add(uri);
+	}
+	
+	/**
+	 * Gerer et afficher ce qui se passe pendant l'execution du controleur
+	 */
+	public void runningAndPrint() {
+		this.logMessage("Decisions controleur...");
 		
-		String partieProdu = m.getContenu().split("/ ")[0];
-		String partieConso = m.getContenu().split("/ ")[1];
-		
-		for (String unite : partieProdu.split("\\|(\\s)*")) {
-			unite_production.put(unite.split("\\s")[0], Double.valueOf(unite.split("\\s")[2]));
-			
-		}
-		
-		for (String appareil : partieConso.split("\\|(\\s)*")) {
-			appareil_consommation.put(appareil.split("\\s")[0], Double.valueOf(appareil.split("\\s")[2]));
-		}
+		/** TODO code pour gerer les decisions du controleur */
 	}
-
-	protected double getProduction() {
-		double energie_produite = 0.0;
-
-		for (String uri : unite_production.keySet())
-			energie_produite += unite_production.get(uri);
-
-		return energie_produite;
-	}
-
-	protected double getConsommation() {
-		double energie_consommee = 0.0;
-
-		for (String uri : appareil_consommation.keySet()) {
-			energie_consommee += appareil_consommation.get(uri);
-		}
-
-		return energie_consommee;
-	}
-
-	protected double getConsommation(int fin) {
-		double energie_consommee = 0.0;
-
-		int i = 0;
-		for (String uri : appareil_consommation.keySet()) {
-			if (i == fin)
-				break;
-
-			energie_consommee += appareil_consommation.get(uri);
-			i++;
-		}
-
-		return energie_consommee;
-	}
-
-	protected void make_decisions() throws Exception {
-		if (getConsommation() <= getProduction() && !allume_appareil_permanent) {
-			allume_appareil_permanent = true;
-			eteindre_appareil = false;
-			for (int i = 0; i < priorites.size(); i++) {
-				if (!priorites.get(i)[1].equals("1"))
-					break;
-				Message m = new Message();
-				m.setContenu("allumer");
-				m.setAuteur("controleurURI");
-				addMessageToMap(priorites.get(i)[0], m);
-				envoyerMessage(priorites.get(i)[0]);
-			}
-
-		} else if (getConsommation() > getProduction()) {
-			allume_appareil_permanent = false;
-			if (!batterie) {
-				Message b = new Message();
-				b.setContenu("allumer");
-				b.setAuteur("controleurURI");
-				addMessageToMap("batterieURI", b);
-				envoyerMessage("batterieURI");
-				batterie = true;
-			} else if(!eteindre_appareil) {
-				eteindre_appareil = true;
-				for (int i = priorites.size() - 1; i > 0; i--) {
-					if (getConsommation(i) > getProduction()) {
-						Message m = new Message();
-						m.setContenu("eteindre");
-						m.setAuteur("controleurURI");
-						addMessageToMap(priorites.get(i)[0], m);
-						envoyerMessage(priorites.get(i)[0]);
-					}
-				}
-			}
-		}
-	}
+	
+	// ************* Cycle de vie du composant ************* 
 
 	@Override
 	public void start() throws ComponentStartException {
 		super.start();
 		
-		this.runTask(new AbstractTask() {
+		this.logMessage("Demarrage du controleur...");
+
+		this.scheduleTask(new AbstractComponent.AbstractTask() {
+			@Override
 			public void run() {
-				
-				Message m1 = new Message();
-				Message m2 = new Message();
-				Message m3 = new Message();
-				Message m4 = new Message();
-
-				m1.setContenu("allumer");
-				m1.setAuteur("controleurURI");
-				addMessageToMap("panneauURI", m1);
-
-				m2.setContenu("allumer");
-				m2.setAuteur("controleurURI");
-				addMessageToMap("frigoURI", m2);
-
-				m3.setContenu("allumer");
-				m3.setAuteur("controleurURI");
-				addMessageToMap("ordinateurURI", m3);
-
-				m4.setContenu("allumer : 20");
-				m4.setAuteur("controleurURI");
-				addMessageToMap("chargeurURI", m4);
-				
-				try {
-					envoyerMessage("panneauURI");
-					envoyerMessage("frigoURI");
-					envoyerMessage("ordinateurURI");
-					envoyerMessage("chargeurURI");
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				try { ((Controleur) this.getTaskOwner()).envoyerEtatPanneauSolaire(EtatUniteProduction.ON); }
+				catch (Exception e) { throw new RuntimeException(e); }
 			}
-		});
-
+		}, 1000, TimeUnit.MILLISECONDS);
+		
+		this.scheduleTask(new AbstractComponent.AbstractTask() {
+			@Override
+			public void run() {
+				try { ((Controleur) this.getTaskOwner()).envoyerEtatBatterie(EtatUniteProduction.ON); }
+				catch (Exception e) { throw new RuntimeException(e); }
+			}
+		}, 1000, TimeUnit.MILLISECONDS);
+		
+		this.scheduleTask(new AbstractComponent.AbstractTask() {
+			@Override
+			public void run() {
+				try { ((Controleur) this.getTaskOwner()).envoyerEtatFrigo(EtatAppareil.ON); }
+				catch (Exception e) { throw new RuntimeException(e); }
+			}
+		}, 2000, TimeUnit.MILLISECONDS);
+		
+		this.scheduleTask(new AbstractComponent.AbstractTask() {
+			@Override
+			public void run() {
+				try { ((Controleur) this.getTaskOwner()).envoyerEtatOrdinateur(EtatAppareil.ON); }
+				catch (Exception e) { throw new RuntimeException(e); }
+			}
+		}, 2000, TimeUnit.MILLISECONDS);
 	}
 
 	@Override
 	public void execute() throws Exception {
 		super.execute();
-
-		this.runTask(new AbstractTask() {
+		
+		this.logMessage("Phase d'execution du controleur.");
+		
+		this.logMessage("Execution en cours...");
+		
+		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
+			@Override
 			public void run() {
-				
-				Message m4 = new Message();
-				Message m5 = new Message();
-
-				m4.setContenu("fridge temperature cible : 3.0");
-				m4.setAuteur("controleurURI");
-				addMessageToMap("frigoURI", m4);
-
-				m5.setContenu("set pourcentage : 95");
-				m5.setAuteur("controleurURI");
-				addMessageToMap("chargeurURI", m5);
-
-				try {
-					this.taskOwner.logMessage("Envoi message au frigo : " + m4.getContenu());
-					envoyerMessage("frigoURI");
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-
-				try {
-					this.taskOwner.logMessage("Envoi message au chargeur : " + m5.getContenu());
-					envoyerMessage("chargeurURI");
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				
-				while (true) {
-					try {
-						Thread.sleep(4000);
-						make_decisions();
-					} catch (Exception e) {
-						Thread.currentThread().interrupt();
-					}
-				}
+				try { ((Controleur) this.getTaskOwner()).runningAndPrint(); } 
+				catch (Exception e) { throw new RuntimeException(e); }
 			}
-		});
+		}, 4000, 1000, TimeUnit.MILLISECONDS);
 	}
-
+	
 	@Override
-	public void shutdown() throws ComponentShutdownException {
+	public void finalise() throws Exception {
+		this.logMessage("Arret du composant controleur...") ;
+		super.finalise();
+	}
+	
+	@Override
+	public void	shutdown() throws ComponentShutdownException
+	{
+		try {
+			PortI[] port_controleur = this.findPortsFromInterface(ILaveLinge.class);
+			PortI[] port_consommation = this.findPortsFromInterface(IConsommation.class);
+			PortI[] port_ajoutappareil = this.findPortsFromInterface(IAjoutAppareil.class);
+			
+			port_controleur[0].unpublishPort() ;
+			port_consommation[0].unpublishPort();
+			port_ajoutappareil[0].unpublishPort();
+		} catch (Exception e) { throw new ComponentShutdownException(e); }
 		super.shutdown();
 	}
 
+	@Override
+	public void shutdownNow() throws ComponentShutdownException
+	{
+		try {
+			PortI[] port_controleur = this.findPortsFromInterface(ILaveLinge.class);
+			PortI[] port_consommation = this.findPortsFromInterface(IConsommation.class);
+			PortI[] port_ajoutappareil = this.findPortsFromInterface(IAjoutAppareil.class);
+			
+			port_controleur[0].unpublishPort() ;
+			port_consommation[0].unpublishPort();
+			port_ajoutappareil[0].unpublishPort();
+		} catch (Exception e) { throw new ComponentShutdownException(e); }
+		super.shutdownNow();
+	}
 }

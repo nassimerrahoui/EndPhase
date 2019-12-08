@@ -1,175 +1,185 @@
 package app.components;
 
-import java.util.Vector;
-import app.data.Message;
-import app.interfaces.IFrigo;
-import app.ports.AppareilDataInPort;
-import app.ports.AppareilDataOutPort;
+import java.util.concurrent.TimeUnit;
+import app.interfaces.appareil.IAjoutAppareil;
+import app.interfaces.appareil.IConsommation;
+import app.interfaces.appareil.IFrigo;
+import app.ports.frigo.FrigoCompteurInPort;
+import app.ports.frigo.FrigoControleurOutPort;
+import app.ports.frigo.FrigoInPort;
+import app.util.EtatAppareil;
+import app.util.ModeFrigo;
 import app.util.TypeAppareil;
 import fr.sorbonne_u.components.AbstractComponent;
+import fr.sorbonne_u.components.annotations.OfferedInterfaces;
+import fr.sorbonne_u.components.annotations.RequiredInterfaces;
+import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
-import fr.sorbonne_u.components.interfaces.DataOfferedI;
+import fr.sorbonne_u.components.ports.PortI;
 
-public class Frigo extends AbstractComponent implements IFrigo {
-
-	public AppareilDataInPort dataInPort;
-	public AppareilDataOutPort dataOutPort;
-	protected Vector<Message> messages_recu = new Vector<>();
+@OfferedInterfaces(offered = { IFrigo.class, IConsommation.class })
+@RequiredInterfaces(required = { IAjoutAppareil.class })
+public class Frigo extends AbstractComponent {
 	
-	protected Boolean isOn;
-	protected Double freezer_temperature;
-	protected Double freezer_temperature_cible;
-	protected Double fridge_temperature;
-	protected Double fridge_temperature_cible;
-	protected Double consommation;
+	/** port sortant permettant a l'appareil de s'inscrire sur la liste des appareil du controleur */
+	protected FrigoControleurOutPort controleur_OUTPORT;	
+
 	protected TypeAppareil type;
-	
-	public Frigo(String reflectionInboundPortURI, int nbThreads, int nbSchedulableThreads, String dataOutPortURI, TypeAppareil type) throws Exception {
-		super(reflectionInboundPortURI, nbThreads, nbSchedulableThreads);
+	protected EtatAppareil etat;
+	protected ModeFrigo lumiere_refrigerateur;
+	protected ModeFrigo lumiere_congelateur;
+
+	protected Double congelateur_temperature_cible;
+	protected Double refrigerateur_temperature_cible;
+	protected Double consommation;
+
+	protected Frigo(String frigoURI, 
+			int nbThreads, int nbSchedulableThreads,
+			TypeAppareil type) throws Exception {
+		super(frigoURI, nbThreads, nbSchedulableThreads);
+
+		controleur_OUTPORT = new FrigoControleurOutPort(this);
 		
-		dataOutPort = new AppareilDataOutPort(dataOutPortURI, this);
-		this.addPort(dataOutPort);
-		dataOutPort.publishPort();
+		// port entrant permettant au controleur d'effectuer des actions sur le frigo
+		FrigoInPort action_INPORT = new FrigoInPort(this);
 		
-		String dataInPortURI = java.util.UUID.randomUUID().toString();
-		dataInPort = new AppareilDataInPort(dataInPortURI, this);
-		this.addPort(dataInPort);
-		dataInPort.publishPort();
+		// port entrant permettant au compteur de recupere la consommation du frigo
+		FrigoCompteurInPort consommation_INPORT = new FrigoCompteurInPort(this);
 		
+		this.addPort(controleur_OUTPORT);
+		this.addPort(action_INPORT);
+		this.addPort(consommation_INPORT);
+		
+		controleur_OUTPORT.publishPort();
+		consommation_INPORT.publishPort();
+		consommation_INPORT.publishPort();
+		
+		if (AbstractCVM.isDistributed) {
+			this.executionLog.setDirectory(System.getProperty("user.dir")) ;
+		} else {
+			this.executionLog.setDirectory(System.getProperty("user.home")) ;
+		}
+		
+		/** TODO definir pool de thread */
+		
+		// affichage
+		this.tracer.setTitle("Frigo");
 		this.tracer.setRelativePosition(0, 1);
-		
-		isOn = true;
-		fridge_temperature = 4.4;
-		fridge_temperature_cible = 3.0;
-		freezer_temperature = 0.0;
-		freezer_temperature_cible = -10.0;
-		consommation = 55.0;
+
+		// attributs
 		this.type = type;
+		this.etat = EtatAppareil.OFF;
+		this.refrigerateur_temperature_cible = 3.0;
+		this.congelateur_temperature_cible = -10.0;
+		this.consommation = 55.0;
 	}
 	
-	protected void freezerStabilize() {
-		if(freezer_temperature_cible - freezer_temperature > 0.5) {
-			freezer_temperature += 0.2;
-			consommation--;
-		} else if (freezer_temperature_cible - freezer_temperature < -0.5) {
-			freezer_temperature -= 0.2;
-			consommation++;
-		}
-	}
-	
-	protected void fridgeStabilize() {
-		if(fridge_temperature_cible - fridge_temperature > 0.5) {
-			fridge_temperature += 0.2;
-			consommation++;
-		} else if (fridge_temperature_cible - fridge_temperature < -0.5) {
-			fridge_temperature -= 0.2;
-			consommation--;
-		}
-	}
-	
-	protected void tick() throws Exception {
-		if(isOn) {
-			freezerStabilize();
-			fridgeStabilize();
-		}
-		envoyerMessage((Message) getConsommation());
-	}
-	
-	protected void traitementMessage(Message m) {
-		switch (m.getContenu()) {
-		case "eteindre":
-			if(isOn) {
-				this.logMessage("Frigo : je m'eteins...");
-				isOn = false;
-				consommation = 5.0;
-			}
-			break;
 
-		case "allumer":
-			if(!isOn) {
-				this.logMessage("Frigo : demarre...");
-				isOn = true;
-				consommation = 55.0;
-			}
-		default:
-			if(m.getContenu().contains("fridge temperature cible")) {
-				fridge_temperature_cible = Double.valueOf(m.getContenu().split("\\s+")[4]);
-				this.logMessage("Fridge temperature cible : " + fridge_temperature_cible.toString());
-			} else if(m.getContenu().contains("freeze temperature cible")) {
-				freezer_temperature_cible = Double.valueOf(m.getContenu().split("\\s+")[4]);
-			}
-			break;
-		}
-		
-		messages_recu.remove(m);
+	public void demandeAjoutControleur(String uri) throws Exception {
+		this.controleur_OUTPORT.demandeAjoutControleur(uri);
 	}
 
-	@Override
-	public void recevoirMessage(Message m) throws Exception {
-		this.logMessage("Message recu : " + m.getContenu());
-		messages_recu.add(m);
-		traitementMessage(m);
+	public double envoyerConsommation() throws Exception {
+		return consommation;
+	}
+
+	public void setEtatAppareil(EtatAppareil etat) throws Exception {
+		this.etat = etat;
+	}
+
+	public void setTemperature_Refrigerateur(double temperature) throws Exception {
+		this.refrigerateur_temperature_cible = temperature;
+	}
+
+	public void setTemperature_Congelateur(double temperature) throws Exception {
+		this.congelateur_temperature_cible = temperature;
+	}
+
+	public void setLumiere_Refrigerateur(ModeFrigo mf) throws Exception {
+		this.lumiere_refrigerateur = mf;
+	}
+
+	public void setLumiere_Congelateur(ModeFrigo mf) throws Exception {
+		this.lumiere_congelateur = mf;
+	}
+
+	/**
+	 * Adapatation de la temperature en fonction de la temperature cible
+	 */
+	protected void adaptationTemperature() {
+		this.logMessage("regulation de la temperature...");
+		/** TODO **/
 	}
 	
-	protected void envoyerMessage(Message m) throws Exception {
-		this.dataInPort.send(m);
-	}
-	
-	@Override
-	public DataOfferedI.DataI getConsommation() throws Exception {
-		// 0.2 degre -> 1 Watt
-		Message m = new Message();
-		m.setContenu("- "+consommation.toString());
-		m.setAuteur("frigoURI");
-		return m;
-	}
-	
+	// ************* Cycle de vie du composant ************* 
+
 	@Override
 	public void start() throws ComponentStartException {
 		super.start();
-		this.runTask(new AbstractTask() {
+		
+		this.logMessage("Demarrage du frigo...");
 
+		this.scheduleTask(new AbstractComponent.AbstractTask() {
+			@Override
 			public void run() {
-				try {
-					Thread.sleep(2500);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+				try { ((Frigo) this.getTaskOwner()).demandeAjoutControleur("CONSTANTE A METTRE ICI"); }
+				catch (Exception e) { throw new RuntimeException(e); }
 			}
-			
-		});
+		}, 1000, TimeUnit.MILLISECONDS);
 	}
-	
+
 	@Override
 	public void execute() throws Exception {
 		super.execute();
-		this.runTask(new AbstractTask() {
-
+		
+		this.logMessage("Phase d'execution du frigo.");
+		
+		this.logMessage("Execution en cours...");
+		
+		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
+			@Override
 			public void run() {
-				try {
-					while(isOn) {
-						Thread.sleep(2000);
-						tick();
-						this.taskOwner.logMessage("fridge : " + (Math.round(fridge_temperature*100.0)/100.0) + " °C");
-					}
-				} catch (InterruptedException e) {
-					Thread.currentThread().interrupt();
-				} catch (Exception e) {
-					//e.printStackTrace();
-				}
+				try { ((Frigo) this.getTaskOwner()).adaptationTemperature(); } 
+				catch (Exception e) { throw new RuntimeException(e); }
 			}
-			
-		});
+		}, 2000, 1000, TimeUnit.MILLISECONDS);
 	}
 	
 	@Override
-	public void shutdown() throws ComponentShutdownException {
-		super.shutdown();
-		try {
-			this.dataOutPort.unpublishPort();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public void finalise() throws Exception {
+		this.logMessage("Arret du composant frigo...") ;
+		super.finalise();
 	}
+	
+	@Override
+	public void	shutdown() throws ComponentShutdownException
+	{
+		try {
+			PortI[] port_controleur = this.findPortsFromInterface(IFrigo.class);
+			PortI[] port_consommation = this.findPortsFromInterface(IConsommation.class);
+			PortI[] port_ajoutappareil = this.findPortsFromInterface(IAjoutAppareil.class);
+			
+			port_controleur[0].unpublishPort() ;
+			port_consommation[0].unpublishPort();
+			port_ajoutappareil[0].unpublishPort();
+		} catch (Exception e) { throw new ComponentShutdownException(e); }
+		super.shutdown();
+	}
+
+	@Override
+	public void shutdownNow() throws ComponentShutdownException
+	{
+		try {
+			PortI[] port_controleur = this.findPortsFromInterface(IFrigo.class);
+			PortI[] port_consommation = this.findPortsFromInterface(IConsommation.class);
+			PortI[] port_ajoutappareil = this.findPortsFromInterface(IAjoutAppareil.class);
+			
+			port_controleur[0].unpublishPort() ;
+			port_consommation[0].unpublishPort();
+			port_ajoutappareil[0].unpublishPort();
+		} catch (Exception e) { throw new ComponentShutdownException(e); }
+		super.shutdownNow();
+	}
+
 }
