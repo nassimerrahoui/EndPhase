@@ -1,4 +1,4 @@
-package app.ports.ordi;
+package app.ports.ordinateur;
 
 import app.interfaces.appareil.IAjoutAppareil;
 import fr.sorbonne_u.components.ComponentI;

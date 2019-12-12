@@ -8,7 +8,7 @@ import fr.sorbonne_u.components.interfaces.OfferedI;
  * @author Willy Nassim
  *
  */
-public interface IPanneau extends OfferedI{
+public interface IPanneau extends OfferedI {
 	
 	/**
 	 * Permet d'eteindre ou allumer une unite de production

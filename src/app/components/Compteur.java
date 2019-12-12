@@ -4,50 +4,38 @@ import java.util.concurrent.ConcurrentHashMap;
 import app.interfaces.compteur.ICompteur;
 import app.interfaces.compteur.ICompteurControleur;
 import app.ports.compteur.CompteurInPort;
-import app.ports.compteur.CompteurOutPort;
+import app.ports.compteur.ConsommationProductionInPort;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
+import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
+import fr.sorbonne_u.components.exceptions.ComponentStartException;
+import fr.sorbonne_u.components.ports.PortI;
 
-@OfferedInterfaces(offered = { ICompteurControleur.class })
-@RequiredInterfaces(required = { ICompteur.class })
+@OfferedInterfaces(offered = { ICompteurControleur.class, ICompteur.class })
+@RequiredInterfaces(required = { })
 public class Compteur extends AbstractComponent {
 
 	protected ConcurrentHashMap<String, Double> appareil_consommation = new ConcurrentHashMap<>();
 	protected ConcurrentHashMap<String, Double> unite_production = new ConcurrentHashMap<>();
-	
-	protected CompteurOutPort frigo_OUTPORT;
-	protected CompteurOutPort lavelinge_OUTPORT;
-	protected CompteurOutPort ordinateur_OUTPORT;
-	protected CompteurOutPort batterie_OUTPORT;
-	protected CompteurOutPort panneau_OUTPORT;
 
-	public Compteur(String compteurURI, int nbThreads, int nbSchedulableThreads) throws Exception {
-		super(compteurURI, nbThreads, nbSchedulableThreads);
+	public Compteur(
+			String COMPTEUR_URI,
+			int nbThreads, int nbSchedulableThreads) throws Exception {
+		super(COMPTEUR_URI, nbThreads, nbSchedulableThreads);
 		
-		frigo_OUTPORT = new CompteurOutPort(this);
-		lavelinge_OUTPORT = new CompteurOutPort(this);
-		ordinateur_OUTPORT = new CompteurOutPort(this);
-		batterie_OUTPORT = new CompteurOutPort(this);
-		panneau_OUTPORT = new CompteurOutPort(this);
+		// port entrant pour recuperer les consommation des appareils
+		// et recuperer les productions des unites de production
+		ConsommationProductionInPort consommation_production_INPORT = new ConsommationProductionInPort(this);
 		
-		// port entrant permettant au controleur de recuperer des informations
-		// depuis le compteur
+		// port entrant permettant au controleur de recuperer des informations depuis le compteur
 		CompteurInPort action_INPORT = new CompteurInPort(this);
 		
-		this.addPort(frigo_OUTPORT);
-		this.addPort(lavelinge_OUTPORT);
-		this.addPort(ordinateur_OUTPORT);
-		this.addPort(batterie_OUTPORT);
-		this.addPort(panneau_OUTPORT);
+		this.addPort(consommation_production_INPORT);
 		this.addPort(action_INPORT);
 		
-		frigo_OUTPORT.publishPort();
-		lavelinge_OUTPORT.publishPort();
-		ordinateur_OUTPORT.publishPort();
-		batterie_OUTPORT.publishPort();
-		panneau_OUTPORT.publishPort();
+		consommation_production_INPORT.publishPort();
 		action_INPORT.publishPort();
 		
 		if (AbstractCVM.isDistributed) {
@@ -65,10 +53,12 @@ public class Compteur extends AbstractComponent {
 
 	public void ajouterAppareil(String uri) throws Exception {
 		this.appareil_consommation.put(uri, 0.0);
+		this.logMessage(uri + "a ete ajoute au compteur");
 	}
 	
 	public void ajouterUniteProduction(String uri) throws Exception {
 		this.unite_production.put(uri, 0.0);
+		this.logMessage(uri + "a ete ajoute au compteur");
 	}
 
 	public double envoyerConsommationGlobale() throws Exception {
@@ -78,24 +68,66 @@ public class Compteur extends AbstractComponent {
 	public double envoyerProductionGlobale() throws Exception {
 		return unite_production.values().stream().mapToDouble(i -> i).sum();
 	}
-
-	public double getFrigoConsommation() throws Exception {
-		return this.frigo_OUTPORT.getFrigoConsommation();
+	
+	public void setAppareilConsommation(String uri, double consommation) throws Exception {
+		if(appareil_consommation.containsKey(uri)) {
+			appareil_consommation.put(uri, consommation);
+			this.logMessage(uri + " consomme " + "Watt");
+		}
 	}
 
-	public double getLaveLingeConsommation() throws Exception {
-		return this.lavelinge_OUTPORT.getLaveLingeConsommation();
+	public void setUniteProduction(String uri, double production) throws Exception {
+		if(unite_production.containsKey(uri)) {
+			unite_production.put(uri, production);
+			this.logMessage(uri + " produit " + production + "Watt");
+		}
+	}
+	
+	// ************* Cycle de vie du composant ************* 
+
+	@Override
+	public void start() throws ComponentStartException {
+		super.start();
+		this.logMessage("Demarrage du compteur...");
 	}
 
-	public double getOrdinateurConsommation() throws Exception {
-		return this.ordinateur_OUTPORT.getOrdinateurConsommation();
+	@Override
+	public void execute() throws Exception {
+		super.execute();
+		this.logMessage("Phase d'execution du compteur.");
+	}
+	
+	@Override
+	public void finalise() throws Exception {
+		this.logMessage("Arret du composant compteur...") ;
+		super.finalise();
+	}
+	
+	@Override
+	public void	shutdown() throws ComponentShutdownException
+	{
+		try {
+			PortI[] p1 = this.findPortsFromInterface(ICompteur.class);
+			PortI[] p2 = this.findPortsFromInterface(ICompteurControleur.class);
+			
+			p1[0].unpublishPort();
+			p2[0].unpublishPort();
+			
+		} catch (Exception e) { throw new ComponentShutdownException(e); }
+		super.shutdown();
 	}
 
-	public double getPanneauProduction() throws Exception {
-		return this.panneau_OUTPORT.getPanneauProduction();
-	}
-
-	public double getBatterieProduction() throws Exception {
-		return this.batterie_OUTPORT.getBatterieProduction();
+	@Override
+	public void shutdownNow() throws ComponentShutdownException
+	{
+		try {
+			PortI[] p1 = this.findPortsFromInterface(ICompteur.class);
+			PortI[] p2 = this.findPortsFromInterface(ICompteurControleur.class);
+			
+			p1[0].unpublishPort();
+			p2[0].unpublishPort();
+			
+		} catch (Exception e) { throw new ComponentShutdownException(e); }
+		super.shutdownNow();
 	}
 }

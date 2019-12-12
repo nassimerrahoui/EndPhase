@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit;
 import app.interfaces.appareil.IAjoutAppareil;
 import app.interfaces.appareil.IConsommation;
 import app.interfaces.appareil.IFrigo;
-import app.ports.frigo.FrigoCompteurInPort;
+import app.ports.frigo.FrigoCompteurOutPort;
 import app.ports.frigo.FrigoControleurOutPort;
 import app.ports.frigo.FrigoInPort;
 import app.util.EtatAppareil;
@@ -18,12 +18,15 @@ import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
 
-@OfferedInterfaces(offered = { IFrigo.class, IConsommation.class })
-@RequiredInterfaces(required = { IAjoutAppareil.class })
+@OfferedInterfaces(offered = { IFrigo.class })
+@RequiredInterfaces(required = { IAjoutAppareil.class, IConsommation.class })
 public class Frigo extends AbstractComponent {
 	
 	/** port sortant permettant a l'appareil de s'inscrire sur la liste des appareil du controleur */
-	protected FrigoControleurOutPort controleur_OUTPORT;	
+	protected FrigoControleurOutPort controleur_OUTPORT;
+	
+	/** port sortant permettant au compteur de recupere la consommation du frigo */
+	protected FrigoCompteurOutPort consommation_OUTPORT;
 
 	protected TypeAppareil type;
 	protected EtatAppareil etat;
@@ -34,26 +37,29 @@ public class Frigo extends AbstractComponent {
 	protected Double refrigerateur_temperature_cible;
 	protected Double consommation;
 
-	protected Frigo(String frigoURI, 
+	protected Frigo(
+			String FRIGO_URI, 
+			String FRIGO_COMPTEUR_OP_URI,
+			String FRIGO_CONTROLEUR_OP_URI,
 			int nbThreads, int nbSchedulableThreads,
 			TypeAppareil type) throws Exception {
-		super(frigoURI, nbThreads, nbSchedulableThreads);
+		super(FRIGO_URI, nbThreads, nbSchedulableThreads);
 
-		controleur_OUTPORT = new FrigoControleurOutPort(this);
+		controleur_OUTPORT = new FrigoControleurOutPort(FRIGO_CONTROLEUR_OP_URI,this);
+		consommation_OUTPORT = new FrigoCompteurOutPort(FRIGO_COMPTEUR_OP_URI,this);
 		
 		// port entrant permettant au controleur d'effectuer des actions sur le frigo
 		FrigoInPort action_INPORT = new FrigoInPort(this);
 		
-		// port entrant permettant au compteur de recupere la consommation du frigo
-		FrigoCompteurInPort consommation_INPORT = new FrigoCompteurInPort(this);
+		/** TODO faire port entrant pour assembleur */
 		
 		this.addPort(controleur_OUTPORT);
+		this.addPort(consommation_OUTPORT);
 		this.addPort(action_INPORT);
-		this.addPort(consommation_INPORT);
 		
 		controleur_OUTPORT.publishPort();
-		consommation_INPORT.publishPort();
-		consommation_INPORT.publishPort();
+		consommation_OUTPORT.publishPort();
+		action_INPORT.publishPort();
 		
 		if (AbstractCVM.isDistributed) {
 			this.executionLog.setDirectory(System.getProperty("user.dir")) ;
@@ -80,8 +86,8 @@ public class Frigo extends AbstractComponent {
 		this.controleur_OUTPORT.demandeAjoutControleur(uri);
 	}
 
-	public double envoyerConsommation() throws Exception {
-		return consommation;
+	public void envoyerConsommation(String uri, double consommation) throws Exception {
+		this.consommation_OUTPORT.envoyerConsommation(uri, consommation);
 	}
 
 	public void setEtatAppareil(EtatAppareil etat) throws Exception {

@@ -1,18 +1,18 @@
 package app.interfaces.production;
 
-import fr.sorbonne_u.components.interfaces.OfferedI;
+import fr.sorbonne_u.components.interfaces.RequiredI;
 
 /**
- * Permet aux unites de production d'offrir une interface pour le compteur 
+ * Interface requise par les unites de production pour le compteur
  * @author Willy Nassim
  *
  */
-public interface IProduction extends OfferedI {
+public interface IProduction extends RequiredI {
 	
 	/**
-	 * Retourne la production electrique d'une unite de production
+	 * Envoi la production electrique d'une unite de production au compteur
 	 * @return
 	 * @throws Exception
 	 */
-	public double envoyerProduction() throws Exception;
+	public void envoyerProduction(String uri, double production) throws Exception;
 }

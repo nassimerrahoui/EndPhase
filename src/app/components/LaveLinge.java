@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit;
 import app.interfaces.appareil.IAjoutAppareil;
 import app.interfaces.appareil.IConsommation;
 import app.interfaces.appareil.ILaveLinge;
-import app.ports.lavelinge.LaveLingeCompteurInPort;
+import app.ports.lavelinge.LaveLingeCompteurOutPort;
 import app.ports.lavelinge.LaveLingeControleurOutPort;
 import app.ports.lavelinge.LaveLingeInPort;
 import app.util.EtatAppareil;
@@ -19,12 +19,15 @@ import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
 
-@OfferedInterfaces(offered = { ILaveLinge.class, IConsommation.class })
-@RequiredInterfaces(required = { IAjoutAppareil.class })
+@OfferedInterfaces(offered = { ILaveLinge.class })
+@RequiredInterfaces(required = { IAjoutAppareil.class, IConsommation.class })
 public class LaveLinge extends AbstractComponent {
 
 	/** port sortant permettant a l'appareil de s'inscrire sur la liste des appareil du controleur */
 	protected LaveLingeControleurOutPort controleur_OUTPORT;
+	
+	/** port sortant permettant au compteur de recupere la consommation du lave-linge */
+	protected LaveLingeCompteurOutPort consommation_OUTPORT;
 
 	protected TypeAppareil type;
 	protected EtatAppareil etat;
@@ -35,24 +38,27 @@ public class LaveLinge extends AbstractComponent {
 	protected Double consommation;
 	protected TemperatureLaveLinge temperature;
 
-	public LaveLinge(String lavelingeURI, 
+	public LaveLinge(
+			String LAVELIGNE_URI, 
+			String LAVELINGE_COMPTEUR_OP_URI,
+			String LAVELINGE_CONTROLEUR_OP_URI,
 			int nbThreads, int nbSchedulableThreads, 
 			TypeAppareil type) throws Exception {
-		super(lavelingeURI, nbThreads, nbSchedulableThreads);
+		super(LAVELIGNE_URI, nbThreads, nbSchedulableThreads);
 
+		controleur_OUTPORT = new LaveLingeControleurOutPort(LAVELINGE_CONTROLEUR_OP_URI,this);
+		consommation_OUTPORT = new LaveLingeCompteurOutPort(LAVELINGE_COMPTEUR_OP_URI,this);
+		
 		// port entrant permettant au controleur d'effectuer des actions sur le lave-linge
 		LaveLingeInPort action_INPORT = new LaveLingeInPort(this);
 		
-		// port entrant permettant au compteur de recupere la consommation du lave-linge
-		LaveLingeCompteurInPort consommation_INPORT = new LaveLingeCompteurInPort(this);
-		
 		this.addPort(controleur_OUTPORT);
+		this.addPort(consommation_OUTPORT);
 		this.addPort(action_INPORT);
-		this.addPort(consommation_INPORT);
 		
 		controleur_OUTPORT.publishPort();
-		consommation_INPORT.publishPort();
-		consommation_INPORT.publishPort();
+		consommation_OUTPORT.publishPort();
+		action_INPORT.publishPort();
 		
 		if (AbstractCVM.isDistributed) {
 			this.executionLog.setDirectory(System.getProperty("user.dir")) ;
@@ -79,8 +85,8 @@ public class LaveLinge extends AbstractComponent {
 		this.controleur_OUTPORT.demandeAjoutControleur(uri);
 	}
 
-	public double envoyerConsommation() throws Exception {
-		return consommation;
+	public void envoyerConsommation(String uri, double consommation) throws Exception {
+		this.consommation_OUTPORT.envoyerConsommation(uri, consommation);
 	}
 
 	public void setEtatAppareil(EtatAppareil etat) throws Exception {
