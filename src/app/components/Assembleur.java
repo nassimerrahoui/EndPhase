@@ -107,7 +107,7 @@ public class Assembleur extends AbstractComponent {
 
 		LISTE_REFLECTION_INPORT[2] = DynamicOutPort.createComponent(LaveLinge.class.getCanonicalName(),
 				new Object[] { 
-						URI.LAVELIGNE_URI.getURI(), 
+						URI.LAVELINGE_URI.getURI(), 
 						URI.LAVELINGE_COMPTEUR_OP_URI.getURI(),
 						URI.LAVELINGE_CONTROLEUR_OP_URI.getURI(),
 						Integer.valueOf(2),
@@ -327,9 +327,9 @@ public class Assembleur extends AbstractComponent {
 		this.AssembleurOutPort.ajoutLogement(URI.FRIGO_URI.getURI());
 		this.doPortDisconnection(this.AssembleurOutPort.getPortURI());
 
-		this.doPortConnection(this.AssembleurOutPort.getPortURI(), URI.LAVELIGNE_URI.getURI(),
+		this.doPortConnection(this.AssembleurOutPort.getPortURI(), URI.LAVELINGE_URI.getURI(),
 				AssembleurEntiteConnector.class.getCanonicalName());
-		this.AssembleurOutPort.ajoutLogement(URI.LAVELIGNE_URI.getURI());
+		this.AssembleurOutPort.ajoutLogement(URI.LAVELINGE_URI.getURI());
 		this.doPortDisconnection(this.AssembleurOutPort.getPortURI());
 
 		this.doPortConnection(this.AssembleurOutPort.getPortURI(), URI.ORDINATEUR_URI.getURI(),

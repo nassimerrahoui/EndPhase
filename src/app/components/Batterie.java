@@ -1,13 +1,16 @@
 package app.components;
 
 import java.util.concurrent.TimeUnit;
+import app.interfaces.generateur.IEntiteDynamique;
 import app.interfaces.production.IAjoutUniteProduction;
 import app.interfaces.production.IBatterie;
 import app.interfaces.production.IProduction;
+import app.ports.batterie.BatterieAssembleurInPort;
 import app.ports.batterie.BatterieCompteurOutPort;
 import app.ports.batterie.BatterieControleurOutPort;
 import app.ports.batterie.BatterieInPort;
 import app.util.EtatUniteProduction;
+import app.util.URI;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
@@ -16,7 +19,7 @@ import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
 
-@OfferedInterfaces(offered = { IBatterie.class })
+@OfferedInterfaces(offered = { IBatterie.class, IEntiteDynamique.class })
 @RequiredInterfaces(required = { IAjoutUniteProduction.class, IProduction.class })
 public class Batterie extends AbstractComponent {
 
@@ -24,7 +27,7 @@ public class Batterie extends AbstractComponent {
 	protected BatterieControleurOutPort controleur_OUTPORT;
 	
 	/** port sortant permettant au compteur de recupere la production de l'unite */
-	protected BatterieCompteurOutPort compteur_OUTPORT;
+	protected BatterieCompteurOutPort production_OUTPORT;
 	
 	protected EtatUniteProduction etat;
 	protected Double production;
@@ -37,20 +40,23 @@ public class Batterie extends AbstractComponent {
 		super(BATTERIE_URI, nbThreads, nbSchedulableThreads);
 
 		this.controleur_OUTPORT = new BatterieControleurOutPort(BATTERIE_CONTROLEUR_OP_URI,this);
-		this.compteur_OUTPORT = new BatterieCompteurOutPort(BATTERIE_COMPTEUR_OP_URI,this);
+		this.production_OUTPORT = new BatterieCompteurOutPort(BATTERIE_COMPTEUR_OP_URI,this);
 		
 		// port entrant permettant au controleur d'effectuer des actions sur la batterie
 		BatterieInPort action_INPORT = new BatterieInPort(this);
 		
-		/** TODO port entrant pour assembleur */
+		// port entrant permettant a l'assembleur d'effectuer d'integrer l'entite au logement
+		BatterieAssembleurInPort launch_INPORT = new BatterieAssembleurInPort(this);
 		
 		this.addPort(controleur_OUTPORT);
-		this.addPort(compteur_OUTPORT);
+		this.addPort(production_OUTPORT);
 		this.addPort(action_INPORT);
+		this.addPort(launch_INPORT);
 		
 		controleur_OUTPORT.publishPort();
-		compteur_OUTPORT.publishPort();
+		production_OUTPORT.publishPort();
 		action_INPORT.publishPort();
+		launch_INPORT.publishPort();
 		
 		if (AbstractCVM.isDistributed) {
 			this.executionLog.setDirectory(System.getProperty("user.dir")) ;
@@ -75,7 +81,7 @@ public class Batterie extends AbstractComponent {
 	}
 
 	public void envoyerProduction(String uri, double production) throws Exception {
-		this.compteur_OUTPORT.envoyerProduction(uri, production);
+		this.production_OUTPORT.envoyerProduction(uri, production);
 	}
 	
 	public void setEtatUniteProduction(EtatUniteProduction etat) throws Exception {
@@ -87,16 +93,7 @@ public class Batterie extends AbstractComponent {
 	@Override
 	public void start() throws ComponentStartException {
 		super.start();
-		
 		this.logMessage("Demarrage de la batterie...");
-
-		this.scheduleTask(new AbstractComponent.AbstractTask() {
-			@Override
-			public void run() {
-				try { ((Batterie) this.getTaskOwner()).demandeAjoutControleur("CONSTANTE A METTRE ICI"); }
-				catch (Exception e) { throw new RuntimeException(e); }
-			}
-		}, 1000, TimeUnit.MILLISECONDS);
 	}
 
 	@Override
@@ -110,7 +107,7 @@ public class Batterie extends AbstractComponent {
 		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
 			@Override
 			public void run() {
-				try { ((Batterie) this.getTaskOwner()).envoyerProduction("CONSTANTE A METTRE ICI", production); } 
+				try { ((Batterie) this.getTaskOwner()).envoyerProduction(URI.BATTERIE_URI.getURI(), production); } 
 				catch (Exception e) { throw new RuntimeException(e); }
 			}
 		}, 2000, 1000, TimeUnit.MILLISECONDS);
@@ -130,10 +127,12 @@ public class Batterie extends AbstractComponent {
 			PortI[] p1 = this.findPortsFromInterface(IBatterie.class);
 			PortI[] p2 = this.findPortsFromInterface(IAjoutUniteProduction.class);
 			PortI[] p3 = this.findPortsFromInterface(IProduction.class);
+			PortI[] port_assembleur = this.findPortsFromInterface(IEntiteDynamique.class);
 			
 			p1[0].unpublishPort();
 			p2[0].unpublishPort();
 			p3[0].unpublishPort();
+			port_assembleur[0].unpublishPort();
 			
 		} catch (Exception e) { throw new ComponentShutdownException(e); }
 		super.shutdown();
@@ -147,10 +146,12 @@ public class Batterie extends AbstractComponent {
 			PortI[] p1 = this.findPortsFromInterface(IBatterie.class);
 			PortI[] p2 = this.findPortsFromInterface(IAjoutUniteProduction.class);
 			PortI[] p3 = this.findPortsFromInterface(IProduction.class);
+			PortI[] port_assembleur = this.findPortsFromInterface(IEntiteDynamique.class);
 			
 			p1[0].unpublishPort();
 			p2[0].unpublishPort();
 			p3[0].unpublishPort();
+			port_assembleur[0].unpublishPort();
 			
 		} catch (Exception e) { throw new ComponentShutdownException(e); }
 		super.shutdownNow();

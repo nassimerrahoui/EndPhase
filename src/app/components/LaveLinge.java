@@ -4,6 +4,8 @@ import java.util.concurrent.TimeUnit;
 import app.interfaces.appareil.IAjoutAppareil;
 import app.interfaces.appareil.IConsommation;
 import app.interfaces.appareil.ILaveLinge;
+import app.interfaces.generateur.IEntiteDynamique;
+import app.ports.lavelinge.LaveLingeAssembleurInPort;
 import app.ports.lavelinge.LaveLingeCompteurOutPort;
 import app.ports.lavelinge.LaveLingeControleurOutPort;
 import app.ports.lavelinge.LaveLingeInPort;
@@ -19,7 +21,7 @@ import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
 
-@OfferedInterfaces(offered = { ILaveLinge.class })
+@OfferedInterfaces(offered = { ILaveLinge.class, IEntiteDynamique.class })
 @RequiredInterfaces(required = { IAjoutAppareil.class, IConsommation.class })
 public class LaveLinge extends AbstractComponent {
 
@@ -52,13 +54,18 @@ public class LaveLinge extends AbstractComponent {
 		// port entrant permettant au controleur d'effectuer des actions sur le lave-linge
 		LaveLingeInPort action_INPORT = new LaveLingeInPort(this);
 		
+		// port entrant permettant a l'assembleur d'effectuer d'integrer l'entite au logement
+		LaveLingeAssembleurInPort launch_INPORT = new LaveLingeAssembleurInPort(this);
+		
 		this.addPort(controleur_OUTPORT);
 		this.addPort(consommation_OUTPORT);
 		this.addPort(action_INPORT);
+		this.addPort(launch_INPORT);
 		
 		controleur_OUTPORT.publishPort();
 		consommation_OUTPORT.publishPort();
 		action_INPORT.publishPort();
+		launch_INPORT.publishPort();
 		
 		if (AbstractCVM.isDistributed) {
 			this.executionLog.setDirectory(System.getProperty("user.dir")) ;
@@ -76,11 +83,12 @@ public class LaveLinge extends AbstractComponent {
 		this.heure = 0;
 		this.minutes = 0;
 		this.etat = EtatAppareil.OFF;
-		this.consommation = 100.0;
+		this.consommation = 0.0;
 		this.type = type;
 		this.temperature = TemperatureLaveLinge.QUARANTE_DEGRES;
+		this.mode = ModeLaveLinge.Veille;
 	}
-
+	
 	public void demandeAjoutControleur(String uri) throws Exception {
 		this.controleur_OUTPORT.demandeAjoutControleur(uri);
 	}
@@ -122,6 +130,19 @@ public class LaveLinge extends AbstractComponent {
 		this.logMessage("Mode actuel : " + mode.name());
 		
 		/** TODO code pour gerer ce qui se passe pendant un mode */
+		if(mode == ModeLaveLinge.Veille) {
+			consommation = 0.0;
+		} else if(mode == ModeLaveLinge.Lavage) {
+			consommation = 2.0;
+		} else if (mode == ModeLaveLinge.Rincage) {
+			consommation = 2.0;
+		} else if (mode == ModeLaveLinge.Essorage) {
+			consommation = 4.0;
+		} else if (mode == ModeLaveLinge.Sechage) {
+			consommation = 6.0;
+		} else if (mode == ModeLaveLinge.Vidange) {
+			consommation = 1.0;
+		}
 	}
 	
 	// ************* Cycle de vie du composant ************* 
@@ -129,16 +150,7 @@ public class LaveLinge extends AbstractComponent {
 	@Override
 	public void start() throws ComponentStartException {
 		super.start();
-		
 		this.logMessage("Demarrage du lave-linge...");
-
-		this.scheduleTask(new AbstractComponent.AbstractTask() {
-			@Override
-			public void run() {
-				try { ((LaveLinge) this.getTaskOwner()).demandeAjoutControleur("CONSTANTE URI A METTRE ICI"); }
-				catch (Exception e) { throw new RuntimeException(e); }
-			}
-		}, 1000, TimeUnit.MILLISECONDS);
 	}
 
 	@Override
@@ -184,10 +196,12 @@ public class LaveLinge extends AbstractComponent {
 			PortI[] port_controleur = this.findPortsFromInterface(ILaveLinge.class);
 			PortI[] port_consommation = this.findPortsFromInterface(IConsommation.class);
 			PortI[] port_ajoutappareil = this.findPortsFromInterface(IAjoutAppareil.class);
+			PortI[] port_assembleur = this.findPortsFromInterface(IEntiteDynamique.class);
 			
 			port_controleur[0].unpublishPort() ;
 			port_consommation[0].unpublishPort();
 			port_ajoutappareil[0].unpublishPort();
+			port_assembleur[0].unpublishPort();
 		} catch (Exception e) { throw new ComponentShutdownException(e); }
 		super.shutdown();
 	}
@@ -199,10 +213,12 @@ public class LaveLinge extends AbstractComponent {
 			PortI[] port_controleur = this.findPortsFromInterface(ILaveLinge.class);
 			PortI[] port_consommation = this.findPortsFromInterface(IConsommation.class);
 			PortI[] port_ajoutappareil = this.findPortsFromInterface(IAjoutAppareil.class);
+			PortI[] port_assembleur = this.findPortsFromInterface(IEntiteDynamique.class);
 			
 			port_controleur[0].unpublishPort() ;
 			port_consommation[0].unpublishPort();
 			port_ajoutappareil[0].unpublishPort();
+			port_assembleur[0].unpublishPort();
 		} catch (Exception e) { throw new ComponentShutdownException(e); }
 		super.shutdownNow();
 	}
