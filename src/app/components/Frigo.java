@@ -37,16 +37,21 @@ public class Frigo extends AbstractComponent {
 	protected Double refrigerateur_temperature_cible;
 	protected Double consommation;
 
-	protected Frigo(String frigoURI, 
+	protected Frigo(
+			String FRIGO_URI, 
+			String FRIGO_COMPTEUR_OP_URI,
+			String FRIGO_CONTROLEUR_OP_URI,
 			int nbThreads, int nbSchedulableThreads,
 			TypeAppareil type) throws Exception {
-		super(frigoURI, nbThreads, nbSchedulableThreads);
+		super(FRIGO_URI, nbThreads, nbSchedulableThreads);
 
-		controleur_OUTPORT = new FrigoControleurOutPort(this);
-		consommation_OUTPORT = new FrigoCompteurOutPort(this);
+		controleur_OUTPORT = new FrigoControleurOutPort(FRIGO_CONTROLEUR_OP_URI,this);
+		consommation_OUTPORT = new FrigoCompteurOutPort(FRIGO_COMPTEUR_OP_URI,this);
 		
 		// port entrant permettant au controleur d'effectuer des actions sur le frigo
 		FrigoInPort action_INPORT = new FrigoInPort(this);
+		
+		/** TODO faire port entrant pour assembleur */
 		
 		this.addPort(controleur_OUTPORT);
 		this.addPort(consommation_OUTPORT);

@@ -1,6 +1,6 @@
 package app.connectors;
 
-import app.components.Frigo;
+import app.interfaces.appareil.IFrigo;
 import app.interfaces.controleur.IControleFrigo;
 import app.util.EtatAppareil;
 import app.util.ModeFrigo;
@@ -10,26 +10,26 @@ public class ControleurFrigoConnector extends AbstractConnector implements ICont
 
 	@Override
 	public void envoyerEtatAppareil(EtatAppareil etat) throws Exception {
-		((Frigo) this.offering).setEtatAppareil(etat);
+		((IFrigo) this.offering).setEtatAppareil(etat);
 	}
 
 	@Override
 	public void envoyerTemperature_Refrigerateur(double temperature) throws Exception {
-		((Frigo) this.offering).setTemperature_Refrigerateur(temperature);
+		((IFrigo) this.offering).setTemperature_Refrigerateur(temperature);
 	}
 
 	@Override
 	public void envoyerTemperature_Congelateur(double temperature) throws Exception {
-		((Frigo) this.offering).setTemperature_Congelateur(temperature);
+		((IFrigo) this.offering).setTemperature_Congelateur(temperature);
 	}
 
 	@Override
 	public void envoyerLumiere_Refrigerateur(ModeFrigo mf) throws Exception {
-		((Frigo) this.offering).setLumiere_Refrigerateur(mf);
+		((IFrigo) this.offering).setLumiere_Refrigerateur(mf);
 	}
 
 	@Override
 	public void envoyerLumiere_Congelateur(ModeFrigo mf) throws Exception {
-		((Frigo) this.offering).setLumiere_Congelateur(mf);
+		((IFrigo) this.offering).setLumiere_Congelateur(mf);
 	}
 }

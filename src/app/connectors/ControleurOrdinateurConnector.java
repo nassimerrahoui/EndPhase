@@ -1,6 +1,6 @@
 package app.connectors;
 
-import app.components.Ordinateur;
+import app.interfaces.appareil.IOrdinateur;
 import app.interfaces.controleur.IControleOrdinateur;
 import app.util.EtatAppareil;
 import app.util.ModeOrdinateur;
@@ -10,11 +10,11 @@ public class ControleurOrdinateurConnector extends AbstractConnector implements 
 
 	@Override
 	public void envoyerEtatAppareil(EtatAppareil etat) throws Exception {
-		((Ordinateur) this.offering).setEtatAppareil(etat);
+		((IOrdinateur) this.offering).setEtatAppareil(etat);
 	}
 
 	@Override
 	public void envoyerMode(ModeOrdinateur mo) throws Exception {
-		((Ordinateur) this.offering).setMode(mo);
+		((IOrdinateur) this.offering).setMode(mo);
 	}
 }

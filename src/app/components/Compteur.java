@@ -20,8 +20,10 @@ public class Compteur extends AbstractComponent {
 	protected ConcurrentHashMap<String, Double> appareil_consommation = new ConcurrentHashMap<>();
 	protected ConcurrentHashMap<String, Double> unite_production = new ConcurrentHashMap<>();
 
-	public Compteur(String compteurURI, int nbThreads, int nbSchedulableThreads) throws Exception {
-		super(compteurURI, nbThreads, nbSchedulableThreads);
+	public Compteur(
+			String COMPTEUR_URI,
+			int nbThreads, int nbSchedulableThreads) throws Exception {
+		super(COMPTEUR_URI, nbThreads, nbSchedulableThreads);
 		
 		// port entrant pour recuperer les consommation des appareils
 		// et recuperer les productions des unites de production

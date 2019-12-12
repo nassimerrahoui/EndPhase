@@ -1,7 +1,7 @@
 package app.connectors;
 
-import app.components.Batterie;
 import app.interfaces.controleur.IControleBatterie;
+import app.interfaces.production.IBatterie;
 import app.util.EtatUniteProduction;
 import fr.sorbonne_u.components.connectors.AbstractConnector;
 
@@ -9,6 +9,6 @@ public class ControleurBatterieConnector extends AbstractConnector implements IC
 
 	@Override
 	public void envoyerEtatUniteProduction(EtatUniteProduction etat) throws Exception {
-		((Batterie) this.offering).setEtatUniteProduction(etat);
+		((IBatterie) this.offering).setEtatUniteProduction(etat);
 	}
 }

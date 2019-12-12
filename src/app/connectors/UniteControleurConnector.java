@@ -1,6 +1,6 @@
 package app.connectors;
 
-import app.components.Controleur;
+import app.interfaces.controleur.IControleur;
 import app.interfaces.production.IAjoutUniteProduction;
 import fr.sorbonne_u.components.connectors.AbstractConnector;
 
@@ -8,6 +8,6 @@ public class UniteControleurConnector extends AbstractConnector implements IAjou
 
 	@Override
 	public void demandeAjoutControleur(String uri) throws Exception {
-		((Controleur) this.offering).ajouterUniteProduction(uri);
+		((IControleur) this.offering).ajouterUniteProduction(uri);
 	}
 }

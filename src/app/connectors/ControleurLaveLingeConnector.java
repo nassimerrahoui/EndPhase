@@ -1,6 +1,6 @@
 package app.connectors;
 
-import app.components.LaveLinge;
+import app.interfaces.appareil.ILaveLinge;
 import app.interfaces.controleur.IControleLaveLinge;
 import app.util.EtatAppareil;
 import app.util.ModeLaveLinge;
@@ -11,21 +11,21 @@ public class ControleurLaveLingeConnector extends AbstractConnector implements I
 
 	@Override
 	public void envoyerEtatAppareil(EtatAppareil etat) throws Exception {
-		((LaveLinge) this.offering).setEtatAppareil(etat);
+		((ILaveLinge) this.offering).setEtatAppareil(etat);
 	}
 
 	@Override
 	public void envoyerPlanificationCycle(int heure, int minutes) throws Exception {
-		((LaveLinge) this.offering).planifierCycle(heure, minutes);
+		((ILaveLinge) this.offering).planifierCycle(heure, minutes);
 	}
 
 	@Override
 	public void envoyerPlanificationMode(ModeLaveLinge ml, int heure, int minutes) throws Exception {
-		((LaveLinge) this.offering).planifierMode(ml, heure, minutes);
+		((ILaveLinge) this.offering).planifierMode(ml, heure, minutes);
 	}
 
 	@Override
 	public void envoyerTemperature(TemperatureLaveLinge tl) throws Exception {
-		((LaveLinge) this.offering).setTemperature(tl);
+		((ILaveLinge) this.offering).setTemperature(tl);
 	}
 }

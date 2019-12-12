@@ -29,15 +29,20 @@ public class PanneauSolaire extends AbstractComponent {
 	protected EtatUniteProduction etat;
 	protected Double production;
 
-	public PanneauSolaire(String panneauURI, 
+	public PanneauSolaire(
+			String PANNEAUSOLAIRE_URI, 
+			String PANNEAUSOLAIRE_COMPTEUR_OP_URI,
+			String PANNEAUSOLAIRE_CONTROLEUR_OP_URI,
 			int nbThreads, int nbSchedulableThreads) throws Exception {
-		super(panneauURI, nbThreads, nbSchedulableThreads);
+		super(PANNEAUSOLAIRE_URI, nbThreads, nbSchedulableThreads);
 
-		this.controleur_OUTPORT = new PanneauControleurOutPort(this);
-		this.compteur_OUTPORT = new PanneauCompteurOutPort(this);
+		this.controleur_OUTPORT = new PanneauControleurOutPort(PANNEAUSOLAIRE_CONTROLEUR_OP_URI,this);
+		this.compteur_OUTPORT = new PanneauCompteurOutPort(PANNEAUSOLAIRE_COMPTEUR_OP_URI,this);
 		
 		// port entrant permettant au controleur d'effectuer des actions sur le panneau solaire
 		PanneauInPort action_INPORT = new PanneauInPort(this);
+		
+		/** TODO port entrant pour assembleur */
 		
 		this.addPort(controleur_OUTPORT);
 		this.addPort(compteur_OUTPORT);

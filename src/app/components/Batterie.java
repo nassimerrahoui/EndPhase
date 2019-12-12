@@ -29,15 +29,20 @@ public class Batterie extends AbstractComponent {
 	protected EtatUniteProduction etat;
 	protected Double production;
 
-	public Batterie(String batterieURI, 
+	public Batterie(
+			String BATTERIE_URI, 
+			String BATTERIE_COMPTEUR_OP_URI,
+			String BATTERIE_CONTROLEUR_OP_URI,
 			int nbThreads, int nbSchedulableThreads) throws Exception {
-		super(batterieURI, nbThreads, nbSchedulableThreads);
+		super(BATTERIE_URI, nbThreads, nbSchedulableThreads);
 
-		this.controleur_OUTPORT = new BatterieControleurOutPort(this);
-		this.compteur_OUTPORT = new BatterieCompteurOutPort(this);
+		this.controleur_OUTPORT = new BatterieControleurOutPort(BATTERIE_CONTROLEUR_OP_URI,this);
+		this.compteur_OUTPORT = new BatterieCompteurOutPort(BATTERIE_COMPTEUR_OP_URI,this);
 		
 		// port entrant permettant au controleur d'effectuer des actions sur la batterie
 		BatterieInPort action_INPORT = new BatterieInPort(this);
+		
+		/** TODO port entrant pour assembleur */
 		
 		this.addPort(controleur_OUTPORT);
 		this.addPort(compteur_OUTPORT);

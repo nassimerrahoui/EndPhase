@@ -5,9 +5,9 @@ import java.util.concurrent.TimeUnit;
 import app.interfaces.appareil.IAjoutAppareil;
 import app.interfaces.appareil.IConsommation;
 import app.interfaces.appareil.IOrdinateur;
-import app.ports.ordi.OrdinateurCompteurOutPort;
-import app.ports.ordi.OrdinateurControleurOutPort;
-import app.ports.ordi.OrdinateurInPort;
+import app.ports.ordinateur.OrdinateurCompteurOutPort;
+import app.ports.ordinateur.OrdinateurControleurOutPort;
+import app.ports.ordinateur.OrdinateurInPort;
 import app.util.EtatAppareil;
 import app.util.ModeOrdinateur;
 import app.util.TypeAppareil;
@@ -34,16 +34,21 @@ public class Ordinateur extends AbstractComponent {
 	protected ModeOrdinateur mode;
 	protected Double consommation;
 
-	public Ordinateur(String ordiURI, 
+	public Ordinateur(
+			String ORDINATEUR_URI, 
+			String ORDINATEUR_COMPTEUR_OP_URI,
+			String ORDINATEUR_CONTROLEUR_OP_URI,
 			int nbThreads, int nbSchedulableThreads, 
 			TypeAppareil type) throws Exception {
-		super(ordiURI, nbThreads, nbSchedulableThreads);
+		super(ORDINATEUR_URI, nbThreads, nbSchedulableThreads);
 
-		controleur_OUTPORT = new OrdinateurControleurOutPort(this);
-		consommation_OUTPORT = new OrdinateurCompteurOutPort(this);
+		controleur_OUTPORT = new OrdinateurControleurOutPort(ORDINATEUR_CONTROLEUR_OP_URI,this);
+		consommation_OUTPORT = new OrdinateurCompteurOutPort(ORDINATEUR_COMPTEUR_OP_URI,this);
 		
 		// port entrant permettant au controleur d'effectuer des actions sur l'ordinateur
 		OrdinateurInPort action_INPORT = new OrdinateurInPort(this);
+		
+		/** port entrant pour assembleur */
 		
 		this.addPort(controleur_OUTPORT);
 		this.addPort(consommation_OUTPORT);

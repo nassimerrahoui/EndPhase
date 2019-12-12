@@ -1,6 +1,6 @@
 package app.connectors;
 
-import app.components.Compteur;
+import app.interfaces.compteur.ICompteurControleur;
 import app.interfaces.controleur.IControleCompteur;
 import fr.sorbonne_u.components.connectors.AbstractConnector;
 
@@ -8,21 +8,21 @@ public class ControleurCompteurConnector extends AbstractConnector implements IC
 
 	@Override
 	public void demanderAjoutAppareil(String uri) throws Exception {
-		((Compteur) this.offering).ajouterAppareil(uri);
+		((ICompteurControleur) this.offering).ajouterAppareil(uri);
 	}
 
 	@Override
 	public void demanderAjoutUniteProduction(String uri) throws Exception {
-		((Compteur) this.offering).ajouterUniteProduction(uri);
+		((ICompteurControleur) this.offering).ajouterUniteProduction(uri);
 	}
 
 	@Override
 	public double getConsommationGlobale() throws Exception {
-		return ((Compteur) this.offering).envoyerConsommationGlobale();
+		return ((ICompteurControleur) this.offering).envoyerConsommationGlobale();
 	}
 
 	@Override
 	public double getProductionGlobale() throws Exception {
-		return ((Compteur) this.offering).envoyerProductionGlobale();
+		return ((ICompteurControleur) this.offering).envoyerProductionGlobale();
 	}
 }

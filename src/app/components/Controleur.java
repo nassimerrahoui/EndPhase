@@ -15,7 +15,7 @@ import app.ports.controleur.ControleurFrigoOutPort;
 import app.ports.controleur.ControleurInPort;
 import app.ports.controleur.ControleurLaveLingeOutPort;
 import app.ports.controleur.ControleurOrdinateurOutPort;
-import app.ports.controleur.ControleurPanneauoOutPort;
+import app.ports.controleur.ControleurPanneauOutPort;
 import app.util.EtatAppareil;
 import app.util.EtatUniteProduction;
 import app.util.ModeFrigo;
@@ -43,23 +43,29 @@ public class Controleur extends AbstractComponent {
 	protected ControleurFrigoOutPort frigo_OUTPORT;
 	protected ControleurLaveLingeOutPort lavelinge_OUTPORT;
 	protected ControleurOrdinateurOutPort ordinateur_OUTPORT;
-	protected ControleurPanneauoOutPort panneausolaire_OUTPORT;
+	protected ControleurPanneauOutPort panneausolaire_OUTPORT;
 	protected ControleurBatterieOutPort batterie_OUTPORT;
 	protected ControleurCompteurOutPort compteur_OUTPORT;
 
 	protected Vector<String> unitesProduction = new Vector<>();
 	protected Vector<String> appareils = new Vector<>();
 
-	public Controleur(String controleurURI, 
+	public Controleur(
+			String CONTROLEUR_OP_FRIGO_URI, 
+			String CONTROLEUR_OP_LAVELINGE_URI,
+			String CONTROLEUR_OP_ORDINATEUR_URI,
+			String CONTROLEUR_OP_PANNEAUSOLAIRE_URI,
+			String CONTROLEUR_OP_BATTERIE_URI,
+			String CONTROLEUR_OP_COMPTEUR_URI,
 			int nbThreads, int nbSchedulableThreads) throws Exception {
-		super(controleurURI, nbThreads, nbSchedulableThreads);
+		super(CONTROLEUR_OP_FRIGO_URI, nbThreads, nbSchedulableThreads);
 		
-		frigo_OUTPORT = new ControleurFrigoOutPort(this);
-		lavelinge_OUTPORT = new ControleurLaveLingeOutPort(this);
-		ordinateur_OUTPORT = new ControleurOrdinateurOutPort(this);
-		panneausolaire_OUTPORT = new ControleurPanneauoOutPort(this);
-		batterie_OUTPORT = new ControleurBatterieOutPort(this);
-		compteur_OUTPORT = new ControleurCompteurOutPort(this);
+		frigo_OUTPORT = new ControleurFrigoOutPort(CONTROLEUR_OP_FRIGO_URI,this);
+		lavelinge_OUTPORT = new ControleurLaveLingeOutPort(CONTROLEUR_OP_LAVELINGE_URI,this);
+		ordinateur_OUTPORT = new ControleurOrdinateurOutPort(CONTROLEUR_OP_ORDINATEUR_URI,this);
+		panneausolaire_OUTPORT = new ControleurPanneauOutPort(CONTROLEUR_OP_PANNEAUSOLAIRE_URI,this);
+		batterie_OUTPORT = new ControleurBatterieOutPort(CONTROLEUR_OP_BATTERIE_URI,this);
+		compteur_OUTPORT = new ControleurCompteurOutPort(CONTROLEUR_OP_COMPTEUR_URI,this);
 		
 		// port entrant permettant aux appareils et unites de production de s'inscrire
 		ControleurInPort inscription_INPORT = new ControleurInPort(this);

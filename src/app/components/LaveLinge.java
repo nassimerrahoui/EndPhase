@@ -38,13 +38,16 @@ public class LaveLinge extends AbstractComponent {
 	protected Double consommation;
 	protected TemperatureLaveLinge temperature;
 
-	public LaveLinge(String lavelingeURI, 
+	public LaveLinge(
+			String LAVELIGNE_URI, 
+			String LAVELINGE_COMPTEUR_OP_URI,
+			String LAVELINGE_CONTROLEUR_OP_URI,
 			int nbThreads, int nbSchedulableThreads, 
 			TypeAppareil type) throws Exception {
-		super(lavelingeURI, nbThreads, nbSchedulableThreads);
+		super(LAVELIGNE_URI, nbThreads, nbSchedulableThreads);
 
-		controleur_OUTPORT = new LaveLingeControleurOutPort(this);
-		consommation_OUTPORT = new LaveLingeCompteurOutPort(this);
+		controleur_OUTPORT = new LaveLingeControleurOutPort(LAVELINGE_CONTROLEUR_OP_URI,this);
+		consommation_OUTPORT = new LaveLingeCompteurOutPort(LAVELINGE_COMPTEUR_OP_URI,this);
 		
 		// port entrant permettant au controleur d'effectuer des actions sur le lave-linge
 		LaveLingeInPort action_INPORT = new LaveLingeInPort(this);
