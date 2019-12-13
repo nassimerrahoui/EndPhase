@@ -78,7 +78,6 @@ public class Frigo extends AbstractComponent {
 		this.tracer.setTitle("Frigo");
 		this.tracer.setRelativePosition(0, 1);
 		this.toggleTracing();
-		this.toggleLogging();
 
 		// attributs
 		this.type = type;

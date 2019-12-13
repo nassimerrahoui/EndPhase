@@ -4,9 +4,9 @@ import app.components.Compteur;
 import app.interfaces.compteur.ICompteur;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.ComponentI;
-import fr.sorbonne_u.components.ports.AbstractOutboundPort;
+import fr.sorbonne_u.components.ports.AbstractInboundPort;
 
-public class ConsommationProductionInPort extends AbstractOutboundPort implements ICompteur {
+public class ConsommationProductionInPort extends AbstractInboundPort implements ICompteur {
 
 	private static final long serialVersionUID = 1L;
 

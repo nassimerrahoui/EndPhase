@@ -79,7 +79,6 @@ public class LaveLinge extends AbstractComponent {
 		this.tracer.setTitle("LaveLinge");
 		this.tracer.setRelativePosition(1, 1);
 		this.toggleTracing();
-		this.toggleLogging();
 		
 		// attributs
 		this.heure = 0;

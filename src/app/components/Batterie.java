@@ -70,7 +70,6 @@ public class Batterie extends AbstractComponent {
 		this.tracer.setTitle("Batterie");
 		this.tracer.setRelativePosition(0, 2);
 		this.toggleTracing();
-		this.toggleLogging();
 
 		// attributs
 		etat = EtatUniteProduction.OFF;

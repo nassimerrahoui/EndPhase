@@ -52,6 +52,7 @@ public class Controleur extends AbstractComponent {
 	protected Vector<String> appareils = new Vector<>();
 
 	public Controleur(
+			String CONTROLEUR_URI,
 			String CONTROLEUR_OP_FRIGO_URI, 
 			String CONTROLEUR_OP_LAVELINGE_URI,
 			String CONTROLEUR_OP_ORDINATEUR_URI,
@@ -59,7 +60,7 @@ public class Controleur extends AbstractComponent {
 			String CONTROLEUR_OP_BATTERIE_URI,
 			String CONTROLEUR_OP_COMPTEUR_URI,
 			int nbThreads, int nbSchedulableThreads) throws Exception {
-		super(CONTROLEUR_OP_FRIGO_URI, nbThreads, nbSchedulableThreads);
+		super(CONTROLEUR_URI, nbThreads, nbSchedulableThreads);
 		
 		frigo_OUTPORT = new ControleurFrigoOutPort(CONTROLEUR_OP_FRIGO_URI,this);
 		lavelinge_OUTPORT = new ControleurLaveLingeOutPort(CONTROLEUR_OP_LAVELINGE_URI,this);
@@ -98,8 +99,6 @@ public class Controleur extends AbstractComponent {
 		// affichage
 		this.tracer.setTitle("Controleur");
 		this.tracer.setRelativePosition(1, 0);
-		this.toggleTracing();
-		this.toggleLogging();
 	}
 	
 	// ******* Services requis pour allumer ou eteindre des appareils *********

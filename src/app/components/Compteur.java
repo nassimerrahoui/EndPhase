@@ -50,17 +50,16 @@ public class Compteur extends AbstractComponent {
 		this.tracer.setTitle("Compteur");
 		this.tracer.setRelativePosition(1, 3);
 		this.toggleTracing();
-		this.toggleLogging();
 	}
 
 	public void ajouterAppareil(String uri) throws Exception {
 		this.appareil_consommation.put(uri, 0.0);
-		this.logMessage(uri + "a ete ajoute au compteur");
+		this.logMessage(uri + " a ete ajoute au compteur");
 	}
 	
 	public void ajouterUniteProduction(String uri) throws Exception {
 		this.unite_production.put(uri, 0.0);
-		this.logMessage(uri + "a ete ajoute au compteur");
+		this.logMessage(uri + " a ete ajoute au compteur");
 	}
 
 	public double envoyerConsommationGlobale() throws Exception {
