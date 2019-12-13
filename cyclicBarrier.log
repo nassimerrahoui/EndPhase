@@ -1,138 +1,144 @@
-1576260283357|DCVM Cyclic Barrier up and running!
-1576260288164|DCVM Cyclic Barrier accepts: JVM_ORDINATEUR_URI localhost 52300
-1576260288179|DCVM Cyclic Barrier has received 1 out of 8 expected.
-1576260288196|DCVM Cyclic Barrier accepts: JVM_LAVELINGE_URI localhost 52302
-1576260288197|DCVM Cyclic Barrier has received 2 out of 8 expected.
-1576260288219|DCVM Cyclic Barrier accepts: JVM_COMPTEUR_URI localhost 52306
-1576260288220|DCVM Cyclic Barrier has received 3 out of 8 expected.
-1576260288220|DCVM Cyclic Barrier accepts: JVM_CONTROLEUR_URI localhost 52304
-1576260288222|DCVM Cyclic Barrier has received 4 out of 8 expected.
-1576260288226|DCVM Cyclic Barrier accepts: JVM_BATTERIE_URI localhost 52308
-1576260288230|DCVM Cyclic Barrier accepts: JVM_FRIGO_URI localhost 52310
-1576260288230|DCVM Cyclic Barrier has received 5 out of 8 expected.
-1576260288231|DCVM Cyclic Barrier has received 6 out of 8 expected.
-1576260288246|DCVM Cyclic Barrier accepts: JVM_PANNEAUSOLAIRE_URI localhost 52312
-1576260288246|DCVM Cyclic Barrier has received 7 out of 8 expected.
-1576260288271|All connected!
-1576260288271|DCVM Cyclic Barrier accepts: JVM_DYNAMIC_ASSEMBLEUR_URI localhost 52314
-1576260288272|DCVM Cyclic Barrier has received 8 out of 8 expected.
-1576260288272|DCVM Cyclic Barrier releases 8 sites.
-1576260288298|DCVM Cyclic Barrier accepts: JVM_BATTERIE_URI localhost 52308
-1576260288299|DCVM Cyclic Barrier has received 1 out of 8 expected.
-1576260288299|DCVM Cyclic Barrier accepts: JVM_ORDINATEUR_URI localhost 52300
-1576260288299|DCVM Cyclic Barrier has received 2 out of 8 expected.
-1576260288299|DCVM Cyclic Barrier accepts: JVM_FRIGO_URI localhost 52310
-1576260288300|DCVM Cyclic Barrier has received 3 out of 8 expected.
-1576260288301|DCVM Cyclic Barrier accepts: JVM_CONTROLEUR_URI localhost 52304
-1576260288301|DCVM Cyclic Barrier has received 4 out of 8 expected.
-1576260288314|DCVM Cyclic Barrier accepts: JVM_COMPTEUR_URI localhost 52306
-1576260288315|DCVM Cyclic Barrier accepts: JVM_LAVELINGE_URI localhost 52302
-1576260288315|DCVM Cyclic Barrier has received 5 out of 8 expected.
-1576260288315|DCVM Cyclic Barrier accepts: JVM_DYNAMIC_ASSEMBLEUR_URI localhost 52314
-1576260288315|DCVM Cyclic Barrier has received 6 out of 8 expected.
-1576260288316|DCVM Cyclic Barrier has received 7 out of 8 expected.
-1576260288343|DCVM Cyclic Barrier accepts: JVM_PANNEAUSOLAIRE_URI localhost 52312
-1576260288344|DCVM Cyclic Barrier has received 8 out of 8 expected.
-1576260288344|DCVM Cyclic Barrier releases 8 sites.
-1576260288907|DCVM Cyclic Barrier accepts: JVM_COMPTEUR_URI localhost 52306
-1576260288908|DCVM Cyclic Barrier has received 1 out of 8 expected.
-1576260288908|DCVM Cyclic Barrier accepts: JVM_CONTROLEUR_URI localhost 52304
-1576260288909|DCVM Cyclic Barrier has received 2 out of 8 expected.
-1576260288920|DCVM Cyclic Barrier accepts: JVM_FRIGO_URI localhost 52310
-1576260288921|DCVM Cyclic Barrier has received 3 out of 8 expected.
-1576260288935|DCVM Cyclic Barrier accepts: JVM_ORDINATEUR_URI localhost 52300
-1576260288936|DCVM Cyclic Barrier has received 4 out of 8 expected.
-1576260288943|DCVM Cyclic Barrier accepts: JVM_PANNEAUSOLAIRE_URI localhost 52312
-1576260288944|DCVM Cyclic Barrier has received 5 out of 8 expected.
-1576260288975|DCVM Cyclic Barrier accepts: JVM_BATTERIE_URI localhost 52308
-1576260288976|DCVM Cyclic Barrier has received 6 out of 8 expected.
-1576260289007|DCVM Cyclic Barrier accepts: JVM_LAVELINGE_URI localhost 52302
-1576260289008|DCVM Cyclic Barrier has received 7 out of 8 expected.
-1576260289063|DCVM Cyclic Barrier accepts: JVM_DYNAMIC_ASSEMBLEUR_URI localhost 52314
-1576260289064|DCVM Cyclic Barrier has received 8 out of 8 expected.
-1576260289064|DCVM Cyclic Barrier releases 8 sites.
-1576260289065|DCVM Cyclic Barrier accepts: JVM_COMPTEUR_URI localhost 52306
-1576260289065|DCVM Cyclic Barrier accepts: JVM_CONTROLEUR_URI localhost 52304
-1576260289065|DCVM Cyclic Barrier accepts: JVM_FRIGO_URI localhost 52310
-1576260289065|DCVM Cyclic Barrier accepts: JVM_ORDINATEUR_URI localhost 52300
-1576260289065|DCVM Cyclic Barrier accepts: JVM_PANNEAUSOLAIRE_URI localhost 52312
-1576260289065|DCVM Cyclic Barrier accepts: JVM_BATTERIE_URI localhost 52308
-1576260289065|DCVM Cyclic Barrier accepts: JVM_LAVELINGE_URI localhost 52302
-1576260289065|DCVM Cyclic Barrier has received 1 out of 8 expected.
-1576260289066|DCVM Cyclic Barrier has received 2 out of 8 expected.
-1576260289067|DCVM Cyclic Barrier has received 3 out of 8 expected.
-1576260289067|DCVM Cyclic Barrier has received 4 out of 8 expected.
-1576260289068|DCVM Cyclic Barrier has received 5 out of 8 expected.
-1576260289068|DCVM Cyclic Barrier has received 6 out of 8 expected.
-1576260289069|DCVM Cyclic Barrier has received 7 out of 8 expected.
-1576260289107|DCVM Cyclic Barrier accepts: JVM_DYNAMIC_ASSEMBLEUR_URI localhost 52314
-1576260289108|DCVM Cyclic Barrier has received 8 out of 8 expected.
-1576260289108|DCVM Cyclic Barrier releases 8 sites.
-1576260289152|DCVM Cyclic Barrier accepts: JVM_LAVELINGE_URI localhost 52302
-1576260289152|DCVM Cyclic Barrier accepts: JVM_COMPTEUR_URI localhost 52306
-1576260289152|DCVM Cyclic Barrier accepts: JVM_FRIGO_URI localhost 52310
-1576260289153|DCVM Cyclic Barrier has received 1 out of 8 expected.
-1576260289153|DCVM Cyclic Barrier has received 2 out of 8 expected.
-1576260289154|DCVM Cyclic Barrier has received 3 out of 8 expected.
-1576260289154|DCVM Cyclic Barrier has received 4 out of 8 expected.
-1576260289154|DCVM Cyclic Barrier has received 5 out of 8 expected.
-1576260289159|DCVM Cyclic Barrier has received 6 out of 8 expected.
-1576260289160|DCVM Cyclic Barrier has received 7 out of 8 expected.
-1576260289203|DCVM Cyclic Barrier accepts: JVM_DYNAMIC_ASSEMBLEUR_URI localhost 52314
-1576260289204|DCVM Cyclic Barrier has received 8 out of 8 expected.
-1576260289204|DCVM Cyclic Barrier releases 8 sites.
-1576260299249|DCVM Cyclic Barrier accepts: JVM_BATTERIE_URI localhost 52308
-1576260299249|DCVM Cyclic Barrier accepts: JVM_FRIGO_URI localhost 52310
-1576260299249|DCVM Cyclic Barrier accepts: JVM_ORDINATEUR_URI localhost 52300
-1576260299249|DCVM Cyclic Barrier accepts: JVM_COMPTEUR_URI localhost 52306
-1576260299249|DCVM Cyclic Barrier accepts: JVM_PANNEAUSOLAIRE_URI localhost 52312
-1576260299249|DCVM Cyclic Barrier accepts: JVM_LAVELINGE_URI localhost 52302
-1576260299250|DCVM Cyclic Barrier accepts: JVM_CONTROLEUR_URI localhost 52304
-1576260299250|DCVM Cyclic Barrier has received 1 out of 8 expected.
-1576260299251|DCVM Cyclic Barrier has received 2 out of 8 expected.
-1576260299252|DCVM Cyclic Barrier has received 3 out of 8 expected.
-1576260299253|DCVM Cyclic Barrier has received 4 out of 8 expected.
-1576260299254|DCVM Cyclic Barrier has received 5 out of 8 expected.
-1576260299255|DCVM Cyclic Barrier has received 6 out of 8 expected.
-1576260299255|DCVM Cyclic Barrier has received 7 out of 8 expected.
-1576260299291|DCVM Cyclic Barrier accepts: JVM_DYNAMIC_ASSEMBLEUR_URI localhost 52314
-1576260299292|DCVM Cyclic Barrier has received 8 out of 8 expected.
-1576260299292|DCVM Cyclic Barrier releases 8 sites.
-1576260299423|DCVM Cyclic Barrier accepts: JVM_FRIGO_URI localhost 52310
-1576260299424|DCVM Cyclic Barrier has received 1 out of 8 expected.
-1576260299427|DCVM Cyclic Barrier accepts: JVM_PANNEAUSOLAIRE_URI localhost 52312
-1576260299427|DCVM Cyclic Barrier accepts: JVM_ORDINATEUR_URI localhost 52300
-1576260299427|DCVM Cyclic Barrier accepts: JVM_LAVELINGE_URI localhost 52302
-1576260299428|DCVM Cyclic Barrier has received 2 out of 8 expected.
-1576260299428|DCVM Cyclic Barrier has received 3 out of 8 expected.
-1576260299429|DCVM Cyclic Barrier has received 4 out of 8 expected.
-1576260299429|DCVM Cyclic Barrier has received 5 out of 8 expected.
-1576260299431|DCVM Cyclic Barrier accepts: JVM_BATTERIE_URI localhost 52308
-1576260299432|DCVM Cyclic Barrier accepts: JVM_COMPTEUR_URI localhost 52306
-1576260299432|DCVM Cyclic Barrier has received 6 out of 8 expected.
-1576260299432|DCVM Cyclic Barrier has received 7 out of 8 expected.
-1576260299467|DCVM Cyclic Barrier accepts: JVM_DYNAMIC_ASSEMBLEUR_URI localhost 52314
-1576260299468|DCVM Cyclic Barrier has received 8 out of 8 expected.
-1576260299468|DCVM Cyclic Barrier releases 8 sites.
-1576260299559|DCVM Cyclic Barrier accepts: JVM_DYNAMIC_ASSEMBLEUR_URI localhost 52314
-1576260299560|DCVM Cyclic Barrier has received 1 out of 8 expected.
-1576260299775|DCVM Cyclic Barrier accepts: JVM_COMPTEUR_URI localhost 52306
-1576260299776|DCVM Cyclic Barrier has received 2 out of 8 expected.
-1576260299863|DCVM Cyclic Barrier accepts: JVM_PANNEAUSOLAIRE_URI localhost 52312
-1576260299863|DCVM Cyclic Barrier accepts: JVM_LAVELINGE_URI localhost 52302
-1576260299864|DCVM Cyclic Barrier has received 3 out of 8 expected.
-1576260299865|DCVM Cyclic Barrier has received 4 out of 8 expected.
-1576260299872|DCVM Cyclic Barrier accepts: JVM_FRIGO_URI localhost 52310
-1576260299872|DCVM Cyclic Barrier accepts: JVM_ORDINATEUR_URI localhost 52300
-1576260299872|DCVM Cyclic Barrier has received 5 out of 8 expected.
-1576260299873|DCVM Cyclic Barrier has received 6 out of 8 expected.
-1576260299959|DCVM Cyclic Barrier accepts: JVM_BATTERIE_URI localhost 52308
-1576260299960|DCVM Cyclic Barrier has received 7 out of 8 expected.
-1576260300137|DCVM Cyclic Barrier accepts: JVM_CONTROLEUR_URI localhost 52304
-1576260300137|DCVM Cyclic Barrier has received 8 out of 8 expected.
-1576260300137|DCVM Cyclic Barrier releases 8 sites.
-1576260300139|DCVMCyclicBarrier.run() finished.
-1576260300139|DCVMCyclicBarrier.run() finished.
-1576260300139|DCVMCyclicBarrier.run() finished.
-1576260300139|DCVMCyclicBarrier.run() finished.
-1576260300139|DCVM Cyclic Barrier shuts down!
+1576262140838|DCVM Cyclic Barrier up and running!
+1576262143162|DCVM Cyclic Barrier accepts: JVM_FRIGO_URI localhost 53700
+1576262143162|DCVM Cyclic Barrier accepts: JVM_CONTROLEUR_URI localhost 53702
+1576262143163|DCVM Cyclic Barrier has received 1 out of 8 expected.
+1576262143181|DCVM Cyclic Barrier has received 2 out of 8 expected.
+1576262143195|DCVM Cyclic Barrier accepts: JVM_PANNEAUSOLAIRE_URI localhost 53704
+1576262143196|DCVM Cyclic Barrier has received 3 out of 8 expected.
+1576262143198|DCVM Cyclic Barrier accepts: JVM_BATTERIE_URI localhost 53706
+1576262143199|DCVM Cyclic Barrier has received 4 out of 8 expected.
+1576262143209|DCVM Cyclic Barrier accepts: JVM_ORDINATEUR_URI localhost 53708
+1576262143210|DCVM Cyclic Barrier has received 5 out of 8 expected.
+1576262143210|DCVM Cyclic Barrier has received 6 out of 8 expected.
+1576262143217|DCVM Cyclic Barrier accepts: JVM_LAVELINGE_URI localhost 53712
+1576262143218|DCVM Cyclic Barrier has received 7 out of 8 expected.
+1576262143252|All connected!
+1576262143252|DCVM Cyclic Barrier accepts: JVM_DYNAMIC_ASSEMBLEUR_URI localhost 53714
+1576262143253|DCVM Cyclic Barrier has received 8 out of 8 expected.
+1576262143253|DCVM Cyclic Barrier releases 8 sites.
+1576262143290|DCVM Cyclic Barrier accepts: JVM_LAVELINGE_URI localhost 53712
+1576262143291|DCVM Cyclic Barrier accepts: JVM_FRIGO_URI localhost 53700
+1576262143291|DCVM Cyclic Barrier has received 1 out of 8 expected.
+1576262143292|DCVM Cyclic Barrier has received 2 out of 8 expected.
+1576262143293|DCVM Cyclic Barrier accepts: JVM_PANNEAUSOLAIRE_URI localhost 53704
+1576262143293|DCVM Cyclic Barrier accepts: JVM_CONTROLEUR_URI localhost 53702
+1576262143293|DCVM Cyclic Barrier has received 3 out of 8 expected.
+1576262143294|DCVM Cyclic Barrier has received 4 out of 8 expected.
+1576262143294|DCVM Cyclic Barrier accepts: JVM_BATTERIE_URI localhost 53706
+1576262143294|DCVM Cyclic Barrier has received 5 out of 8 expected.
+1576262143300|DCVM Cyclic Barrier accepts: JVM_DYNAMIC_ASSEMBLEUR_URI localhost 53714
+1576262143302|DCVM Cyclic Barrier has received 6 out of 8 expected.
+1576262143304|DCVM Cyclic Barrier accepts: JVM_COMPTEUR_URI localhost 53710
+1576262143305|DCVM Cyclic Barrier accepts: JVM_ORDINATEUR_URI localhost 53708
+1576262143306|DCVM Cyclic Barrier has received 7 out of 8 expected.
+1576262143307|DCVM Cyclic Barrier has received 8 out of 8 expected.
+1576262143307|DCVM Cyclic Barrier releases 8 sites.
+1576262143831|DCVM Cyclic Barrier accepts: JVM_ORDINATEUR_URI localhost 53708
+1576262143832|DCVM Cyclic Barrier has received 1 out of 8 expected.
+1576262143843|DCVM Cyclic Barrier accepts: JVM_LAVELINGE_URI localhost 53712
+1576262143844|DCVM Cyclic Barrier has received 2 out of 8 expected.
+1576262143855|DCVM Cyclic Barrier accepts: JVM_CONTROLEUR_URI localhost 53702
+1576262143856|DCVM Cyclic Barrier has received 3 out of 8 expected.
+1576262143871|DCVM Cyclic Barrier accepts: JVM_COMPTEUR_URI localhost 53710
+1576262143872|DCVM Cyclic Barrier has received 4 out of 8 expected.
+1576262143883|DCVM Cyclic Barrier accepts: JVM_FRIGO_URI localhost 53700
+1576262143884|DCVM Cyclic Barrier has received 5 out of 8 expected.
+1576262143915|DCVM Cyclic Barrier accepts: JVM_PANNEAUSOLAIRE_URI localhost 53704
+1576262143916|DCVM Cyclic Barrier has received 6 out of 8 expected.
+1576262143939|DCVM Cyclic Barrier accepts: JVM_BATTERIE_URI localhost 53706
+1576262143940|DCVM Cyclic Barrier has received 7 out of 8 expected.
+1576262144011|DCVM Cyclic Barrier accepts: JVM_DYNAMIC_ASSEMBLEUR_URI localhost 53714
+1576262144012|DCVM Cyclic Barrier has received 8 out of 8 expected.
+1576262144012|DCVM Cyclic Barrier releases 8 sites.
+1576262144013|DCVM Cyclic Barrier accepts: JVM_ORDINATEUR_URI localhost 53708
+1576262144013|DCVM Cyclic Barrier accepts: JVM_CONTROLEUR_URI localhost 53702
+1576262144014|DCVM Cyclic Barrier accepts: JVM_FRIGO_URI localhost 53700
+1576262144014|DCVM Cyclic Barrier accepts: JVM_PANNEAUSOLAIRE_URI localhost 53704
+1576262144014|DCVM Cyclic Barrier accepts: JVM_BATTERIE_URI localhost 53706
+1576262144014|DCVM Cyclic Barrier accepts: JVM_LAVELINGE_URI localhost 53712
+1576262144014|DCVM Cyclic Barrier accepts: JVM_COMPTEUR_URI localhost 53710
+1576262144014|DCVM Cyclic Barrier has received 1 out of 8 expected.
+1576262144014|DCVM Cyclic Barrier has received 2 out of 8 expected.
+1576262144014|DCVM Cyclic Barrier has received 3 out of 8 expected.
+1576262144016|DCVM Cyclic Barrier has received 4 out of 8 expected.
+1576262144016|DCVM Cyclic Barrier has received 5 out of 8 expected.
+1576262144017|DCVM Cyclic Barrier has received 6 out of 8 expected.
+1576262144017|DCVM Cyclic Barrier has received 7 out of 8 expected.
+1576262144055|DCVM Cyclic Barrier accepts: JVM_DYNAMIC_ASSEMBLEUR_URI localhost 53714
+1576262144056|DCVM Cyclic Barrier has received 8 out of 8 expected.
+1576262144056|DCVM Cyclic Barrier releases 8 sites.
+1576262144100|DCVM Cyclic Barrier accepts: JVM_COMPTEUR_URI localhost 53710
+1576262144100|DCVM Cyclic Barrier accepts: JVM_FRIGO_URI localhost 53700
+1576262144100|DCVM Cyclic Barrier accepts: JVM_PANNEAUSOLAIRE_URI localhost 53704
+1576262144100|DCVM Cyclic Barrier accepts: JVM_ORDINATEUR_URI localhost 53708
+1576262144100|DCVM Cyclic Barrier accepts: JVM_CONTROLEUR_URI localhost 53702
+1576262144100|DCVM Cyclic Barrier accepts: JVM_LAVELINGE_URI localhost 53712
+1576262144101|DCVM Cyclic Barrier has received 1 out of 8 expected.
+1576262144101|DCVM Cyclic Barrier has received 2 out of 8 expected.
+1576262144102|DCVM Cyclic Barrier has received 3 out of 8 expected.
+1576262144102|DCVM Cyclic Barrier has received 4 out of 8 expected.
+1576262144102|DCVM Cyclic Barrier has received 5 out of 8 expected.
+1576262144103|DCVM Cyclic Barrier has received 6 out of 8 expected.
+1576262144103|DCVM Cyclic Barrier has received 7 out of 8 expected.
+1576262144151|DCVM Cyclic Barrier accepts: JVM_DYNAMIC_ASSEMBLEUR_URI localhost 53714
+1576262144152|DCVM Cyclic Barrier has received 8 out of 8 expected.
+1576262144152|DCVM Cyclic Barrier releases 8 sites.
+1576262164196|DCVM Cyclic Barrier accepts: JVM_CONTROLEUR_URI localhost 53702
+1576262164196|DCVM Cyclic Barrier accepts: JVM_PANNEAUSOLAIRE_URI localhost 53704
+1576262164196|DCVM Cyclic Barrier accepts: JVM_FRIGO_URI localhost 53700
+1576262164196|DCVM Cyclic Barrier accepts: JVM_BATTERIE_URI localhost 53706
+1576262164196|DCVM Cyclic Barrier accepts: JVM_LAVELINGE_URI localhost 53712
+1576262164196|DCVM Cyclic Barrier accepts: JVM_COMPTEUR_URI localhost 53710
+1576262164197|DCVM Cyclic Barrier has received 1 out of 8 expected.
+1576262164197|DCVM Cyclic Barrier accepts: JVM_ORDINATEUR_URI localhost 53708
+1576262164198|DCVM Cyclic Barrier has received 2 out of 8 expected.
+1576262164198|DCVM Cyclic Barrier has received 3 out of 8 expected.
+1576262164199|DCVM Cyclic Barrier has received 4 out of 8 expected.
+1576262164199|DCVM Cyclic Barrier has received 5 out of 8 expected.
+1576262164199|DCVM Cyclic Barrier has received 6 out of 8 expected.
+1576262164200|DCVM Cyclic Barrier has received 7 out of 8 expected.
+1576262164239|DCVM Cyclic Barrier accepts: JVM_DYNAMIC_ASSEMBLEUR_URI localhost 53714
+1576262164240|DCVM Cyclic Barrier has received 8 out of 8 expected.
+1576262164240|DCVM Cyclic Barrier releases 8 sites.
+1576262164377|DCVM Cyclic Barrier accepts: JVM_LAVELINGE_URI localhost 53712
+1576262164377|DCVM Cyclic Barrier has received 1 out of 8 expected.
+1576262164379|DCVM Cyclic Barrier accepts: JVM_CONTROLEUR_URI localhost 53702
+1576262164379|DCVM Cyclic Barrier accepts: JVM_PANNEAUSOLAIRE_URI localhost 53704
+1576262164380|DCVM Cyclic Barrier accepts: JVM_COMPTEUR_URI localhost 53710
+1576262164380|DCVM Cyclic Barrier accepts: JVM_ORDINATEUR_URI localhost 53708
+1576262164380|DCVM Cyclic Barrier has received 2 out of 8 expected.
+1576262164380|DCVM Cyclic Barrier accepts: JVM_BATTERIE_URI localhost 53706
+1576262164381|DCVM Cyclic Barrier has received 3 out of 8 expected.
+1576262164381|DCVM Cyclic Barrier has received 4 out of 8 expected.
+1576262164381|DCVM Cyclic Barrier has received 5 out of 8 expected.
+1576262164382|DCVM Cyclic Barrier has received 6 out of 8 expected.
+1576262164383|DCVM Cyclic Barrier accepts: JVM_FRIGO_URI localhost 53700
+1576262164384|DCVM Cyclic Barrier has received 7 out of 8 expected.
+1576262164423|DCVM Cyclic Barrier accepts: JVM_DYNAMIC_ASSEMBLEUR_URI localhost 53714
+1576262164424|DCVM Cyclic Barrier has received 8 out of 8 expected.
+1576262164424|DCVM Cyclic Barrier releases 8 sites.
+1576262164511|DCVM Cyclic Barrier accepts: JVM_DYNAMIC_ASSEMBLEUR_URI localhost 53714
+1576262164512|DCVM Cyclic Barrier has received 1 out of 8 expected.
+1576262164648|DCVM Cyclic Barrier accepts: JVM_COMPTEUR_URI localhost 53710
+1576262164649|DCVM Cyclic Barrier has received 2 out of 8 expected.
+1576262164821|DCVM Cyclic Barrier accepts: JVM_LAVELINGE_URI localhost 53712
+1576262164821|DCVM Cyclic Barrier has received 3 out of 8 expected.
+1576262164824|DCVM Cyclic Barrier accepts: JVM_ORDINATEUR_URI localhost 53708
+1576262164824|DCVM Cyclic Barrier accepts: JVM_PANNEAUSOLAIRE_URI localhost 53704
+1576262164824|DCVM Cyclic Barrier accepts: JVM_FRIGO_URI localhost 53700
+1576262164824|DCVM Cyclic Barrier has received 4 out of 8 expected.
+1576262164825|DCVM Cyclic Barrier has received 5 out of 8 expected.
+1576262164825|DCVM Cyclic Barrier has received 6 out of 8 expected.
+1576262164831|DCVM Cyclic Barrier accepts: JVM_BATTERIE_URI localhost 53706
+1576262164832|DCVM Cyclic Barrier has received 7 out of 8 expected.
+1576262165100|DCVM Cyclic Barrier accepts: JVM_CONTROLEUR_URI localhost 53702
+1576262165101|DCVM Cyclic Barrier has received 8 out of 8 expected.
+1576262165101|DCVM Cyclic Barrier releases 8 sites.
+1576262165102|DCVMCyclicBarrier.run() finished.
+1576262165103|DCVMCyclicBarrier.run() finished.
+1576262165103|DCVMCyclicBarrier.run() finished.
+1576262165103|DCVMCyclicBarrier.run() finished.
+1576262165103|DCVMCyclicBarrier.run() finished.
+1576262165103|DCVMCyclicBarrier.run() finished.
+1576262165103|DCVMCyclicBarrier.run() finished.
+1576262165103|DCVM Cyclic Barrier shuts down!

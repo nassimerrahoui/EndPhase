@@ -90,6 +90,7 @@ public class Frigo extends AbstractComponent {
 	}
 
 	public void envoyerConsommation(String uri, double consommation) throws Exception {
+		this.logMessage("OKOK");
 		this.consommation_OUTPORT.envoyerConsommation(uri, consommation);
 	}
 
@@ -151,7 +152,7 @@ public class Frigo extends AbstractComponent {
 		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
 			@Override
 			public void run() {
-				try { ((Frigo) this.getTaskOwner()).envoyerConsommation(URI.FRIGO_URI.getURI(), consommation); } 
+				try { ((Frigo) this.getTaskOwner()).envoyerConsommation(URI.FRIGO_URI.getURI(), 54); } 
 				catch (Exception e) { throw new RuntimeException(e); }
 			}
 		}, 2000, 1000, TimeUnit.MILLISECONDS);

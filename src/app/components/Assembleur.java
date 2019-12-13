@@ -123,8 +123,8 @@ public class Assembleur extends AbstractComponent {
 						URI.FRIGO_URI.getURI(), 
 						URI.FRIGO_COMPTEUR_OP_URI.getURI(),
 						URI.FRIGO_CONTROLEUR_OP_URI.getURI(),
-						Integer.valueOf(2),
-						Integer.valueOf(2),
+						Integer.valueOf(8),
+						Integer.valueOf(8),
 						TypeAppareil.CONSO_PERMANENTE});
 
 		i++;
@@ -139,8 +139,8 @@ public class Assembleur extends AbstractComponent {
 						URI.LAVELINGE_URI.getURI(), 
 						URI.LAVELINGE_COMPTEUR_OP_URI.getURI(),
 						URI.LAVELINGE_CONTROLEUR_OP_URI.getURI(),
-						Integer.valueOf(2),
-						Integer.valueOf(2),
+						Integer.valueOf(8),
+						Integer.valueOf(8),
 						TypeAppareil.CONSO_PLANIFIABLE});
 
 		i++;
@@ -155,8 +155,8 @@ public class Assembleur extends AbstractComponent {
 						URI.ORDINATEUR_URI.getURI(), 
 						URI.ORDINATEUR_COMPTEUR_OP_URI.getURI(),
 						URI.ORDINATEUR_CONTROLEUR_OP_URI.getURI(),
-						Integer.valueOf(2),
-						Integer.valueOf(2),
+						Integer.valueOf(8),
+						Integer.valueOf(8),
 						TypeAppareil.CONSO_INCONTROLABLE});
 
 		i++;
@@ -171,8 +171,8 @@ public class Assembleur extends AbstractComponent {
 						URI.PANNEAUSOLAIRE_URI.getURI(), 
 						URI.PANNEAUSOLAIRE_COMPTEUR_OP_URI.getURI(),
 						URI.PANNEAUSOLAIRE_CONTROLEUR_OP_URI.getURI(),
-						Integer.valueOf(2),
-						Integer.valueOf(2)});
+						Integer.valueOf(8),
+						Integer.valueOf(8)});
 
 		i++;
 		DynamicOutPort.doDisconnection();
@@ -186,8 +186,8 @@ public class Assembleur extends AbstractComponent {
 						URI.BATTERIE_URI.getURI(), 
 						URI.BATTERIE_COMPTEUR_OP_URI.getURI(),
 						URI.BATTERIE_CONTROLEUR_OP_URI.getURI(),
-						Integer.valueOf(2),
-						Integer.valueOf(2)});
+						Integer.valueOf(8),
+						Integer.valueOf(8)});
 
 		i++;
 		DynamicOutPort.doDisconnection();
@@ -199,8 +199,8 @@ public class Assembleur extends AbstractComponent {
 		LISTE_REFLECTION_INPORT[6] = DynamicOutPort.createComponent(Compteur.class.getCanonicalName(),
 				new Object[] { 
 						URI.COMPTEUR_URI.getURI(),
-						Integer.valueOf(5),
-						Integer.valueOf(5)});
+						Integer.valueOf(8),
+						Integer.valueOf(8)});
 
 		DynamicOutPort.doDisconnection();
 		

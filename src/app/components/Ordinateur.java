@@ -120,8 +120,6 @@ public class Ordinateur extends AbstractComponent {
 
 		this.logMessage("Phase d'execution de l'ordinateur.");
 		
-		this.logMessage("Passage en Performance reduite.");
-		
 		this.logMessage("Execution en cours...");
 		
 		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {

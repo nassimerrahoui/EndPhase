@@ -72,7 +72,7 @@ public class Compteur extends AbstractComponent {
 	public void setAppareilConsommation(String uri, double consommation) throws Exception {
 		if(appareil_consommation.containsKey(uri)) {
 			appareil_consommation.put(uri, consommation);
-			this.logMessage(uri + " consomme " + " Watt");
+			this.logMessage(uri + " consomme " + consommation + " Watt");
 		}
 	}
 

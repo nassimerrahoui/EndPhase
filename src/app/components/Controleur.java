@@ -9,7 +9,6 @@ import app.interfaces.controleur.IControleLaveLinge;
 import app.interfaces.controleur.IControleOrdinateur;
 import app.interfaces.controleur.IControlePanneau;
 import app.interfaces.controleur.IControleur;
-import app.interfaces.generateur.IEntiteDynamique;
 import app.ports.controleur.ControleurBatterieOutPort;
 import app.ports.controleur.ControleurCompteurOutPort;
 import app.ports.controleur.ControleurFrigoOutPort;
@@ -32,7 +31,7 @@ import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
 
-@OfferedInterfaces(offered = { IControleur.class, IEntiteDynamique.class })
+@OfferedInterfaces(offered = { IControleur.class })
 @RequiredInterfaces(required = { 
 		IControleCompteur.class, 
 		IControleFrigo.class, 
@@ -93,6 +92,7 @@ public class Controleur extends AbstractComponent {
 		// affichage
 		this.tracer.setTitle("Controleur");
 		this.tracer.setRelativePosition(1, 0);
+		//this.toggleTracing();
 	}
 	
 	// ******* Services requis pour allumer ou eteindre des appareils *********
