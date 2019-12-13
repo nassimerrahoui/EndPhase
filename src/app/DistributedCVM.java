@@ -30,8 +30,6 @@ public class DistributedCVM extends AbstractDistributedCVM {
 					URI.JVM_COMPTEUR_URI.getURI()
 			};
 			
-			System.out.println("JE SUIS AVANT");
-			
 			@SuppressWarnings("unused")
 			String assembleur = AbstractComponent.createComponent(
 								Assembleur.class.getCanonicalName(),
@@ -39,8 +37,6 @@ public class DistributedCVM extends AbstractDistributedCVM {
 										URI.DYNAMIC_ASSEMBLEUR_URI.getURI(),
 										jvm_uris});
 		
-			System.out.println("JE SUIS APRES");
-			
 		}
 		super.instantiateAndPublish();
 	}

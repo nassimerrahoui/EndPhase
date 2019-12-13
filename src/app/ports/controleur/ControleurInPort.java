@@ -2,6 +2,7 @@ package app.ports.controleur;
 
 import app.components.Controleur;
 import app.interfaces.controleur.IControleur;
+import app.util.URI;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
@@ -27,7 +28,7 @@ public class ControleurInPort extends AbstractInboundPort implements IControleur
 			}
 		};
 
-		this.owner.handleRequestAsync(0, task);
+		this.owner.handleRequestAsync(URI.POOL_AJOUT_CONTROLEUR_URI.getURI(), task);
 	}
 
 	@Override
@@ -39,6 +40,6 @@ public class ControleurInPort extends AbstractInboundPort implements IControleur
 			}
 		};
 
-		this.owner.handleRequestAsync(0, task);
+		this.owner.handleRequestAsync(URI.POOL_AJOUT_CONTROLEUR_URI.getURI(), task);
 	}
 }

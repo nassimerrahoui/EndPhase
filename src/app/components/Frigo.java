@@ -12,6 +12,7 @@ import app.ports.frigo.FrigoInPort;
 import app.util.EtatAppareil;
 import app.util.ModeFrigo;
 import app.util.TypeAppareil;
+import app.util.URI;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
@@ -72,13 +73,12 @@ public class Frigo extends AbstractComponent {
 			this.executionLog.setDirectory(System.getProperty("user.home")) ;
 		}
 		
-		/** TODO definir pool de thread */
+		this.createNewExecutorService(URI.POOL_ACTION_FRIGO_URI.getURI(), 5, false) ;
 		
 		// affichage
 		this.tracer.setTitle("Frigo");
 		this.tracer.setRelativePosition(0, 1);
 		this.toggleTracing();
-		this.toggleLogging();
 
 		// attributs
 		this.type = type;
@@ -153,10 +153,18 @@ public class Frigo extends AbstractComponent {
 	@Override
 	public void execute() throws Exception {
 		super.execute();
-		
+				
 		this.logMessage("Phase d'execution du frigo.");
 		
 		this.logMessage("Execution en cours...");
+		
+		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
+			@Override
+			public void run() {
+				try { ((Frigo) this.getTaskOwner()).envoyerConsommation(URI.FRIGO_URI.getURI(), consommation); } 
+				catch (Exception e) { throw new RuntimeException(e); }
+			}
+		}, 2000, 1000, TimeUnit.MILLISECONDS);
 		
 		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
 			@Override

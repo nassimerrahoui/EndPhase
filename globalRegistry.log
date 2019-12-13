@@ -1,100 +1,165 @@
-1574029552903|Registry up and running!
-1574029674952|GlobalRegistry processing put controleurURI rmi=localhost
-1574029675050|GlobalRegistry processing put oport1 rmi=localhost
-1574029675077|GlobalRegistry processing put 40f92810-d609-46bb-b6e0-71e0a58914f7 rmi=localhost
-1574029675080|GlobalRegistry processing put c3b85a5f-8adc-40c0-b76c-5d58514914f7 rmi=localhost
-1574029675126|GlobalRegistry processing put a899010a-1644-4fef-8b5e-e9fe6c70b99e rmi=localhost
-1574029675128|GlobalRegistry processing put 590d10e1-3b2a-451f-837f-52c0b2dfe840 rmi=localhost
-1574029675136|GlobalRegistry processing put 8e4ad7ae-209d-4785-941a-7862e6c059d0 rmi=localhost
-1574029675376|GlobalRegistry processing put frigoURI rmi=localhost
-1574029675376|GlobalRegistry processing put batterieURI rmi=localhost
-1574029675452|GlobalRegistry processing put oport6 rmi=localhost
-1574029675455|GlobalRegistry processing put oport2 rmi=localhost
-1574029675526|GlobalRegistry processing put 6d58cd26-1d80-49b5-b602-d0af201cdf10 rmi=localhost
-1574029675533|GlobalRegistry processing put e8291d82-ebbd-4f66-b8e2-08fa94f99135 rmi=localhost
-1574029675563|GlobalRegistry processing put chargeurURI rmi=localhost
-1574029675616|GlobalRegistry processing put oport4 rmi=localhost
-1574029675653|GlobalRegistry processing put 23fe3a0b-68c9-44a0-bafd-2c0c9f922fd9 rmi=localhost
-1574029675916|GlobalRegistry processing put panneauURI rmi=localhost
-1574029675973|GlobalRegistry processing put oport3 rmi=localhost
-1574029676012|GlobalRegistry processing put 8a4b2e6d-cf91-4dc8-92eb-bffaca3f890e rmi=localhost
-1574029676105|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionI-44c69ed5-0cfd-472a-a3d2-b7bbec7e979c rmi=localhost
-1574029676191|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionI-9dbe37c0-4703-4336-a4eb-1d4c53f33817 rmi=localhost
-1574029676193|GlobalRegistry processing put controleur-dcc rmi=localhost
-1574029676267|GlobalRegistry processing put batterie-dcc rmi=localhost
-1574029676488|GlobalRegistry processing put compteurURI rmi=localhost
-1574029676557|GlobalRegistry processing put compteur_oport0 rmi=localhost
-1574029676565|GlobalRegistry processing put compteur_oport1 rmi=localhost
-1574029676575|GlobalRegistry processing put compteur_oport2 rmi=localhost
-1574029676585|GlobalRegistry processing put compteur_oport3 rmi=localhost
-1574029676598|GlobalRegistry processing put compteur_oport4 rmi=localhost
-1574029676644|GlobalRegistry processing put 2d6b9ede-2484-4cb6-aa31-4e1402ab70a7 rmi=localhost
-1574029676660|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionI-adda7f78-af85-47ea-8c04-768710643465 rmi=localhost
-1574029676733|GlobalRegistry processing put frigo-dcc rmi=localhost
-1574029676890|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionI-54bf5ab1-d17c-4836-a5d9-1549844ff52e rmi=localhost
-1574029677012|GlobalRegistry processing put chargeur-dcc rmi=localhost
-1574029677223|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionI-b217f0f0-2cbe-40f3-a6b3-7f3b29779341 rmi=localhost
-1574029677262|GlobalRegistry processing put panneau-dcc rmi=localhost
-1574029677276|All connected!
-1574029677315|GlobalRegistry processing put ordinateurURI rmi=localhost
-1574029677388|GlobalRegistry processing put oport5 rmi=localhost
-1574029677425|GlobalRegistry processing put dfae31e3-2244-45f6-a0c2-ec2863342035 rmi=localhost
-1574029677608|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionI-2545ae43-b385-400c-9b7e-d22e6ccb6003 rmi=localhost
-1574029677661|GlobalRegistry processing put compteur-dcc rmi=localhost
-1574029677938|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionI-a523534d-f98a-408d-99fb-5d29e8e60bab rmi=localhost
-1574029677997|GlobalRegistry processing put ordinateur-dcc rmi=localhost
-1574029678016|GlobalRegistry processing lookup compteur_oport1
-1574029678020|GlobalRegistry processing lookup oport1
-1574029678021|GlobalRegistry processing lookup compteur_oport2
-1574029678036|GlobalRegistry processing lookup oport6
-1574029678037|GlobalRegistry processing lookup compteur_oport3
-1574029678041|GlobalRegistry processing lookup compteur_oport0
-1574029678041|GlobalRegistry processing lookup compteur_oport4
-1574029678085|GlobalRegistry processing lookup 40f92810-d609-46bb-b6e0-71e0a58914f7
-1574029678123|GlobalRegistry processing lookup oport5
-1574029678127|GlobalRegistry processing lookup 2d6b9ede-2484-4cb6-aa31-4e1402ab70a7
-1574029678137|GlobalRegistry processing lookup 8a4b2e6d-cf91-4dc8-92eb-bffaca3f890e
-1574029678156|GlobalRegistry processing lookup a899010a-1644-4fef-8b5e-e9fe6c70b99e
-1574029678177|GlobalRegistry processing lookup 6d58cd26-1d80-49b5-b602-d0af201cdf10
-1574029678190|GlobalRegistry processing lookup 23fe3a0b-68c9-44a0-bafd-2c0c9f922fd9
-1574029678197|GlobalRegistry processing lookup e8291d82-ebbd-4f66-b8e2-08fa94f99135
-1574029678207|GlobalRegistry processing lookup dfae31e3-2244-45f6-a0c2-ec2863342035
-1574029678278|GlobalRegistry processing lookup oport4
-1574029678293|GlobalRegistry processing lookup c3b85a5f-8adc-40c0-b76c-5d58514914f7
-1574029678310|GlobalRegistry processing lookup oport2
-1574029678316|GlobalRegistry processing lookup 8e4ad7ae-209d-4785-941a-7862e6c059d0
-1574029678335|GlobalRegistry processing lookup oport3
-1574029678341|GlobalRegistry processing lookup 590d10e1-3b2a-451f-837f-52c0b2dfe840
-1574029693407|GlobalRegistry processing remove fr.sorbonne_u.components.reflection.interfaces.ReflectionI-44c69ed5-0cfd-472a-a3d2-b7bbec7e979c
-1574029693409|GlobalRegistry processing remove panneauURI
-1574029693412|GlobalRegistry processing remove controleurURI
-1574029693413|GlobalRegistry processing remove fr.sorbonne_u.components.reflection.interfaces.ReflectionI-2545ae43-b385-400c-9b7e-d22e6ccb6003
-1574029693414|GlobalRegistry processing remove frigoURI
-1574029693414|GlobalRegistry processing remove fr.sorbonne_u.components.reflection.interfaces.ReflectionI-54bf5ab1-d17c-4836-a5d9-1549844ff52e
-1574029693414|GlobalRegistry processing remove batterieURI
-1574029693415|GlobalRegistry processing remove fr.sorbonne_u.components.reflection.interfaces.ReflectionI-a523534d-f98a-408d-99fb-5d29e8e60bab
-1574029693415|GlobalRegistry processing remove fr.sorbonne_u.components.reflection.interfaces.ReflectionI-b217f0f0-2cbe-40f3-a6b3-7f3b29779341
-1574029693419|GlobalRegistry processing remove compteurURI
-1574029693420|GlobalRegistry processing remove chargeurURI
-1574029693424|GlobalRegistry processing remove fr.sorbonne_u.components.reflection.interfaces.ReflectionI-adda7f78-af85-47ea-8c04-768710643465
-1574029693424|GlobalRegistry processing remove ordinateurURI
-1574029693426|GlobalRegistry processing remove fr.sorbonne_u.components.reflection.interfaces.ReflectionI-9dbe37c0-4703-4336-a4eb-1d4c53f33817
-1574029693438|GlobalRegistry processing remove controleur-dcc
-1574029693440|GlobalRegistry processing remove oport3
-1574029693445|GlobalRegistry processing remove compteur-dcc
-1574029693446|GlobalRegistry processing remove chargeur-dcc
-1574029693447|GlobalRegistry processing remove oport6
-1574029693447|GlobalRegistry processing remove ordinateur-dcc
-1574029693447|GlobalRegistry processing remove oport2
-1574029693447|GlobalRegistry processing remove panneau-dcc
-1574029693455|GlobalRegistry processing remove frigo-dcc
-1574029693457|GlobalRegistry processing remove batterie-dcc
-1574029693464|GlobalRegistry processing remove oport5
-1574029693471|GlobalRegistry processing shutdown
-1574029693472|GlobalRegistry processing shutdown
-1574029693475|GlobalRegistry processing shutdown
-1574029693476|GlobalRegistry processing shutdown
-1574029693476|GlobalRegistry processing shutdown
-1574029693478|GlobalRegistry processing shutdown
-1574029693478|GlobalRegistry processing shutdown
-1574029693580|Global registry shuts down!
+1576245047887|Registry up and running!
+1576245627047|GlobalRegistry processing put DYNAMIC_ASSEMBLEUR_URI rmi=localhost
+1576245627297|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionI-2febeb2f-dad2-4eb3-bef9-dd89d6723cae rmi=localhost
+1576245627297|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionI-1a587a82-c188-463f-8a5d-fe5beaa7b68d rmi=localhost
+1576245627375|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionI-5542e906-b905-4641-8075-dbaac98d01f7 rmi=localhost
+1576245627375|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionI-58e5da22-6042-4b21-8b8a-0f699d454f2d rmi=localhost
+1576245627391|GlobalRegistry processing put JVM_PANNEAUSOLAIRE_URI-dcc rmi=localhost
+1576245627391|GlobalRegistry processing put JVM_FRIGO_URI-dcc rmi=localhost
+1576245627532|GlobalRegistry processing put JVM_LAVELINGE_URI-dcc rmi=localhost
+1576245627563|GlobalRegistry processing put JVM_ORDINATEUR_URI-dcc rmi=localhost
+1576245627672|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionI-bda73f35-2d58-4874-8444-4f615ae1871d rmi=localhost
+1576245627672|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionI-2764873b-4a38-474c-9fb5-469fa6f4dded rmi=localhost
+1576245627719|All connected!
+1576245627719|GlobalRegistry processing put JVM_CONTROLEUR_URI-dcc rmi=localhost
+1576245627782|GlobalRegistry processing put JVM_COMPTEUR_URI-dcc rmi=localhost
+1576245627797|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionI-04521f87-3e9f-479f-96da-f25e03d3de7b rmi=localhost
+1576245627844|GlobalRegistry processing put JVM_BATTERIE_URI-dcc rmi=localhost
+1576245628094|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionI-29d5e7f8-b4b7-41ac-8c23-0fa3bdb392b7 rmi=localhost
+1576245628094|GlobalRegistry processing put JVM_DYNAMIC_ASSEMBLEUR_URI-dcc rmi=localhost
+1576245628165|GlobalRegistry processing put app.interfaces.generateur.IAssembleur-1057126a-53b6-40b9-b8a8-88fec1d2a7c0 rmi=localhost
+1576245628181|GlobalRegistry processing lookup JVM_CONTROLEUR_URI-dcc
+1576245628275|GlobalRegistry processing put CONTROLEUR_URI rmi=localhost
+1576245628384|GlobalRegistry processing put CONTROLEUR_OP_FRIGO_URI rmi=localhost
+1576245628400|GlobalRegistry processing put CONTROLEUR_OP_LAVELINGE_URI rmi=localhost
+1576245628478|GlobalRegistry processing put CONTROLEUR_OP_ORDINATEUR_URI rmi=localhost
+1576245628509|GlobalRegistry processing put CONTROLEUR_OP_PANNEAUSOLAIRE_URI rmi=localhost
+1576245628556|GlobalRegistry processing put CONTROLEUR_OP_BATTERIE_URI rmi=localhost
+1576245628587|GlobalRegistry processing put CONTROLEUR_OP_COMPTEUR_URI rmi=localhost
+1576245628634|GlobalRegistry processing put app.interfaces.controleur.IControleur-221aa812-b764-4f38-bde1-d36d163f5464 rmi=localhost
+1576245628665|GlobalRegistry processing lookup JVM_FRIGO_URI-dcc
+1576245628712|GlobalRegistry processing put FRIGO_URI rmi=localhost
+1576245628806|GlobalRegistry processing put FRIGO_CONTROLEUR_OP_URI rmi=localhost
+1576245628822|GlobalRegistry processing put FRIGO_COMPTEUR_OP_URI rmi=localhost
+1576245628853|GlobalRegistry processing put app.interfaces.appareil.IFrigo-73644792-f04d-4848-94d9-c8b1f846d2d2 rmi=localhost
+1576245628900|GlobalRegistry processing put app.interfaces.generateur.IEntiteDynamique-f98b6520-c7a4-4783-89f6-97e3c9c31341 rmi=localhost
+1576245629431|GlobalRegistry processing lookup JVM_LAVELINGE_URI-dcc
+1576245629493|GlobalRegistry processing put LAVELINGE_URI rmi=localhost
+1576245629650|GlobalRegistry processing put LAVELINGE_CONTROLEUR_OP_URI rmi=localhost
+1576245629681|GlobalRegistry processing put LAVELINGE_COMPTEUR_OP_URI rmi=localhost
+1576245629728|GlobalRegistry processing put app.interfaces.appareil.ILaveLinge-8c1578d6-a0f2-467b-acd2-9fa339da60a5 rmi=localhost
+1576245629743|GlobalRegistry processing put app.interfaces.generateur.IEntiteDynamique-c0351de0-2aa5-4e26-a46e-b58188814d09 rmi=localhost
+1576245630072|GlobalRegistry processing lookup JVM_ORDINATEUR_URI-dcc
+1576245630103|GlobalRegistry processing put ORDINATEUR_URI rmi=localhost
+1576245630181|GlobalRegistry processing put ORDINATEUR_CONTROLEUR_OP_URI rmi=localhost
+1576245630181|GlobalRegistry processing put ORDINATEUR_COMPTEUR_OP_URI rmi=localhost
+1576245630212|GlobalRegistry processing put app.interfaces.appareil.IOrdinateur-acd7cda6-f974-44d6-a70a-faaa702a89ac rmi=localhost
+1576245630228|GlobalRegistry processing put app.interfaces.generateur.IEntiteDynamique-a77a56f5-d6a4-4783-a3c9-96dc613ccda7 rmi=localhost
+1576245630540|GlobalRegistry processing lookup JVM_PANNEAUSOLAIRE_URI-dcc
+1576245630587|GlobalRegistry processing put PANNEAUSOLAIRE_URI rmi=localhost
+1576245630634|GlobalRegistry processing put PANNEAUSOLAIRE_CONTROLEUR_OP_URI rmi=localhost
+1576245630650|GlobalRegistry processing put PANNEAUSOLAIRE_COMPTEUR_OP_URI rmi=localhost
+1576245630681|GlobalRegistry processing put app.interfaces.production.IPanneau-a664a5a1-b557-4d77-bed4-ae77e68b8c5d rmi=localhost
+1576245630697|GlobalRegistry processing put app.interfaces.generateur.IEntiteDynamique-117425e0-042e-4acf-b9e8-cbc2dd342fee rmi=localhost
+1576245631025|GlobalRegistry processing lookup JVM_BATTERIE_URI-dcc
+1576245631056|GlobalRegistry processing put BATTERIE_URI rmi=localhost
+1576245631118|GlobalRegistry processing put BATTERIE_CONTROLEUR_OP_URI rmi=localhost
+1576245631134|GlobalRegistry processing put BATTERIE_COMPTEUR_OP_URI rmi=localhost
+1576245631165|GlobalRegistry processing put app.interfaces.production.IBatterie-4ce9a141-5fc1-4603-8847-210b97534f27 rmi=localhost
+1576245631181|GlobalRegistry processing put app.interfaces.generateur.IEntiteDynamique-c1f71477-7036-43cc-85cc-3c5ab9ee560b rmi=localhost
+1576245631509|GlobalRegistry processing lookup JVM_COMPTEUR_URI-dcc
+1576245631525|GlobalRegistry processing put COMPTEUR_URI rmi=localhost
+1576245631587|GlobalRegistry processing put app.interfaces.compteur.ICompteur-94ecbf8e-7d48-4888-8051-5c8446a0bcb7 rmi=localhost
+1576245631603|GlobalRegistry processing put app.interfaces.compteur.ICompteurControleur-41c98903-9185-44ff-80cb-9bf9da166847 rmi=localhost
+1576245631962|GlobalRegistry processing lookup FRIGO_URI
+1576245631993|GlobalRegistry processing lookup LAVELINGE_URI
+1576245632009|GlobalRegistry processing lookup ORDINATEUR_URI
+1576245632025|GlobalRegistry processing lookup PANNEAUSOLAIRE_URI
+1576245632040|GlobalRegistry processing lookup BATTERIE_URI
+1576245632071|GlobalRegistry processing lookup COMPTEUR_URI
+1576245632087|GlobalRegistry processing lookup CONTROLEUR_URI
+1576245632415|GlobalRegistry processing lookup app.interfaces.appareil.IFrigo-73644792-f04d-4848-94d9-c8b1f846d2d2
+1576245632478|GlobalRegistry processing lookup app.interfaces.appareil.ILaveLinge-8c1578d6-a0f2-467b-acd2-9fa339da60a5
+1576245632509|GlobalRegistry processing lookup app.interfaces.appareil.IOrdinateur-acd7cda6-f974-44d6-a70a-faaa702a89ac
+1576245632540|GlobalRegistry processing lookup app.interfaces.production.IPanneau-a664a5a1-b557-4d77-bed4-ae77e68b8c5d
+1576245632571|GlobalRegistry processing lookup app.interfaces.production.IBatterie-4ce9a141-5fc1-4603-8847-210b97534f27
+1576245632587|GlobalRegistry processing lookup app.interfaces.compteur.ICompteurControleur-41c98903-9185-44ff-80cb-9bf9da166847
+1576245632618|GlobalRegistry processing lookup COMPTEUR_URI
+1576245632634|GlobalRegistry processing lookup FRIGO_URI
+1576245632681|GlobalRegistry processing lookup app.interfaces.compteur.ICompteur-94ecbf8e-7d48-4888-8051-5c8446a0bcb7
+1576245632712|GlobalRegistry processing lookup LAVELINGE_URI
+1576245632759|GlobalRegistry processing lookup app.interfaces.compteur.ICompteur-94ecbf8e-7d48-4888-8051-5c8446a0bcb7
+1576245632790|GlobalRegistry processing lookup ORDINATEUR_URI
+1576245632821|GlobalRegistry processing lookup app.interfaces.compteur.ICompteur-94ecbf8e-7d48-4888-8051-5c8446a0bcb7
+1576245632853|GlobalRegistry processing lookup PANNEAUSOLAIRE_URI
+1576245632884|GlobalRegistry processing lookup app.interfaces.compteur.ICompteur-94ecbf8e-7d48-4888-8051-5c8446a0bcb7
+1576245632915|GlobalRegistry processing lookup BATTERIE_URI
+1576245632946|GlobalRegistry processing lookup app.interfaces.compteur.ICompteur-94ecbf8e-7d48-4888-8051-5c8446a0bcb7
+1576245632962|GlobalRegistry processing lookup CONTROLEUR_URI
+1576245632978|GlobalRegistry processing lookup FRIGO_URI
+1576245633024|GlobalRegistry processing lookup app.interfaces.controleur.IControleur-221aa812-b764-4f38-bde1-d36d163f5464
+1576245633056|GlobalRegistry processing lookup LAVELINGE_URI
+1576245633118|GlobalRegistry processing lookup app.interfaces.controleur.IControleur-221aa812-b764-4f38-bde1-d36d163f5464
+1576245633134|GlobalRegistry processing lookup ORDINATEUR_URI
+1576245633181|GlobalRegistry processing lookup app.interfaces.controleur.IControleur-221aa812-b764-4f38-bde1-d36d163f5464
+1576245633212|GlobalRegistry processing lookup PANNEAUSOLAIRE_URI
+1576245633290|GlobalRegistry processing lookup app.interfaces.controleur.IControleur-221aa812-b764-4f38-bde1-d36d163f5464
+1576245633321|GlobalRegistry processing lookup BATTERIE_URI
+1576245633384|GlobalRegistry processing lookup app.interfaces.controleur.IControleur-221aa812-b764-4f38-bde1-d36d163f5464
+1576245633415|GlobalRegistry processing lookup app.interfaces.generateur.IEntiteDynamique-f98b6520-c7a4-4783-89f6-97e3c9c31341
+1576245633431|GlobalRegistry processing lookup app.interfaces.generateur.IEntiteDynamique-c0351de0-2aa5-4e26-a46e-b58188814d09
+1576245633446|GlobalRegistry processing lookup app.interfaces.generateur.IEntiteDynamique-a77a56f5-d6a4-4783-a3c9-96dc613ccda7
+1576245633462|GlobalRegistry processing lookup app.interfaces.generateur.IEntiteDynamique-117425e0-042e-4acf-b9e8-cbc2dd342fee
+1576245633478|GlobalRegistry processing lookup app.interfaces.generateur.IEntiteDynamique-c1f71477-7036-43cc-85cc-3c5ab9ee560b
+1576245733541|GlobalRegistry processing remove DYNAMIC_ASSEMBLEUR_URI
+1576245733541|GlobalRegistry processing remove fr.sorbonne_u.components.reflection.interfaces.ReflectionI-29d5e7f8-b4b7-41ac-8c23-0fa3bdb392b7
+1576245733572|GlobalRegistry processing remove fr.sorbonne_u.components.reflection.interfaces.ReflectionI-bda73f35-2d58-4874-8444-4f615ae1871d
+1576245733588|GlobalRegistry processing remove CONTROLEUR_URI
+1576245733588|GlobalRegistry processing remove fr.sorbonne_u.components.reflection.interfaces.ReflectionI-2764873b-4a38-474c-9fb5-469fa6f4dded
+1576245733588|GlobalRegistry processing remove fr.sorbonne_u.components.reflection.interfaces.ReflectionI-5542e906-b905-4641-8075-dbaac98d01f7
+1576245733603|GlobalRegistry processing remove COMPTEUR_URI
+1576245733603|GlobalRegistry processing remove ORDINATEUR_URI
+1576245733619|GlobalRegistry processing remove fr.sorbonne_u.components.reflection.interfaces.ReflectionI-2febeb2f-dad2-4eb3-bef9-dd89d6723cae
+1576245733619|GlobalRegistry processing remove fr.sorbonne_u.components.reflection.interfaces.ReflectionI-58e5da22-6042-4b21-8b8a-0f699d454f2d
+1576245733634|GlobalRegistry processing remove LAVELINGE_URI
+1576245733634|GlobalRegistry processing remove FRIGO_URI
+1576245733650|GlobalRegistry processing remove fr.sorbonne_u.components.reflection.interfaces.ReflectionI-1a587a82-c188-463f-8a5d-fe5beaa7b68d
+1576245733650|GlobalRegistry processing remove PANNEAUSOLAIRE_URI
+1576245733666|GlobalRegistry processing remove BATTERIE_URI
+1576245733681|GlobalRegistry processing remove fr.sorbonne_u.components.reflection.interfaces.ReflectionI-04521f87-3e9f-479f-96da-f25e03d3de7b
+1576245733697|GlobalRegistry processing remove JVM_DYNAMIC_ASSEMBLEUR_URI-dcc
+1576245733713|GlobalRegistry processing remove JVM_CONTROLEUR_URI-dcc
+1576245733713|GlobalRegistry processing remove JVM_ORDINATEUR_URI-dcc
+1576245733713|GlobalRegistry processing remove JVM_FRIGO_URI-dcc
+1576245733713|GlobalRegistry processing remove JVM_PANNEAUSOLAIRE_URI-dcc
+1576245733713|GlobalRegistry processing remove JVM_LAVELINGE_URI-dcc
+1576245733713|GlobalRegistry processing remove JVM_COMPTEUR_URI-dcc
+1576245733728|GlobalRegistry processing remove app.interfaces.production.IBatterie-4ce9a141-5fc1-4603-8847-210b97534f27
+1576245733728|GlobalRegistry processing remove app.interfaces.compteur.ICompteur-94ecbf8e-7d48-4888-8051-5c8446a0bcb7
+1576245733744|GlobalRegistry processing remove app.interfaces.appareil.IFrigo-73644792-f04d-4848-94d9-c8b1f846d2d2
+1576245733744|GlobalRegistry processing remove BATTERIE_CONTROLEUR_OP_URI
+1576245733744|GlobalRegistry processing remove app.interfaces.appareil.IOrdinateur-acd7cda6-f974-44d6-a70a-faaa702a89ac
+1576245733744|GlobalRegistry processing remove app.interfaces.controleur.IControleur-221aa812-b764-4f38-bde1-d36d163f5464
+1576245733744|GlobalRegistry processing remove app.interfaces.appareil.ILaveLinge-8c1578d6-a0f2-467b-acd2-9fa339da60a5
+1576245733744|GlobalRegistry processing remove BATTERIE_COMPTEUR_OP_URI
+1576245733744|GlobalRegistry processing remove app.interfaces.compteur.ICompteurControleur-41c98903-9185-44ff-80cb-9bf9da166847
+1576245733759|GlobalRegistry processing remove FRIGO_COMPTEUR_OP_URI
+1576245733759|GlobalRegistry processing remove ORDINATEUR_COMPTEUR_OP_URI
+1576245733759|GlobalRegistry processing remove CONTROLEUR_OP_FRIGO_URI
+1576245733759|GlobalRegistry processing remove LAVELINGE_COMPTEUR_OP_URI
+1576245733759|GlobalRegistry processing remove app.interfaces.generateur.IEntiteDynamique-c1f71477-7036-43cc-85cc-3c5ab9ee560b
+1576245733759|GlobalRegistry processing remove FRIGO_CONTROLEUR_OP_URI
+1576245733759|GlobalRegistry processing remove ORDINATEUR_CONTROLEUR_OP_URI
+1576245733759|GlobalRegistry processing remove JVM_BATTERIE_URI-dcc
+1576245733759|GlobalRegistry processing remove CONTROLEUR_OP_LAVELINGE_URI
+1576245733759|GlobalRegistry processing remove LAVELINGE_CONTROLEUR_OP_URI
+1576245733775|GlobalRegistry processing remove app.interfaces.generateur.IEntiteDynamique-f98b6520-c7a4-4783-89f6-97e3c9c31341
+1576245733775|GlobalRegistry processing remove app.interfaces.generateur.IEntiteDynamique-c0351de0-2aa5-4e26-a46e-b58188814d09
+1576245733791|GlobalRegistry processing remove CONTROLEUR_OP_ORDINATEUR_URI
+1576245733806|GlobalRegistry processing remove app.interfaces.generateur.IEntiteDynamique-a77a56f5-d6a4-4783-a3c9-96dc613ccda7
+1576245733806|GlobalRegistry processing remove CONTROLEUR_OP_PANNEAUSOLAIRE_URI
+1576245733806|GlobalRegistry processing remove CONTROLEUR_OP_BATTERIE_URI
+1576245733822|GlobalRegistry processing remove CONTROLEUR_OP_COMPTEUR_URI
+1576245733838|GlobalRegistry processing remove app.interfaces.production.IPanneau-a664a5a1-b557-4d77-bed4-ae77e68b8c5d
+1576245733853|GlobalRegistry processing remove PANNEAUSOLAIRE_CONTROLEUR_OP_URI
+1576245733853|GlobalRegistry processing remove PANNEAUSOLAIRE_COMPTEUR_OP_URI
+1576245733853|GlobalRegistry processing remove app.interfaces.generateur.IEntiteDynamique-117425e0-042e-4acf-b9e8-cbc2dd342fee
+1576245733869|GlobalRegistry processing shutdown
+1576245733869|GlobalRegistry processing shutdown
+1576245733869|GlobalRegistry processing shutdown
+1576245733869|GlobalRegistry processing shutdown
+1576245733884|GlobalRegistry processing shutdown
+1576245733884|GlobalRegistry processing shutdown
+1576245733884|GlobalRegistry processing shutdown
+1576245733884|GlobalRegistry processing shutdown
+1576245733916|Global registry shuts down!

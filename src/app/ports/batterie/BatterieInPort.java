@@ -3,6 +3,7 @@ package app.ports.batterie;
 import app.components.Batterie;
 import app.interfaces.production.IBatterie;
 import app.util.EtatUniteProduction;
+import app.util.URI;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
@@ -28,7 +29,7 @@ public class BatterieInPort extends AbstractInboundPort implements IBatterie {
 			}
 		};
 
-		this.owner.handleRequestAsync(0, task);
+		this.owner.handleRequestAsync(URI.POOL_ACTION_BATTERIE_URI.getURI(), task);
 	}
 
 }

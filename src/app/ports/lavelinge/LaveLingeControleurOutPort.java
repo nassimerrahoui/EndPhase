@@ -18,6 +18,6 @@ public class LaveLingeControleurOutPort extends AbstractOutboundPort implements 
 
 	@Override
 	public void demandeAjoutControleur(String uri) throws Exception {
-		((LaveLingeControleurOutPort) this.connector).demandeAjoutControleur(uri);
+		((IAjoutAppareil) this.connector).demandeAjoutControleur(uri);
 	}
 }

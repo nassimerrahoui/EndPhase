@@ -64,13 +64,12 @@ public class PanneauSolaire extends AbstractComponent {
 			this.executionLog.setDirectory(System.getProperty("user.home")) ;
 		}
 		
-		/** TODO definir pool de thread */
+		this.createNewExecutorService(URI.POOL_ACTION_PANNEAUSOLAIRE_URI.getURI(), 5, false) ;
 		
 		// affichage
 		this.tracer.setTitle("Panneau Solaire");
 		this.tracer.setRelativePosition(1, 2);
 		this.toggleTracing();
-		this.toggleLogging();
 
 		// attributs
 		etat = EtatUniteProduction.OFF;

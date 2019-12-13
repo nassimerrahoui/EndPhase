@@ -5,6 +5,7 @@ import app.interfaces.compteur.ICompteur;
 import app.interfaces.compteur.ICompteurControleur;
 import app.ports.compteur.CompteurInPort;
 import app.ports.compteur.ConsommationProductionInPort;
+import app.util.URI;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
@@ -44,23 +45,23 @@ public class Compteur extends AbstractComponent {
 			this.executionLog.setDirectory(System.getProperty("user.home")) ;
 		}
 		
-		/** TODO definir pool de thread */
+		this.createNewExecutorService(URI.POOL_CONSO_PROD_COMPTEUR_URI.getURI(), 5, false) ;
+		this.createNewExecutorService(URI.POOL_CONTROLE_COMPTEUR_URI.getURI(), 5, false) ;
 		
 		// affichage
 		this.tracer.setTitle("Compteur");
 		this.tracer.setRelativePosition(1, 3);
 		this.toggleTracing();
-		this.toggleLogging();
 	}
 
 	public void ajouterAppareil(String uri) throws Exception {
 		this.appareil_consommation.put(uri, 0.0);
-		this.logMessage(uri + "a ete ajoute au compteur");
+		this.logMessage(uri + " a ete ajoute au compteur");
 	}
 	
 	public void ajouterUniteProduction(String uri) throws Exception {
 		this.unite_production.put(uri, 0.0);
-		this.logMessage(uri + "a ete ajoute au compteur");
+		this.logMessage(uri + " a ete ajoute au compteur");
 	}
 
 	public double envoyerConsommationGlobale() throws Exception {
@@ -74,14 +75,14 @@ public class Compteur extends AbstractComponent {
 	public void setAppareilConsommation(String uri, double consommation) throws Exception {
 		if(appareil_consommation.containsKey(uri)) {
 			appareil_consommation.put(uri, consommation);
-			this.logMessage(uri + " consomme " + "Watt");
+			this.logMessage(uri + " consomme " + " Watt");
 		}
 	}
 
 	public void setUniteProduction(String uri, double production) throws Exception {
 		if(unite_production.containsKey(uri)) {
 			unite_production.put(uri, production);
-			this.logMessage(uri + " produit " + production + "Watt");
+			this.logMessage(uri + " produit " + production + " Watt");
 		}
 	}
 	

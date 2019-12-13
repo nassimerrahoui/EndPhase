@@ -4,6 +4,7 @@ import app.components.Ordinateur;
 import app.interfaces.appareil.IOrdinateur;
 import app.util.EtatAppareil;
 import app.util.ModeOrdinateur;
+import app.util.URI;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
@@ -29,7 +30,7 @@ public class OrdinateurInPort extends AbstractInboundPort implements IOrdinateur
 			}
 		};
 
-		this.owner.handleRequestAsync(0, task);
+		this.owner.handleRequestAsync(URI.POOL_ACTION_ORDINATEUR_URI.getURI(), task);
 		
 	}
 
@@ -42,7 +43,7 @@ public class OrdinateurInPort extends AbstractInboundPort implements IOrdinateur
 			}
 		};
 
-		this.owner.handleRequestAsync(0, task);
+		this.owner.handleRequestAsync(URI.POOL_ACTION_ORDINATEUR_URI.getURI(), task);
 		
 	}
 
