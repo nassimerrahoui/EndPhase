@@ -87,6 +87,22 @@ public class Frigo extends AbstractComponent {
 
 	public void demandeAjoutControleur(String uri) throws Exception {
 		this.controleur_OUTPORT.demandeAjoutControleur(uri);
+		
+		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
+			@Override
+			public void run() {
+				try { ((Frigo) this.getTaskOwner()).envoyerConsommation(URI.FRIGO_URI.getURI(), 54); } 
+				catch (Exception e) { throw new RuntimeException(e); }
+			}
+		}, 2000, 1000, TimeUnit.MILLISECONDS);
+		
+		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
+			@Override
+			public void run() {
+				try { ((Frigo) this.getTaskOwner()).runningAndPrint(); } 
+				catch (Exception e) { throw new RuntimeException(e); }
+			}
+		}, 2000, 1000, TimeUnit.MILLISECONDS);
 	}
 
 	public void envoyerConsommation(String uri, double consommation) throws Exception {
@@ -148,22 +164,6 @@ public class Frigo extends AbstractComponent {
 		this.logMessage("Phase d'execution du frigo.");
 		
 		this.logMessage("Execution en cours...");
-		
-		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
-			@Override
-			public void run() {
-				try { ((Frigo) this.getTaskOwner()).envoyerConsommation(URI.FRIGO_URI.getURI(), 54); } 
-				catch (Exception e) { throw new RuntimeException(e); }
-			}
-		}, 2000, 1000, TimeUnit.MILLISECONDS);
-		
-		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
-			@Override
-			public void run() {
-				try { ((Frigo) this.getTaskOwner()).runningAndPrint(); } 
-				catch (Exception e) { throw new RuntimeException(e); }
-			}
-		}, 2000, 1000, TimeUnit.MILLISECONDS);
 	}
 	
 	@Override

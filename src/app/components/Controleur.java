@@ -171,44 +171,6 @@ public class Controleur extends AbstractComponent {
 
 	public void ajouterAppareil(String uri) throws Exception {
 		this.appareils.add(uri);
-		this.compteur_OUTPORT.demanderAjoutAppareil(uri);
-	}
-	
-	// ******* Service offert pour les unites de production  *********
-
-	public void ajouterUniteProduction(String uri) throws Exception {
-		this.unitesProduction.add(uri);
-		this.compteur_OUTPORT.demanderAjoutUniteProduction(uri);
-	}
-	
-	/**
-	 * Gerer et afficher ce qui se passe pendant l'execution du controleur
-	 * @throws Exception 
-	 */
-	public void runningAndPrint() throws Exception {
-		this.logMessage("Decisions controleur...");
-		
-		/** TODO code pour gerer les decisions du controleur */
-		
-		// TEST
-		int i = 0;
-		if(i == 0) {
-			envoyerMode(ModeOrdinateur.PerformanceReduite);
-			i++;
-		}
-	}
-	
-	// ************* Cycle de vie du composant ************* 
-
-	@Override
-	public void start() throws ComponentStartException {
-		super.start();
-		
-		this.logMessage("Demarrage du controleur...");
-		
-		this.logMessage("Phase d'execution du controleur.");
-		
-		this.logMessage("Execution en cours...");
 		
 		this.scheduleTask(new AbstractComponent.AbstractTask() {
 			@Override
@@ -249,6 +211,45 @@ public class Controleur extends AbstractComponent {
 				catch (Exception e) { throw new RuntimeException(e); }
 			}
 		}, 4000, 1000, TimeUnit.MILLISECONDS);
+		
+		this.compteur_OUTPORT.demanderAjoutAppareil(uri);
+	}
+	
+	// ******* Service offert pour les unites de production  *********
+
+	public void ajouterUniteProduction(String uri) throws Exception {
+		this.unitesProduction.add(uri);
+		this.compteur_OUTPORT.demanderAjoutUniteProduction(uri);
+	}
+	
+	/**
+	 * Gerer et afficher ce qui se passe pendant l'execution du controleur
+	 * @throws Exception 
+	 */
+	public void runningAndPrint() throws Exception {
+		this.logMessage("Decisions controleur...");
+		
+		/** TODO code pour gerer les decisions du controleur */
+		
+		// TEST
+		int i = 0;
+		if(i == 0) {
+			envoyerMode(ModeOrdinateur.PerformanceReduite);
+			i++;
+		}
+	}
+	
+	// ************* Cycle de vie du composant ************* 
+
+	@Override
+	public void start() throws ComponentStartException {
+		super.start();
+		
+		this.logMessage("Demarrage du controleur...");
+		
+		this.logMessage("Phase d'execution du controleur.");
+		
+		this.logMessage("Execution en cours...");
 	}
 	
 	@Override
