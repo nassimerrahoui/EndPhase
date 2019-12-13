@@ -13,6 +13,7 @@ import app.util.EtatAppareil;
 import app.util.ModeLaveLinge;
 import app.util.TemperatureLaveLinge;
 import app.util.TypeAppareil;
+import app.util.URI;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
@@ -73,7 +74,7 @@ public class LaveLinge extends AbstractComponent {
 			this.executionLog.setDirectory(System.getProperty("user.home")) ;
 		}
 		
-		/** TODO definir pool de thread */
+		this.createNewExecutorService(URI.POOL_ACTION_LAVELINGE_URI.getURI(), 5, false) ;
 		
 		// affichage
 		this.tracer.setTitle("LaveLinge");
@@ -161,6 +162,14 @@ public class LaveLinge extends AbstractComponent {
 		this.logMessage("Phase d'execution du lave-linge.");
 		
 		this.logMessage("Planification du lave-linge.");
+		
+		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
+			@Override
+			public void run() {
+				try { ((LaveLinge) this.getTaskOwner()).envoyerConsommation(URI.LAVELINGE_URI.getURI(), consommation); } 
+				catch (Exception e) { throw new RuntimeException(e); }
+			}
+		}, 2000, 1000, TimeUnit.MILLISECONDS);
 		
 		this.scheduleTask(new AbstractComponent.AbstractTask() {
 			@Override

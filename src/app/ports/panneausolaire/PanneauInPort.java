@@ -3,6 +3,7 @@ package app.ports.panneausolaire;
 import app.components.PanneauSolaire;
 import app.interfaces.production.IPanneau;
 import app.util.EtatUniteProduction;
+import app.util.URI;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
@@ -28,7 +29,7 @@ public class PanneauInPort extends AbstractInboundPort implements IPanneau {
 			}
 		};
 
-		this.owner.handleRequestAsync(0, task);
+		this.owner.handleRequestAsync(URI.POOL_ACTION_PANNEAUSOLAIRE_URI.getURI(), task);
 	}
 
 }

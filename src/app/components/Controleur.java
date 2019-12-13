@@ -23,6 +23,7 @@ import app.util.ModeFrigo;
 import app.util.ModeLaveLinge;
 import app.util.ModeOrdinateur;
 import app.util.TemperatureLaveLinge;
+import app.util.URI;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
@@ -94,7 +95,8 @@ public class Controleur extends AbstractComponent {
 			this.executionLog.setDirectory(System.getProperty("user.home")) ;
 		}
 		
-		/** TODO definir pool de thread */
+		this.createNewExecutorService(URI.POOL_AJOUT_CONTROLEUR_URI.getURI(), 5, false) ;
+		this.createNewExecutorService(URI.POOL_CONSO_PROD_CONTROLEUR_URI.getURI(), 5, false) ;
 		
 		// affichage
 		this.tracer.setTitle("Controleur");
@@ -189,11 +191,19 @@ public class Controleur extends AbstractComponent {
 	
 	/**
 	 * Gerer et afficher ce qui se passe pendant l'execution du controleur
+	 * @throws Exception 
 	 */
-	public void runningAndPrint() {
+	public void runningAndPrint() throws Exception {
 		this.logMessage("Decisions controleur...");
 		
 		/** TODO code pour gerer les decisions du controleur */
+		
+		// TEST
+		int i = 0;
+		if(i == 0) {
+			envoyerMode(ModeOrdinateur.PerformanceReduite);
+			i++;
+		}
 	}
 	
 	// ************* Cycle de vie du composant ************* 

@@ -16,7 +16,7 @@ public class OrdinateurControleurOutPort extends AbstractOutboundPort implements
 		super(IAjoutAppareil.class, owner);
 	}
 	
-	public void demandeAjoutControleur(String uri) {
-		((OrdinateurControleurOutPort) this.connector).demandeAjoutControleur(uri);
+	public void demandeAjoutControleur(String uri) throws Exception {
+		((IAjoutAppareil) this.connector).demandeAjoutControleur(uri);
 	}
 }

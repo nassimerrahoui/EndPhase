@@ -4,6 +4,7 @@ import app.components.Frigo;
 import app.interfaces.appareil.IFrigo;
 import app.util.EtatAppareil;
 import app.util.ModeFrigo;
+import app.util.URI;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
@@ -30,7 +31,7 @@ public class FrigoInPort extends AbstractInboundPort implements IFrigo {
 			}
 		};
 
-		this.owner.handleRequestAsync(0, task);
+		this.owner.handleRequestAsync(URI.POOL_ACTION_FRIGO_URI.getURI(), task);
 
 	}
 
@@ -43,7 +44,7 @@ public class FrigoInPort extends AbstractInboundPort implements IFrigo {
 			}
 		};
 
-		this.owner.handleRequestAsync(0, task);
+		this.owner.handleRequestAsync(URI.POOL_ACTION_FRIGO_URI.getURI(), task);
 	}
 
 	@Override
@@ -55,7 +56,7 @@ public class FrigoInPort extends AbstractInboundPort implements IFrigo {
 			}
 		};
 
-		this.owner.handleRequestAsync(0, task);
+		this.owner.handleRequestAsync(URI.POOL_ACTION_FRIGO_URI.getURI(), task);
 	}
 
 	@Override
@@ -67,7 +68,7 @@ public class FrigoInPort extends AbstractInboundPort implements IFrigo {
 			}
 		};
 
-		this.owner.handleRequestAsync(0, task);
+		this.owner.handleRequestAsync(URI.POOL_ACTION_FRIGO_URI.getURI(), task);
 	}
 
 	@Override
@@ -79,7 +80,7 @@ public class FrigoInPort extends AbstractInboundPort implements IFrigo {
 			}
 		};
 
-		this.owner.handleRequestAsync(0, task);
+		this.owner.handleRequestAsync(URI.POOL_ACTION_FRIGO_URI.getURI(), task);
 	}
 
 }

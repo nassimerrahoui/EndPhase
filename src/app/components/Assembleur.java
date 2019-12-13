@@ -55,7 +55,7 @@ public class Assembleur extends AbstractComponent {
 	protected ReflectionOutboundPort rop;
 
 	public Assembleur(String uri, String[] LISTE_JVM_URI) {
-		super(uri, 1, 1);
+		super(uri, 10, 10);
 		
 		this.LISTE_JVM_URI = LISTE_JVM_URI;
 		this.LISTE_REFLECTION_INPORT = new String[7];
@@ -79,16 +79,7 @@ public class Assembleur extends AbstractComponent {
 			this.DynamicOutPort = new DynamicComponentCreationOutboundPort(this);
 			this.DynamicOutPort.localPublishPort();
 			
-			this.runTask(new AbstractComponent.AbstractTask() {
-				@Override
-				public void run() {
-					try {
-						((Assembleur) this.getTaskOwner()).dynamicDeploy();
-					} catch (Exception e) {
-						throw new RuntimeException(e);
-					}
-				}
-			});
+			dynamicDeploy();
 
 		} catch (Exception e) {
 			throw new ComponentStartException(e);

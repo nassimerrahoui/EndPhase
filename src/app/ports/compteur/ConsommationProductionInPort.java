@@ -2,6 +2,7 @@ package app.ports.compteur;
 
 import app.components.Compteur;
 import app.interfaces.compteur.ICompteur;
+import app.util.URI;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
@@ -27,7 +28,7 @@ public class ConsommationProductionInPort extends AbstractInboundPort implements
 			}
 		};
 
-		this.owner.handleRequestAsync(0, task);
+		this.owner.handleRequestAsync(URI.POOL_CONSO_PROD_COMPTEUR_URI.getURI(), task);
 	}
 
 	@Override
@@ -39,7 +40,7 @@ public class ConsommationProductionInPort extends AbstractInboundPort implements
 			}
 		};
 
-		this.owner.handleRequestAsync(0, task);
+		this.owner.handleRequestAsync(URI.POOL_CONSO_PROD_COMPTEUR_URI.getURI(), task);
 	}
 
 }

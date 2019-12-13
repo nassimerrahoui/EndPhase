@@ -5,6 +5,7 @@ import app.interfaces.appareil.ILaveLinge;
 import app.util.EtatAppareil;
 import app.util.ModeLaveLinge;
 import app.util.TemperatureLaveLinge;
+import app.util.URI;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
@@ -30,7 +31,7 @@ public class LaveLingeInPort extends AbstractInboundPort implements ILaveLinge {
 			}
 		};
 
-		this.owner.handleRequestAsync(0, task);
+		this.owner.handleRequestAsync(URI.POOL_ACTION_LAVELINGE_URI.getURI(), task);
 
 	}
 
@@ -43,7 +44,7 @@ public class LaveLingeInPort extends AbstractInboundPort implements ILaveLinge {
 			}
 		};
 
-		this.owner.handleRequestAsync(0, task);
+		this.owner.handleRequestAsync(URI.POOL_ACTION_LAVELINGE_URI.getURI(), task);
 
 	}
 
@@ -56,7 +57,7 @@ public class LaveLingeInPort extends AbstractInboundPort implements ILaveLinge {
 			}
 		};
 
-		this.owner.handleRequestAsync(0, task);
+		this.owner.handleRequestAsync(URI.POOL_ACTION_LAVELINGE_URI.getURI(), task);
 
 	}
 
@@ -69,7 +70,7 @@ public class LaveLingeInPort extends AbstractInboundPort implements ILaveLinge {
 			}
 		};
 
-		this.owner.handleRequestAsync(0, task);
+		this.owner.handleRequestAsync(URI.POOL_ACTION_LAVELINGE_URI.getURI(), task);
 
 	}
 
