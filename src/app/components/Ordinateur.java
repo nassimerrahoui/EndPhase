@@ -1,10 +1,11 @@
 package app.components;
 
 import java.util.concurrent.TimeUnit;
-
 import app.interfaces.appareil.IAjoutAppareil;
 import app.interfaces.appareil.IConsommation;
 import app.interfaces.appareil.IOrdinateur;
+import app.interfaces.generateur.IEntiteDynamique;
+import app.ports.ordinateur.OrdinateurAssembleurInPort;
 import app.ports.ordinateur.OrdinateurCompteurOutPort;
 import app.ports.ordinateur.OrdinateurControleurOutPort;
 import app.ports.ordinateur.OrdinateurInPort;
@@ -19,7 +20,7 @@ import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
 
-@OfferedInterfaces(offered = { IOrdinateur.class })
+@OfferedInterfaces(offered = { IOrdinateur.class, IEntiteDynamique.class })
 @RequiredInterfaces(required = { IAjoutAppareil.class, IConsommation.class })
 public class Ordinateur extends AbstractComponent {
 
@@ -48,15 +49,18 @@ public class Ordinateur extends AbstractComponent {
 		// port entrant permettant au controleur d'effectuer des actions sur l'ordinateur
 		OrdinateurInPort action_INPORT = new OrdinateurInPort(this);
 		
-		/** port entrant pour assembleur */
+		// port entrant permettant a l'assembleur d'effectuer d'integrer l'entite au logement
+		OrdinateurAssembleurInPort launch_INPORT = new OrdinateurAssembleurInPort(this);
 		
 		this.addPort(controleur_OUTPORT);
 		this.addPort(consommation_OUTPORT);
 		this.addPort(action_INPORT);
+		this.addPort(launch_INPORT);
 		
 		controleur_OUTPORT.publishPort();
 		consommation_OUTPORT.publishPort();
 		action_INPORT.publishPort();
+		launch_INPORT.publishPort();
 		
 		if (AbstractCVM.isDistributed) {
 			this.executionLog.setDirectory(System.getProperty("user.dir")) ;
@@ -69,10 +73,13 @@ public class Ordinateur extends AbstractComponent {
 		// affichage
 		this.tracer.setTitle("Ordinateur");
 		this.tracer.setRelativePosition(2, 1);
+		this.toggleTracing();
+		this.toggleLogging();
 		
 		// attributs
 		this.etat = EtatAppareil.OFF;
-		this.consommation = 90.0;
+		this.mode = ModeOrdinateur.Veille;
+		this.consommation = 0.0;
 		this.type = type;
 	}
 
@@ -100,6 +107,13 @@ public class Ordinateur extends AbstractComponent {
 		this.logMessage("Mode actuel : " + mode.name());
 		
 		/** TODO code pour gerer ce qui se passe pendant un mode */
+		if(mode == ModeOrdinateur.Veille) {
+			consommation = 0.0;
+		} else if(mode == ModeOrdinateur.PerformanceReduite) {
+			consommation = 2.0;
+		} else if(mode == ModeOrdinateur.PerformanceMaximale) {
+			consommation = 4.0;
+		}
 	}
 	
 	// ************* Cycle de vie du composant ************* 
@@ -107,16 +121,7 @@ public class Ordinateur extends AbstractComponent {
 	@Override
 	public void start() throws ComponentStartException {
 		super.start();
-		
 		this.logMessage("Demarrage de l'ordinateur...");
-
-		this.scheduleTask(new AbstractComponent.AbstractTask() {
-			@Override
-			public void run() {
-				try { ((Ordinateur) this.getTaskOwner()).demandeAjoutControleur("CONSTANTE URI A METTRE ICI"); }
-				catch (Exception e) { throw new RuntimeException(e); }
-			}
-		}, 1000, TimeUnit.MILLISECONDS);
 	}
 
 	@Override
@@ -127,20 +132,12 @@ public class Ordinateur extends AbstractComponent {
 		
 		this.logMessage("Passage en Performance reduite.");
 		
-		this.scheduleTask(new AbstractComponent.AbstractTask() {
-			@Override
-			public void run() {
-				try { ((Ordinateur) this.getTaskOwner()).setMode(ModeOrdinateur.PerformanceReduite); } 
-				catch (Exception e) { throw new RuntimeException(e); }
-			}
-		}, 2000, TimeUnit.MILLISECONDS);
-		
 		this.logMessage("Execution en cours...");
 		
 		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
 			@Override
 			public void run() {
-				try { ((LaveLinge) this.getTaskOwner()).runningAndPrint(); } 
+				try { ((Ordinateur) this.getTaskOwner()).runningAndPrint(); } 
 				catch (Exception e) { throw new RuntimeException(e); }
 			}
 		}, 4000, 1000, TimeUnit.MILLISECONDS);
@@ -159,10 +156,12 @@ public class Ordinateur extends AbstractComponent {
 			PortI[] port_controleur = this.findPortsFromInterface(IOrdinateur.class);
 			PortI[] port_consommation = this.findPortsFromInterface(IConsommation.class);
 			PortI[] port_ajoutappareil = this.findPortsFromInterface(IAjoutAppareil.class);
+			PortI[] port_assembleur = this.findPortsFromInterface(IEntiteDynamique.class);
 			
 			port_controleur[0].unpublishPort() ;
 			port_consommation[0].unpublishPort();
 			port_ajoutappareil[0].unpublishPort();
+			port_assembleur[0].unpublishPort();
 		} catch (Exception e) { throw new ComponentShutdownException(e); }
 		super.shutdown();
 	}
@@ -174,10 +173,12 @@ public class Ordinateur extends AbstractComponent {
 			PortI[] port_controleur = this.findPortsFromInterface(IOrdinateur.class);
 			PortI[] port_consommation = this.findPortsFromInterface(IConsommation.class);
 			PortI[] port_ajoutappareil = this.findPortsFromInterface(IAjoutAppareil.class);
+			PortI[] port_assembleur = this.findPortsFromInterface(IEntiteDynamique.class);
 			
 			port_controleur[0].unpublishPort() ;
 			port_consommation[0].unpublishPort();
 			port_ajoutappareil[0].unpublishPort();
+			port_assembleur[0].unpublishPort();
 		} catch (Exception e) { throw new ComponentShutdownException(e); }
 		super.shutdownNow();
 	}

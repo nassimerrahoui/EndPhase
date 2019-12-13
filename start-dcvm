@@ -1,15 +1,17 @@
 #!/bin/bash
 
-java -ea -cp 'jars/*':'bin/' -Djava.security.manager -Djava.security.policy=dcvm.policy app.DistributedCVM controleur config.xml &
+java -ea -cp 'jars/*':'bin/' -Djava.security.manager -Djava.security.policy=dcvm.policy app.DistributedCVM JVM_DYNAMIC_ASSEMBLEUR_URI config.xml &
 
-java -ea -cp 'jars/*':'bin/' -Djava.security.manager -Djava.security.policy=dcvm.policy app.DistributedCVM compteur config.xml &
+java -ea -cp 'jars/*':'bin/' -Djava.security.manager -Djava.security.policy=dcvm.policy app.DistributedCVM JVM_CONTROLEUR_URI config.xml &
 
-java -ea -cp 'jars/*':'bin/' -Djava.security.manager -Djava.security.policy=dcvm.policy app.DistributedCVM frigo config.xml &
+java -ea -cp 'jars/*':'bin/' -Djava.security.manager -Djava.security.policy=dcvm.policy app.DistributedCVM JVM_FRIGO_URI config.xml &
 
-java -ea -cp 'jars/*':'bin/' -Djava.security.manager -Djava.security.policy=dcvm.policy app.DistributedCVM ordinateur config.xml &
+java -ea -cp 'jars/*':'bin/' -Djava.security.manager -Djava.security.policy=dcvm.policy app.DistributedCVM JVM_LAVELINGE_URI config.xml &
 
-java -ea -cp 'jars/*':'bin/' -Djava.security.manager -Djava.security.policy=dcvm.policy app.DistributedCVM chargeur config.xml &
+java -ea -cp 'jars/*':'bin/' -Djava.security.manager -Djava.security.policy=dcvm.policy app.DistributedCVM JVM_ORDINATEUR_URI config.xml &
 
-java -ea -cp 'jars/*':'bin/' -Djava.security.manager -Djava.security.policy=dcvm.policy app.DistributedCVM panneau config.xml &
+java -ea -cp 'jars/*':'bin/' -Djava.security.manager -Djava.security.policy=dcvm.policy app.DistributedCVM JVM_PANNEAUSOLAIRE_URI config.xml &
 
-java -ea -cp 'jars/*':'bin/' -Djava.security.manager -Djava.security.policy=dcvm.policy app.DistributedCVM batterie config.xml &
+java -ea -cp 'jars/*':'bin/' -Djava.security.manager -Djava.security.policy=dcvm.policy app.DistributedCVM JVM_BATTERIE_URI config.xml &
+
+java -ea -cp 'jars/*':'bin/' -Djava.security.manager -Djava.security.policy=dcvm.policy app.DistributedCVM JVM_COMPTEUR_URI config.xml &

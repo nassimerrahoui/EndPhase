@@ -39,7 +39,8 @@ import fr.sorbonne_u.components.reflection.ports.ReflectionOutboundPort;
  * les appareils, les unites de production, le controleur et le compteur.
  * Il va egalement les connecter et les lancer.
  */
-@RequiredInterfaces(required = { ReflectionI.class, DynamicComponentCreationI.class, IAssembleur.class })
+@RequiredInterfaces(required = { DynamicComponentCreationI.class, 
+								IAssembleur.class })
 
 public class Assembleur extends AbstractComponent {
 
@@ -51,28 +52,55 @@ public class Assembleur extends AbstractComponent {
 
 	protected ReflectionOutboundPort rop;
 
-	public Assembleur(String uri, int nbThreads, int nbScheduleThreads, String[] LISTE_JVM_URI) {
-		super(uri, nbThreads, nbScheduleThreads);
+	public Assembleur(String uri, String[] LISTE_JVM_URI) {
+		super(uri, 1, 1);
 		
 		this.LISTE_JVM_URI = LISTE_JVM_URI;
 		this.LISTE_REFLECTION_INPORT = new String[7];
 
-		try {
-			this.AssembleurOutPort = new AssembleurOutPort(URI.DYNAMIC_ASSEMBLEUR_URI.getURI(), this);
-			this.AssembleurOutPort.localPublishPort();
-		} catch (Exception e) { e.printStackTrace(); }
-
 		this.tracer.setTitle("Assembleur");
 		this.tracer.setRelativePosition(0, 3);
+		this.toggleTracing();
+	}
+	
+	@Override
+	public void start() throws ComponentStartException {
+		super.start();
+
+		this.logMessage("Activation de l'assembleur...");
+		
+		try {
+			
+			this.AssembleurOutPort = new AssembleurOutPort(this);
+			this.AssembleurOutPort.publishPort();
+			
+			this.DynamicOutPort = new DynamicComponentCreationOutboundPort(this);
+			this.DynamicOutPort.localPublishPort();
+			
+			this.runTask(new AbstractComponent.AbstractTask() {
+				@Override
+				public void run() {
+					try {
+						((Assembleur) this.getTaskOwner()).dynamicDeploy();
+					} catch (Exception e) {
+						throw new RuntimeException(e);
+					}
+				}
+			});
+
+		} catch (Exception e) {
+			throw new ComponentStartException(e);
+		}
 	}
 
 	public void dynamicDeploy() throws Exception {
-		this.logMessage("Debut du deploiement...");
+		
 		int i = 0;
-
-		DynamicOutPort.doConnection(LISTE_JVM_URI[i] + AbstractCVM.DCC_INBOUNDPORT_URI_SUFFIX,
-				DynamicComponentCreationConnector.class.getCanonicalName());
-
+		
+		DynamicOutPort.doConnection( 
+		LISTE_JVM_URI[i] + AbstractCVM.DCC_INBOUNDPORT_URI_SUFFIX,
+		DynamicComponentCreationConnector.class.getCanonicalName());
+		
 		LISTE_REFLECTION_INPORT[0] = DynamicOutPort.createComponent(Controleur.class.getCanonicalName(),
 				new Object[] { 
 						URI.CONTROLEUR_OP_FRIGO_URI.getURI(),
@@ -86,8 +114,9 @@ public class Assembleur extends AbstractComponent {
 
 		i++;
 		DynamicOutPort.doDisconnection();
-		
-		DynamicOutPort.doConnection(LISTE_JVM_URI[i] + AbstractCVM.DCC_INBOUNDPORT_URI_SUFFIX,
+
+		DynamicOutPort.doConnection( 
+				LISTE_JVM_URI[i] + AbstractCVM.DCC_INBOUNDPORT_URI_SUFFIX,
 				DynamicComponentCreationConnector.class.getCanonicalName());
 
 		LISTE_REFLECTION_INPORT[1] = DynamicOutPort.createComponent(Frigo.class.getCanonicalName(),
@@ -102,12 +131,13 @@ public class Assembleur extends AbstractComponent {
 		i++;
 		DynamicOutPort.doDisconnection();
 		
-		DynamicOutPort.doConnection(LISTE_JVM_URI[i] + AbstractCVM.DCC_INBOUNDPORT_URI_SUFFIX,
+		DynamicOutPort.doConnection( 
+				LISTE_JVM_URI[i] + AbstractCVM.DCC_INBOUNDPORT_URI_SUFFIX,
 				DynamicComponentCreationConnector.class.getCanonicalName());
-
+		
 		LISTE_REFLECTION_INPORT[2] = DynamicOutPort.createComponent(LaveLinge.class.getCanonicalName(),
 				new Object[] { 
-						URI.LAVELIGNE_URI.getURI(), 
+						URI.LAVELINGE_URI.getURI(), 
 						URI.LAVELINGE_COMPTEUR_OP_URI.getURI(),
 						URI.LAVELINGE_CONTROLEUR_OP_URI.getURI(),
 						Integer.valueOf(2),
@@ -116,9 +146,11 @@ public class Assembleur extends AbstractComponent {
 
 		i++;
 		DynamicOutPort.doDisconnection();
-		DynamicOutPort.doConnection(LISTE_JVM_URI[i] + AbstractCVM.DCC_INBOUNDPORT_URI_SUFFIX,
+		
+		DynamicOutPort.doConnection( 
+				LISTE_JVM_URI[i] + AbstractCVM.DCC_INBOUNDPORT_URI_SUFFIX,
 				DynamicComponentCreationConnector.class.getCanonicalName());
-
+		
 		LISTE_REFLECTION_INPORT[3] = DynamicOutPort.createComponent(Ordinateur.class.getCanonicalName(),
 				new Object[] { 
 						URI.ORDINATEUR_URI.getURI(), 
@@ -130,9 +162,11 @@ public class Assembleur extends AbstractComponent {
 
 		i++;
 		DynamicOutPort.doDisconnection();
-		DynamicOutPort.doConnection(LISTE_JVM_URI[i] + AbstractCVM.DCC_INBOUNDPORT_URI_SUFFIX,
+		
+		DynamicOutPort.doConnection( 
+				LISTE_JVM_URI[i] + AbstractCVM.DCC_INBOUNDPORT_URI_SUFFIX,
 				DynamicComponentCreationConnector.class.getCanonicalName());
-
+		
 		LISTE_REFLECTION_INPORT[4] = DynamicOutPort.createComponent(PanneauSolaire.class.getCanonicalName(),
 				new Object[] { 
 						URI.PANNEAUSOLAIRE_URI.getURI(), 
@@ -143,9 +177,11 @@ public class Assembleur extends AbstractComponent {
 
 		i++;
 		DynamicOutPort.doDisconnection();
-		DynamicOutPort.doConnection(LISTE_JVM_URI[i] + AbstractCVM.DCC_INBOUNDPORT_URI_SUFFIX,
+		
+		DynamicOutPort.doConnection( 
+				LISTE_JVM_URI[i] + AbstractCVM.DCC_INBOUNDPORT_URI_SUFFIX,
 				DynamicComponentCreationConnector.class.getCanonicalName());
-
+		
 		LISTE_REFLECTION_INPORT[5] = DynamicOutPort.createComponent(Batterie.class.getCanonicalName(),
 				new Object[] { 
 						URI.BATTERIE_URI.getURI(), 
@@ -156,9 +192,11 @@ public class Assembleur extends AbstractComponent {
 
 		i++;
 		DynamicOutPort.doDisconnection();
-		DynamicOutPort.doConnection(LISTE_JVM_URI[i] + AbstractCVM.DCC_INBOUNDPORT_URI_SUFFIX,
+		
+		DynamicOutPort.doConnection( 
+				LISTE_JVM_URI[i] + AbstractCVM.DCC_INBOUNDPORT_URI_SUFFIX,
 				DynamicComponentCreationConnector.class.getCanonicalName());
-
+		
 		LISTE_REFLECTION_INPORT[6] = DynamicOutPort.createComponent(Compteur.class.getCanonicalName(),
 				new Object[] { 
 						URI.COMPTEUR_URI.getURI(),
@@ -166,15 +204,20 @@ public class Assembleur extends AbstractComponent {
 						Integer.valueOf(5)});
 
 		DynamicOutPort.doDisconnection();
-
-		this.logMessage("Début de l'interconnexion...");
+		
+		this.logMessage("Debut du deploiement...");
 		
 		String[] uri;
-
+		
+		this.addRequiredInterface(ReflectionI.class) ;
 		this.rop = new ReflectionOutboundPort(this);
 		this.rop.localPublishPort();
 
+		System.out.println("HEARTBEAT 1...");
+		
 		rop.doConnection(LISTE_REFLECTION_INPORT[0], ReflectionConnector.class.getCanonicalName());
+		
+		System.out.println("HEARTBEAT 2...");
 		
 		rop.toggleTracing();
 		rop.toggleLogging();
@@ -319,7 +362,7 @@ public class Assembleur extends AbstractComponent {
 		this.doPortDisconnection(rop.getPortURI());
 
 		// *************** Lancement des actions depuis l'assembleur ****************
-
+		
 		this.logMessage("Ajout des appareils et des unites de production au systeme...");
 		
 		this.doPortConnection(this.AssembleurOutPort.getPortURI(), URI.FRIGO_URI.getURI(),
@@ -327,9 +370,9 @@ public class Assembleur extends AbstractComponent {
 		this.AssembleurOutPort.ajoutLogement(URI.FRIGO_URI.getURI());
 		this.doPortDisconnection(this.AssembleurOutPort.getPortURI());
 
-		this.doPortConnection(this.AssembleurOutPort.getPortURI(), URI.LAVELIGNE_URI.getURI(),
+		this.doPortConnection(this.AssembleurOutPort.getPortURI(), URI.LAVELINGE_URI.getURI(),
 				AssembleurEntiteConnector.class.getCanonicalName());
-		this.AssembleurOutPort.ajoutLogement(URI.LAVELIGNE_URI.getURI());
+		this.AssembleurOutPort.ajoutLogement(URI.LAVELINGE_URI.getURI());
 		this.doPortDisconnection(this.AssembleurOutPort.getPortURI());
 
 		this.doPortConnection(this.AssembleurOutPort.getPortURI(), URI.ORDINATEUR_URI.getURI(),
@@ -346,19 +389,5 @@ public class Assembleur extends AbstractComponent {
 				AssembleurEntiteConnector.class.getCanonicalName());
 		this.AssembleurOutPort.ajoutLogement(URI.BATTERIE_URI.getURI());
 		this.doPortDisconnection(this.AssembleurOutPort.getPortURI());
-	}
-
-	@Override
-	public void start() throws ComponentStartException {
-		this.logMessage("Activation de l'assembleur...");
-		try {
-			DynamicOutPort = new DynamicComponentCreationOutboundPort(this);
-			DynamicOutPort.localPublishPort();
-
-		} catch (Exception e) {
-			throw new ComponentStartException(e);
-		}
-
-		super.start();
 	}
 }

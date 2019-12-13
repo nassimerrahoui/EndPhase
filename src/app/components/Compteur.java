@@ -49,6 +49,8 @@ public class Compteur extends AbstractComponent {
 		// affichage
 		this.tracer.setTitle("Compteur");
 		this.tracer.setRelativePosition(1, 3);
+		this.toggleTracing();
+		this.toggleLogging();
 	}
 
 	public void ajouterAppareil(String uri) throws Exception {

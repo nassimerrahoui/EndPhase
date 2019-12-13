@@ -4,6 +4,8 @@ import java.util.concurrent.TimeUnit;
 import app.interfaces.appareil.IAjoutAppareil;
 import app.interfaces.appareil.IConsommation;
 import app.interfaces.appareil.IFrigo;
+import app.interfaces.generateur.IEntiteDynamique;
+import app.ports.frigo.FrigoAssembleurInPort;
 import app.ports.frigo.FrigoCompteurOutPort;
 import app.ports.frigo.FrigoControleurOutPort;
 import app.ports.frigo.FrigoInPort;
@@ -18,7 +20,7 @@ import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
 
-@OfferedInterfaces(offered = { IFrigo.class })
+@OfferedInterfaces(offered = { IFrigo.class, IEntiteDynamique.class })
 @RequiredInterfaces(required = { IAjoutAppareil.class, IConsommation.class })
 public class Frigo extends AbstractComponent {
 	
@@ -51,15 +53,18 @@ public class Frigo extends AbstractComponent {
 		// port entrant permettant au controleur d'effectuer des actions sur le frigo
 		FrigoInPort action_INPORT = new FrigoInPort(this);
 		
-		/** TODO faire port entrant pour assembleur */
+		// port entrant permettant a l'assembleur d'effectuer d'integrer l'entite au logement
+		FrigoAssembleurInPort launch_INPORT = new FrigoAssembleurInPort(this);
 		
 		this.addPort(controleur_OUTPORT);
 		this.addPort(consommation_OUTPORT);
 		this.addPort(action_INPORT);
+		this.addPort(launch_INPORT);
 		
 		controleur_OUTPORT.publishPort();
 		consommation_OUTPORT.publishPort();
 		action_INPORT.publishPort();
+		launch_INPORT.publishPort();
 		
 		if (AbstractCVM.isDistributed) {
 			this.executionLog.setDirectory(System.getProperty("user.dir")) ;
@@ -72,6 +77,8 @@ public class Frigo extends AbstractComponent {
 		// affichage
 		this.tracer.setTitle("Frigo");
 		this.tracer.setRelativePosition(0, 1);
+		this.toggleTracing();
+		this.toggleLogging();
 
 		// attributs
 		this.type = type;
@@ -79,8 +86,9 @@ public class Frigo extends AbstractComponent {
 		this.refrigerateur_temperature_cible = 3.0;
 		this.congelateur_temperature_cible = -10.0;
 		this.consommation = 55.0;
+		this.lumiere_refrigerateur = ModeFrigo.LIGHT_OFF;
+		this.lumiere_congelateur = ModeFrigo.LIGHT_OFF;
 	}
-	
 
 	public void demandeAjoutControleur(String uri) throws Exception {
 		this.controleur_OUTPORT.demandeAjoutControleur(uri);
@@ -111,11 +119,27 @@ public class Frigo extends AbstractComponent {
 	}
 
 	/**
-	 * Adapatation de la temperature en fonction de la temperature cible
+	 * Actions du frigo pendant l'execution
 	 */
-	protected void adaptationTemperature() {
-		this.logMessage("regulation de la temperature...");
+	protected void runningAndPrint() {
+		this.logMessage("Action du frigo...");
 		/** TODO **/
+		
+		if(lumiere_refrigerateur == ModeFrigo.LIGHT_ON) {
+			if(lumiere_congelateur == ModeFrigo.LIGHT_ON) {
+				consommation = 4.0;
+			} else {
+				consommation = 2.0;
+			}
+		} else if(lumiere_congelateur == ModeFrigo.LIGHT_ON) {
+			if(lumiere_refrigerateur == ModeFrigo.LIGHT_ON) {
+				consommation = 4.0;
+			} else {
+				consommation = 2.0;
+			}
+		} else {
+			consommation = 0.0;
+		}
 	}
 	
 	// ************* Cycle de vie du composant ************* 
@@ -123,16 +147,7 @@ public class Frigo extends AbstractComponent {
 	@Override
 	public void start() throws ComponentStartException {
 		super.start();
-		
 		this.logMessage("Demarrage du frigo...");
-
-		this.scheduleTask(new AbstractComponent.AbstractTask() {
-			@Override
-			public void run() {
-				try { ((Frigo) this.getTaskOwner()).demandeAjoutControleur("CONSTANTE A METTRE ICI"); }
-				catch (Exception e) { throw new RuntimeException(e); }
-			}
-		}, 1000, TimeUnit.MILLISECONDS);
 	}
 
 	@Override
@@ -146,7 +161,7 @@ public class Frigo extends AbstractComponent {
 		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
 			@Override
 			public void run() {
-				try { ((Frigo) this.getTaskOwner()).adaptationTemperature(); } 
+				try { ((Frigo) this.getTaskOwner()).runningAndPrint(); } 
 				catch (Exception e) { throw new RuntimeException(e); }
 			}
 		}, 2000, 1000, TimeUnit.MILLISECONDS);
@@ -165,10 +180,12 @@ public class Frigo extends AbstractComponent {
 			PortI[] port_controleur = this.findPortsFromInterface(IFrigo.class);
 			PortI[] port_consommation = this.findPortsFromInterface(IConsommation.class);
 			PortI[] port_ajoutappareil = this.findPortsFromInterface(IAjoutAppareil.class);
+			PortI[] port_assembleur = this.findPortsFromInterface(IEntiteDynamique.class);
 			
 			port_controleur[0].unpublishPort() ;
 			port_consommation[0].unpublishPort();
 			port_ajoutappareil[0].unpublishPort();
+			port_assembleur[0].unpublishPort();
 		} catch (Exception e) { throw new ComponentShutdownException(e); }
 		super.shutdown();
 	}
@@ -180,12 +197,13 @@ public class Frigo extends AbstractComponent {
 			PortI[] port_controleur = this.findPortsFromInterface(IFrigo.class);
 			PortI[] port_consommation = this.findPortsFromInterface(IConsommation.class);
 			PortI[] port_ajoutappareil = this.findPortsFromInterface(IAjoutAppareil.class);
+			PortI[] port_assembleur = this.findPortsFromInterface(IEntiteDynamique.class);
 			
 			port_controleur[0].unpublishPort() ;
 			port_consommation[0].unpublishPort();
 			port_ajoutappareil[0].unpublishPort();
+			port_assembleur[0].unpublishPort();
 		} catch (Exception e) { throw new ComponentShutdownException(e); }
 		super.shutdownNow();
 	}
-
 }
