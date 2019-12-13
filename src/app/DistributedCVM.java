@@ -7,8 +7,6 @@ import fr.sorbonne_u.components.cvm.AbstractDistributedCVM;
 
 public class DistributedCVM extends AbstractDistributedCVM {
 
-	protected Assembleur assembleur;
-
 	public DistributedCVM(String[] args, int xLayout, int yLayout) throws Exception {
 		super(args, xLayout, yLayout);
 	}
@@ -21,7 +19,7 @@ public class DistributedCVM extends AbstractDistributedCVM {
 	@Override
 	public void instantiateAndPublish() throws Exception {
 		if (thisJVMURI.equals(URI.JVM_DYNAMIC_ASSEMBLEUR_URI.getURI())) {
-
+			
 			String[] jvm_uris = {
 					URI.JVM_CONTROLEUR_URI.getURI(),
 					URI.JVM_FRIGO_URI.getURI(),
@@ -31,35 +29,26 @@ public class DistributedCVM extends AbstractDistributedCVM {
 					URI.JVM_BATTERIE_URI.getURI(),
 					URI.JVM_COMPTEUR_URI.getURI()
 			};
-			this.assembleur = new Assembleur(URI.DYNAMIC_ASSEMBLEUR_URI.getURI(), 1, 1, jvm_uris);
-			this.assembleur.toggleTracing();
-			this.assembleur.toggleLogging();
+			
+			System.out.println("JE SUIS AVANT");
+			
+			@SuppressWarnings("unused")
+			String assembleur = AbstractComponent.createComponent(
+								Assembleur.class.getCanonicalName(),
+								new Object[]{
+										URI.DYNAMIC_ASSEMBLEUR_URI.getURI(),
+										jvm_uris});
+		
+			System.out.println("JE SUIS APRES");
+			
 		}
 		super.instantiateAndPublish();
 	}
 
-	@Override
-	public void start() throws Exception {
-		super.start();
-		if (thisJVMURI.equals(URI.JVM_DYNAMIC_ASSEMBLEUR_URI.getURI())) {
-			this.assembleur.runTask(new AbstractComponent.AbstractTask() {
-				@Override
-				public void run() {
-					try {
-						((Assembleur) this.getTaskOwner()).dynamicDeploy();
-					} catch (Exception e) {
-						throw new RuntimeException(e);
-					}
-				}
-			});
-		}
-
-	}
-
 	public static void main(String[] args) {
 		try {
-			DistributedCVM dcvm = new DistributedCVM(args, 2, 5);
-			dcvm.startStandardLifeCycle(100000L);
+			DistributedCVM dda = new DistributedCVM(args, 2, 5);
+			dda.startStandardLifeCycle(100000L);
 			Thread.sleep(5000L);
 			System.exit(0);
 		} catch (Exception e) { throw new RuntimeException(e); }

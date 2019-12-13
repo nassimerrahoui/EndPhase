@@ -69,6 +69,8 @@ public class PanneauSolaire extends AbstractComponent {
 		// affichage
 		this.tracer.setTitle("Panneau Solaire");
 		this.tracer.setRelativePosition(1, 2);
+		this.toggleTracing();
+		this.toggleLogging();
 
 		// attributs
 		etat = EtatUniteProduction.OFF;

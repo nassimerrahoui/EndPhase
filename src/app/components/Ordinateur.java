@@ -73,6 +73,8 @@ public class Ordinateur extends AbstractComponent {
 		// affichage
 		this.tracer.setTitle("Ordinateur");
 		this.tracer.setRelativePosition(2, 1);
+		this.toggleTracing();
+		this.toggleLogging();
 		
 		// attributs
 		this.etat = EtatAppareil.OFF;
