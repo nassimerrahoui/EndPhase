@@ -36,7 +36,7 @@ public class Ordinateur extends AbstractComponent {
 	protected ModeOrdinateur mode;
 	protected Double consommation;
 
-	public Ordinateur(
+	protected Ordinateur(
 			String ORDINATEUR_URI, 
 			String ORDINATEUR_COMPTEUR_OP_URI,
 			String ORDINATEUR_CONTROLEUR_OP_URI,
@@ -52,11 +52,6 @@ public class Ordinateur extends AbstractComponent {
 		
 		// port entrant permettant a l'assembleur d'effectuer d'integrer l'entite au logement
 		OrdinateurAssembleurInPort launch_INPORT = new OrdinateurAssembleurInPort(this);
-		
-		this.addPort(controleur_OUTPORT);
-		this.addPort(consommation_OUTPORT);
-		this.addPort(action_INPORT);
-		this.addPort(launch_INPORT);
 		
 		controleur_OUTPORT.publishPort();
 		consommation_OUTPORT.publishPort();
@@ -122,12 +117,7 @@ public class Ordinateur extends AbstractComponent {
 	public void start() throws ComponentStartException {
 		super.start();
 		this.logMessage("Demarrage de l'ordinateur...");
-	}
 
-	@Override
-	public void execute() throws Exception {
-		super.execute();
-		
 		this.logMessage("Phase d'execution de l'ordinateur.");
 		
 		this.logMessage("Passage en Performance reduite.");

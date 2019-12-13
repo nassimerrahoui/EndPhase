@@ -57,11 +57,6 @@ public class Frigo extends AbstractComponent {
 		// port entrant permettant a l'assembleur d'effectuer d'integrer l'entite au logement
 		FrigoAssembleurInPort launch_INPORT = new FrigoAssembleurInPort(this);
 		
-		this.addPort(controleur_OUTPORT);
-		this.addPort(consommation_OUTPORT);
-		this.addPort(action_INPORT);
-		this.addPort(launch_INPORT);
-		
 		controleur_OUTPORT.publishPort();
 		consommation_OUTPORT.publishPort();
 		action_INPORT.publishPort();
@@ -148,12 +143,7 @@ public class Frigo extends AbstractComponent {
 	public void start() throws ComponentStartException {
 		super.start();
 		this.logMessage("Demarrage du frigo...");
-	}
-
-	@Override
-	public void execute() throws Exception {
-		super.execute();
-				
+		
 		this.logMessage("Phase d'execution du frigo.");
 		
 		this.logMessage("Execution en cours...");

@@ -32,7 +32,7 @@ public class PanneauSolaire extends AbstractComponent {
 	protected EtatUniteProduction etat;
 	protected Double production;
 
-	public PanneauSolaire(
+	protected PanneauSolaire(
 			String PANNEAUSOLAIRE_URI, 
 			String PANNEAUSOLAIRE_COMPTEUR_OP_URI,
 			String PANNEAUSOLAIRE_CONTROLEUR_OP_URI,
@@ -47,11 +47,6 @@ public class PanneauSolaire extends AbstractComponent {
 		
 		// port entrant permettant a l'assembleur d'effectuer d'integrer l'entite au logement
 		PanneauAssembleurInPort launch_INPORT = new PanneauAssembleurInPort(this);
-		
-		this.addPort(controleur_OUTPORT);
-		this.addPort(production_OUTPORT);
-		this.addPort(action_INPORT);
-		this.addPort(launch_INPORT);
 		
 		controleur_OUTPORT.publishPort();
 		production_OUTPORT.publishPort();
@@ -95,11 +90,6 @@ public class PanneauSolaire extends AbstractComponent {
 	public void start() throws ComponentStartException {
 		super.start();
 		this.logMessage("Demarrage du panneau solaire...");
-	}
-
-	@Override
-	public void execute() throws Exception {
-		super.execute();
 		
 		this.logMessage("Phase d'execution du panneau solaire.");
 		
@@ -113,7 +103,7 @@ public class PanneauSolaire extends AbstractComponent {
 			}
 		}, 2000, 1000, TimeUnit.MILLISECONDS);
 	}
-	
+
 	@Override
 	public void finalise() throws Exception {
 		this.logMessage("Arret du composant panneau solaire...") ;
