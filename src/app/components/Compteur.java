@@ -21,7 +21,7 @@ public class Compteur extends AbstractComponent {
 	protected ConcurrentHashMap<String, Double> appareil_consommation = new ConcurrentHashMap<>();
 	protected ConcurrentHashMap<String, Double> unite_production = new ConcurrentHashMap<>();
 
-	public Compteur(
+	protected Compteur(
 			String COMPTEUR_URI,
 			int nbThreads, int nbSchedulableThreads) throws Exception {
 		super(COMPTEUR_URI, nbThreads, nbSchedulableThreads);
@@ -32,9 +32,6 @@ public class Compteur extends AbstractComponent {
 		
 		// port entrant permettant au controleur de recuperer des informations depuis le compteur
 		CompteurInPort action_INPORT = new CompteurInPort(this);
-		
-		this.addPort(consommation_production_INPORT);
-		this.addPort(action_INPORT);
 		
 		consommation_production_INPORT.publishPort();
 		action_INPORT.publishPort();
@@ -92,11 +89,6 @@ public class Compteur extends AbstractComponent {
 	public void start() throws ComponentStartException {
 		super.start();
 		this.logMessage("Demarrage du compteur...");
-	}
-
-	@Override
-	public void execute() throws Exception {
-		super.execute();
 		this.logMessage("Phase d'execution du compteur.");
 	}
 	

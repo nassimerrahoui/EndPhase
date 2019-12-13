@@ -52,7 +52,7 @@ public class Controleur extends AbstractComponent {
 	protected Vector<String> unitesProduction = new Vector<>();
 	protected Vector<String> appareils = new Vector<>();
 
-	public Controleur(
+	protected Controleur(
 			String CONTROLEUR_URI,
 			String CONTROLEUR_OP_FRIGO_URI, 
 			String CONTROLEUR_OP_LAVELINGE_URI,
@@ -72,14 +72,6 @@ public class Controleur extends AbstractComponent {
 		
 		// port entrant permettant aux appareils et unites de production de s'inscrire
 		ControleurInPort inscription_INPORT = new ControleurInPort(this);
-		
-		this.addPort(frigo_OUTPORT);
-		this.addPort(lavelinge_OUTPORT);
-		this.addPort(ordinateur_OUTPORT);
-		this.addPort(panneausolaire_OUTPORT);
-		this.addPort(batterie_OUTPORT);
-		this.addPort(compteur_OUTPORT);
-		this.addPort(inscription_INPORT);
 		
 		frigo_OUTPORT.publishPort();
 		lavelinge_OUTPORT.publishPort();
@@ -213,7 +205,11 @@ public class Controleur extends AbstractComponent {
 		super.start();
 		
 		this.logMessage("Demarrage du controleur...");
-
+		
+		this.logMessage("Phase d'execution du controleur.");
+		
+		this.logMessage("Execution en cours...");
+		
 		this.scheduleTask(new AbstractComponent.AbstractTask() {
 			@Override
 			public void run() {
@@ -245,15 +241,6 @@ public class Controleur extends AbstractComponent {
 				catch (Exception e) { throw new RuntimeException(e); }
 			}
 		}, 3000, TimeUnit.MILLISECONDS);
-	}
-
-	@Override
-	public void execute() throws Exception {
-		super.execute();
-		
-		this.logMessage("Phase d'execution du controleur.");
-		
-		this.logMessage("Execution en cours...");
 		
 		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
 			@Override

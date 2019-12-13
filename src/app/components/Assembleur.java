@@ -27,6 +27,7 @@ import app.util.URI;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
+import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.pre.dcc.connectors.DynamicComponentCreationConnector;
 import fr.sorbonne_u.components.pre.dcc.interfaces.DynamicComponentCreationI;
@@ -47,14 +48,12 @@ import fr.sorbonne_u.components.reflection.ports.ReflectionOutboundPort;
 public class Assembleur extends AbstractComponent {
 
 	protected DynamicComponentCreationOutboundPort DynamicOutPort;
-	protected AssembleurOutPort AssembleurOutPort;
 	
 	protected String[] LISTE_REFLECTION_INPORT;
 	protected String[] LISTE_JVM_URI;
+	protected String[] launch_uri_inport;
 
-	protected ReflectionOutboundPort rop;
-
-	public Assembleur(String uri, String[] LISTE_JVM_URI) {
+	protected Assembleur(String uri, String[] LISTE_JVM_URI) {
 		super(uri, 10, 10);
 		
 		this.LISTE_JVM_URI = LISTE_JVM_URI;
@@ -73,13 +72,19 @@ public class Assembleur extends AbstractComponent {
 		
 		try {
 			
-			this.AssembleurOutPort = new AssembleurOutPort(this);
-			this.AssembleurOutPort.publishPort();
-			
 			this.DynamicOutPort = new DynamicComponentCreationOutboundPort(this);
 			this.DynamicOutPort.localPublishPort();
 			
-			dynamicDeploy();
+			this.runTask(new AbstractComponent.AbstractTask() {
+				@Override
+				public void run() {
+					try {
+						((Assembleur) this.getTaskOwner()).dynamicDeploy();
+					} catch (Exception e) {
+						throw new RuntimeException(e);
+					}
+				}
+			});
 
 		} catch (Exception e) {
 			throw new ComponentStartException(e);
@@ -103,9 +108,9 @@ public class Assembleur extends AbstractComponent {
 						URI.CONTROLEUR_OP_PANNEAUSOLAIRE_URI.getURI(),
 						URI.CONTROLEUR_OP_BATTERIE_URI.getURI(),
 						URI.CONTROLEUR_OP_COMPTEUR_URI.getURI(),
-						Integer.valueOf(5),
-						Integer.valueOf(5)});
-
+						Integer.valueOf(10),
+						Integer.valueOf(10)});
+		
 		i++;
 		DynamicOutPort.doDisconnection();
 
@@ -204,10 +209,11 @@ public class Assembleur extends AbstractComponent {
 		// Recuperation des ports entrants des entites pour le controleur et pour l'assembleur
 		
 		String[] entite_uri_inport = new String[6];
-		String[] launch_uri_inport = new String[5];
+		this.launch_uri_inport = new String[5];
 		
-		this.rop = new ReflectionOutboundPort(this);
-		this.rop.localPublishPort();
+
+		ReflectionOutboundPort rop = new ReflectionOutboundPort(this);
+		rop.localPublishPort();
 		
 		rop.doConnection(LISTE_REFLECTION_INPORT[1], ReflectionConnector.class.getCanonicalName());
 		entite_uri_inport[0] = rop.findInboundPortURIsFromInterface(IFrigo.class)[0];
@@ -239,9 +245,6 @@ public class Assembleur extends AbstractComponent {
 		rop.doDisconnection();
 		
 		// Connexion du controleur vers les entites
-			
-		this.rop = new ReflectionOutboundPort(this);
-		this.rop.localPublishPort();
 		
 		rop.doConnection(LISTE_REFLECTION_INPORT[0], ReflectionConnector.class.getCanonicalName());
 		
@@ -398,31 +401,78 @@ public class Assembleur extends AbstractComponent {
 		
 		this.logMessage("Ajout des appareils et des unites de production au systeme...");
 		
-		this.doPortConnection(this.AssembleurOutPort.getPortURI(), launch_uri_inport[0],
-				AssembleurEntiteConnector.class.getCanonicalName());
-		this.AssembleurOutPort.ajoutLogement(URI.FRIGO_URI.getURI());
-		this.doPortDisconnection(this.AssembleurOutPort.getPortURI());
-
-		this.doPortConnection(this.AssembleurOutPort.getPortURI(), launch_uri_inport[1],
-				AssembleurEntiteConnector.class.getCanonicalName());
-		this.AssembleurOutPort.ajoutLogement(URI.LAVELINGE_URI.getURI());
-		this.doPortDisconnection(this.AssembleurOutPort.getPortURI());
-
-		this.doPortConnection(this.AssembleurOutPort.getPortURI(), launch_uri_inport[2],
-				AssembleurEntiteConnector.class.getCanonicalName());
-		this.AssembleurOutPort.ajoutLogement(URI.ORDINATEUR_URI.getURI());
-		this.doPortDisconnection(this.AssembleurOutPort.getPortURI());
-
-		this.doPortConnection(this.AssembleurOutPort.getPortURI(), launch_uri_inport[3],
-				AssembleurEntiteConnector.class.getCanonicalName());
-		this.AssembleurOutPort.ajoutLogement(URI.PANNEAUSOLAIRE_URI.getURI());
-		this.doPortDisconnection(this.AssembleurOutPort.getPortURI());
-
-		this.doPortConnection(this.AssembleurOutPort.getPortURI(), launch_uri_inport[4],
-				AssembleurEntiteConnector.class.getCanonicalName());
-		this.AssembleurOutPort.ajoutLogement(URI.BATTERIE_URI.getURI());
-		this.doPortDisconnection(this.AssembleurOutPort.getPortURI());
-		
 		rop.unpublishPort();
+		
+		this.runTask(new AbstractComponent.AbstractTask() {
+			@Override
+			public void run() {
+				try {
+					((Assembleur) this.getTaskOwner()).launch();
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
+		
+		
+	}
+	
+	public void launch() throws Exception {
+		
+		AssembleurOutPort AssembleurOutPort = new AssembleurOutPort(this);
+		AssembleurOutPort.publishPort();
+		
+		this.doPortConnection(AssembleurOutPort.getPortURI(), launch_uri_inport[0],
+				AssembleurEntiteConnector.class.getCanonicalName());
+		AssembleurOutPort.ajoutLogement(URI.FRIGO_URI.getURI());
+		this.doPortDisconnection(AssembleurOutPort.getPortURI());
+
+		this.doPortConnection(AssembleurOutPort.getPortURI(), launch_uri_inport[1],
+				AssembleurEntiteConnector.class.getCanonicalName());
+		AssembleurOutPort.ajoutLogement(URI.LAVELINGE_URI.getURI());
+		this.doPortDisconnection(AssembleurOutPort.getPortURI());
+
+		this.doPortConnection(AssembleurOutPort.getPortURI(), launch_uri_inport[2],
+				AssembleurEntiteConnector.class.getCanonicalName());
+		AssembleurOutPort.ajoutLogement(URI.ORDINATEUR_URI.getURI());
+		this.doPortDisconnection(AssembleurOutPort.getPortURI());
+
+		this.doPortConnection(AssembleurOutPort.getPortURI(), launch_uri_inport[3],
+				AssembleurEntiteConnector.class.getCanonicalName());
+		AssembleurOutPort.ajoutLogement(URI.PANNEAUSOLAIRE_URI.getURI());
+		this.doPortDisconnection(AssembleurOutPort.getPortURI());
+
+		this.doPortConnection(AssembleurOutPort.getPortURI(), launch_uri_inport[4],
+				AssembleurEntiteConnector.class.getCanonicalName());
+		AssembleurOutPort.ajoutLogement(URI.BATTERIE_URI.getURI());
+		this.doPortDisconnection(AssembleurOutPort.getPortURI());
+		
+		AssembleurOutPort.unpublishPort();
+		AssembleurOutPort.destroyPort();
+		
+	}
+	
+	@Override
+	public void finalise() throws Exception {
+		if(this.DynamicOutPort.connected()) {
+			this.doPortDisconnection(this.DynamicOutPort.getPortURI());
+		}
+		super.finalise();
+	}
+	
+	@Override
+	public void shutdown() throws ComponentShutdownException {
+		try {
+			this.DynamicOutPort.unpublishPort();
+		} catch (Exception e) { e.printStackTrace(); }
+		super.shutdown();
+	}
+	
+	@Override
+	public void shutdownNow() throws ComponentShutdownException {
+		try {
+			this.DynamicOutPort.unpublishPort();
+		} catch (Exception e) { e.printStackTrace(); }
+		super.shutdownNow();
 	}
 }

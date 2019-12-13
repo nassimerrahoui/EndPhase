@@ -41,7 +41,7 @@ public class LaveLinge extends AbstractComponent {
 	protected Double consommation;
 	protected TemperatureLaveLinge temperature;
 
-	public LaveLinge(
+	protected LaveLinge(
 			String LAVELIGNE_URI, 
 			String LAVELINGE_COMPTEUR_OP_URI,
 			String LAVELINGE_CONTROLEUR_OP_URI,
@@ -57,11 +57,6 @@ public class LaveLinge extends AbstractComponent {
 		
 		// port entrant permettant a l'assembleur d'effectuer d'integrer l'entite au logement
 		LaveLingeAssembleurInPort launch_INPORT = new LaveLingeAssembleurInPort(this);
-		
-		this.addPort(controleur_OUTPORT);
-		this.addPort(consommation_OUTPORT);
-		this.addPort(action_INPORT);
-		this.addPort(launch_INPORT);
 		
 		controleur_OUTPORT.publishPort();
 		consommation_OUTPORT.publishPort();
@@ -153,11 +148,6 @@ public class LaveLinge extends AbstractComponent {
 	public void start() throws ComponentStartException {
 		super.start();
 		this.logMessage("Demarrage du lave-linge...");
-	}
-
-	@Override
-	public void execute() throws Exception {
-		super.execute();
 		
 		this.logMessage("Phase d'execution du lave-linge.");
 		

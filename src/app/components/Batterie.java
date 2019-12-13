@@ -32,7 +32,7 @@ public class Batterie extends AbstractComponent {
 	protected EtatUniteProduction etat;
 	protected Double production;
 
-	public Batterie(
+	protected Batterie (
 			String BATTERIE_URI, 
 			String BATTERIE_COMPTEUR_OP_URI,
 			String BATTERIE_CONTROLEUR_OP_URI,
@@ -47,11 +47,6 @@ public class Batterie extends AbstractComponent {
 		
 		// port entrant permettant a l'assembleur d'effectuer d'integrer l'entite au logement
 		BatterieAssembleurInPort launch_INPORT = new BatterieAssembleurInPort(this);
-		
-		this.addPort(controleur_OUTPORT);
-		this.addPort(production_OUTPORT);
-		this.addPort(action_INPORT);
-		this.addPort(launch_INPORT);
 		
 		controleur_OUTPORT.publishPort();
 		production_OUTPORT.publishPort();
@@ -95,11 +90,6 @@ public class Batterie extends AbstractComponent {
 	public void start() throws ComponentStartException {
 		super.start();
 		this.logMessage("Demarrage de la batterie...");
-	}
-
-	@Override
-	public void execute() throws Exception {
-		super.execute();
 		
 		this.logMessage("Phase d'execution de la batterie.");
 		
