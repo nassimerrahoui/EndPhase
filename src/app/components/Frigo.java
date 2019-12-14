@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit;
 import app.interfaces.appareil.IAjoutAppareil;
 import app.interfaces.appareil.IConsommation;
 import app.interfaces.appareil.IFrigo;
-import app.interfaces.generateur.IEntiteDynamique;
+import app.interfaces.generateur.IComposantDynamique;
 import app.ports.frigo.FrigoAssembleurInPort;
 import app.ports.frigo.FrigoCompteurOutPort;
 import app.ports.frigo.FrigoControleurOutPort;
@@ -21,7 +21,7 @@ import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
 
-@OfferedInterfaces(offered = { IFrigo.class, IEntiteDynamique.class })
+@OfferedInterfaces(offered = { IFrigo.class, IComposantDynamique.class })
 @RequiredInterfaces(required = { IAjoutAppareil.class, IConsommation.class })
 public class Frigo extends AbstractComponent {
 	
@@ -73,7 +73,6 @@ public class Frigo extends AbstractComponent {
 		// affichage
 		this.tracer.setTitle("Frigo");
 		this.tracer.setRelativePosition(0, 1);
-		this.toggleTracing();
 
 		// attributs
 		this.type = type;
@@ -117,8 +116,8 @@ public class Frigo extends AbstractComponent {
 	 * Actions du frigo pendant l'execution
 	 */
 	protected void runningAndPrint() {
-		this.logMessage("Action du frigo...");
-		/** TODO **/
+		
+		/** TODO */
 		
 		if(lumiere_refrigerateur == ModeFrigo.LIGHT_ON) {
 			if(lumiere_congelateur == ModeFrigo.LIGHT_ON) {
@@ -135,6 +134,10 @@ public class Frigo extends AbstractComponent {
 		} else {
 			consommation = 0.0;
 		}
+		
+		this.logMessage("Temperature cible refrigerateur : " + refrigerateur_temperature_cible);
+		this.logMessage("Temperature cible congelateur : " + congelateur_temperature_cible);
+		this.logMessage("...");
 	}
 	
 	// ************* Cycle de vie du composant ************* 
@@ -143,6 +146,10 @@ public class Frigo extends AbstractComponent {
 	public void start() throws ComponentStartException {
 		super.start();
 		this.logMessage("Demarrage du frigo...");
+	}
+	
+	
+	public void dynamicExecute() throws Exception {
 		
 		this.logMessage("Phase d'execution du frigo.");
 		
@@ -151,18 +158,18 @@ public class Frigo extends AbstractComponent {
 		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
 			@Override
 			public void run() {
-				try { ((Frigo) this.getTaskOwner()).envoyerConsommation(URI.FRIGO_URI.getURI(), consommation); } 
+				try { ((Frigo) this.getTaskOwner()).runningAndPrint(); } 
 				catch (Exception e) { throw new RuntimeException(e); }
 			}
-		}, 2000, 1000, TimeUnit.MILLISECONDS);
+		}, 2000, 4000, TimeUnit.MILLISECONDS);
 		
 		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
 			@Override
 			public void run() {
-				try { ((Frigo) this.getTaskOwner()).runningAndPrint(); } 
+				try { ((Frigo) this.getTaskOwner()).envoyerConsommation(URI.FRIGO_URI.getURI(), consommation); } 
 				catch (Exception e) { throw new RuntimeException(e); }
 			}
-		}, 2000, 1000, TimeUnit.MILLISECONDS);
+		}, 2500, 1000, TimeUnit.MILLISECONDS);
 	}
 	
 	@Override
@@ -178,7 +185,7 @@ public class Frigo extends AbstractComponent {
 			PortI[] port_controleur = this.findPortsFromInterface(IFrigo.class);
 			PortI[] port_consommation = this.findPortsFromInterface(IConsommation.class);
 			PortI[] port_ajoutappareil = this.findPortsFromInterface(IAjoutAppareil.class);
-			PortI[] port_assembleur = this.findPortsFromInterface(IEntiteDynamique.class);
+			PortI[] port_assembleur = this.findPortsFromInterface(IComposantDynamique.class);
 			
 			port_controleur[0].unpublishPort() ;
 			port_consommation[0].unpublishPort();
@@ -195,7 +202,7 @@ public class Frigo extends AbstractComponent {
 			PortI[] port_controleur = this.findPortsFromInterface(IFrigo.class);
 			PortI[] port_consommation = this.findPortsFromInterface(IConsommation.class);
 			PortI[] port_ajoutappareil = this.findPortsFromInterface(IAjoutAppareil.class);
-			PortI[] port_assembleur = this.findPortsFromInterface(IEntiteDynamique.class);
+			PortI[] port_assembleur = this.findPortsFromInterface(IComposantDynamique.class);
 			
 			port_controleur[0].unpublishPort() ;
 			port_consommation[0].unpublishPort();

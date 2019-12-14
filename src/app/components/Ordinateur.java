@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit;
 import app.interfaces.appareil.IAjoutAppareil;
 import app.interfaces.appareil.IConsommation;
 import app.interfaces.appareil.IOrdinateur;
-import app.interfaces.generateur.IEntiteDynamique;
+import app.interfaces.generateur.IComposantDynamique;
 import app.ports.ordinateur.OrdinateurAssembleurInPort;
 import app.ports.ordinateur.OrdinateurCompteurOutPort;
 import app.ports.ordinateur.OrdinateurControleurOutPort;
@@ -21,7 +21,7 @@ import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
 
-@OfferedInterfaces(offered = { IOrdinateur.class, IEntiteDynamique.class })
+@OfferedInterfaces(offered = { IOrdinateur.class, IComposantDynamique.class })
 @RequiredInterfaces(required = { IAjoutAppareil.class, IConsommation.class })
 public class Ordinateur extends AbstractComponent {
 
@@ -69,7 +69,6 @@ public class Ordinateur extends AbstractComponent {
 		// affichage
 		this.tracer.setTitle("Ordinateur");
 		this.tracer.setRelativePosition(2, 1);
-		this.toggleTracing();
 		
 		// attributs
 		this.etat = EtatAppareil.OFF;
@@ -117,17 +116,18 @@ public class Ordinateur extends AbstractComponent {
 	public void start() throws ComponentStartException {
 		super.start();
 		this.logMessage("Demarrage de l'ordinateur...");
+	}
+	
+	public void dynamicExecute() throws Exception {
 
 		this.logMessage("Phase d'execution de l'ordinateur.");
-		
-		this.logMessage("Passage en Performance reduite.");
 		
 		this.logMessage("Execution en cours...");
 		
 		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
 			@Override
 			public void run() {
-				try { ((Ordinateur) this.getTaskOwner()).envoyerConsommation(URI.ORDINATEUR_URI.getURI(), consommation); } 
+				try { ((Ordinateur) this.getTaskOwner()).runningAndPrint(); } 
 				catch (Exception e) { throw new RuntimeException(e); }
 			}
 		}, 2000, 1000, TimeUnit.MILLISECONDS);
@@ -135,7 +135,7 @@ public class Ordinateur extends AbstractComponent {
 		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
 			@Override
 			public void run() {
-				try { ((Ordinateur) this.getTaskOwner()).runningAndPrint(); } 
+				try { ((Ordinateur) this.getTaskOwner()).envoyerConsommation(URI.ORDINATEUR_URI.getURI(), consommation); } 
 				catch (Exception e) { throw new RuntimeException(e); }
 			}
 		}, 4000, 1000, TimeUnit.MILLISECONDS);
@@ -154,7 +154,7 @@ public class Ordinateur extends AbstractComponent {
 			PortI[] port_controleur = this.findPortsFromInterface(IOrdinateur.class);
 			PortI[] port_consommation = this.findPortsFromInterface(IConsommation.class);
 			PortI[] port_ajoutappareil = this.findPortsFromInterface(IAjoutAppareil.class);
-			PortI[] port_assembleur = this.findPortsFromInterface(IEntiteDynamique.class);
+			PortI[] port_assembleur = this.findPortsFromInterface(IComposantDynamique.class);
 			
 			port_controleur[0].unpublishPort() ;
 			port_consommation[0].unpublishPort();
@@ -171,7 +171,7 @@ public class Ordinateur extends AbstractComponent {
 			PortI[] port_controleur = this.findPortsFromInterface(IOrdinateur.class);
 			PortI[] port_consommation = this.findPortsFromInterface(IConsommation.class);
 			PortI[] port_ajoutappareil = this.findPortsFromInterface(IAjoutAppareil.class);
-			PortI[] port_assembleur = this.findPortsFromInterface(IEntiteDynamique.class);
+			PortI[] port_assembleur = this.findPortsFromInterface(IComposantDynamique.class);
 			
 			port_controleur[0].unpublishPort() ;
 			port_consommation[0].unpublishPort();
