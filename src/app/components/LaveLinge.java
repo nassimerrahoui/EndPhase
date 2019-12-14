@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit;
 import app.interfaces.appareil.IAjoutAppareil;
 import app.interfaces.appareil.IConsommation;
 import app.interfaces.appareil.ILaveLinge;
-import app.interfaces.generateur.IEntiteDynamique;
+import app.interfaces.generateur.IComposantDynamique;
 import app.ports.lavelinge.LaveLingeAssembleurInPort;
 import app.ports.lavelinge.LaveLingeCompteurOutPort;
 import app.ports.lavelinge.LaveLingeControleurOutPort;
@@ -22,7 +22,7 @@ import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
 
-@OfferedInterfaces(offered = { ILaveLinge.class, IEntiteDynamique.class })
+@OfferedInterfaces(offered = { ILaveLinge.class, IComposantDynamique.class })
 @RequiredInterfaces(required = { IAjoutAppareil.class, IConsommation.class })
 public class LaveLinge extends AbstractComponent {
 
@@ -74,7 +74,6 @@ public class LaveLinge extends AbstractComponent {
 		// affichage
 		this.tracer.setTitle("LaveLinge");
 		this.tracer.setRelativePosition(1, 1);
-		this.toggleTracing();
 		
 		// attributs
 		this.heure = 0;
@@ -100,11 +99,15 @@ public class LaveLinge extends AbstractComponent {
 
 	public void planifierCycle(int heure, int min) throws Exception {
 		/** TODO */
-		planifierMode(ModeLaveLinge.Veille, heure, min);
-		planifierMode(ModeLaveLinge.Lavage, heure, min+10);
-		planifierMode(ModeLaveLinge.Rincage, heure, min+20);
-		planifierMode(ModeLaveLinge.Essorage, heure, min+30);
-		planifierMode(ModeLaveLinge.Veille, heure, min+40);
+		if(heure > 0 && heure <= 23 && min >= 0 && min < 59) {
+			planifierMode(ModeLaveLinge.Veille, heure, min);
+			planifierMode(ModeLaveLinge.Lavage, heure, min+10);
+			planifierMode(ModeLaveLinge.Rincage, heure, min+20);
+			planifierMode(ModeLaveLinge.Essorage, heure, min+30);
+			planifierMode(ModeLaveLinge.Veille, heure, min+40);
+			
+			this.logMessage("Cycle planifier a : " + heure + "h" + min);
+		}
 	}
 
 	public void planifierMode(ModeLaveLinge ml, int heure, int min) throws Exception {
@@ -140,6 +143,10 @@ public class LaveLinge extends AbstractComponent {
 		} else if (mode == ModeLaveLinge.Vidange) {
 			consommation = 1.0;
 		}
+		
+		/** TODO lancer cycle en fonction de l'horloge du lave linge */
+		
+		this.logMessage("...");
 	}
 	
 	// ************* Cycle de vie du composant ************* 
@@ -148,10 +155,21 @@ public class LaveLinge extends AbstractComponent {
 	public void start() throws ComponentStartException {
 		super.start();
 		this.logMessage("Demarrage du lave-linge...");
+	}
+	
+	public void dynamicExecute() throws Exception {
 		
 		this.logMessage("Phase d'execution du lave-linge.");
 		
-		this.logMessage("Planification du lave-linge.");
+		this.logMessage("Execution en cours...");
+		
+		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
+			@Override
+			public void run() {
+				try { ((LaveLinge) this.getTaskOwner()).runningAndPrint(); } 
+				catch (Exception e) { throw new RuntimeException(e); }
+			}
+		}, 2000, 5000, TimeUnit.MILLISECONDS);
 		
 		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
 			@Override
@@ -159,7 +177,9 @@ public class LaveLinge extends AbstractComponent {
 				try { ((LaveLinge) this.getTaskOwner()).envoyerConsommation(URI.LAVELINGE_URI.getURI(), consommation); } 
 				catch (Exception e) { throw new RuntimeException(e); }
 			}
-		}, 2000, 1000, TimeUnit.MILLISECONDS);
+		}, 2500, 1000, TimeUnit.MILLISECONDS);
+		
+		this.logMessage("Planification du lave-linge.");
 		
 		this.scheduleTask(new AbstractComponent.AbstractTask() {
 			@Override
@@ -170,17 +190,7 @@ public class LaveLinge extends AbstractComponent {
 				try { ((LaveLinge) this.getTaskOwner()).planifierCycle(heure, minutes); } 
 				catch (Exception e) { throw new RuntimeException(e); }
 			}
-		}, 2000, TimeUnit.MILLISECONDS);
-		
-		this.logMessage("Execution en cours...");
-		
-		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
-			@Override
-			public void run() {
-				try { ((LaveLinge) this.getTaskOwner()).runningAndPrint(); } 
-				catch (Exception e) { throw new RuntimeException(e); }
-			}
-		}, 4000, 1000, TimeUnit.MILLISECONDS);
+		}, 4000, TimeUnit.MILLISECONDS);
 	}
 	
 	@Override
@@ -196,7 +206,7 @@ public class LaveLinge extends AbstractComponent {
 			PortI[] port_controleur = this.findPortsFromInterface(ILaveLinge.class);
 			PortI[] port_consommation = this.findPortsFromInterface(IConsommation.class);
 			PortI[] port_ajoutappareil = this.findPortsFromInterface(IAjoutAppareil.class);
-			PortI[] port_assembleur = this.findPortsFromInterface(IEntiteDynamique.class);
+			PortI[] port_assembleur = this.findPortsFromInterface(IComposantDynamique.class);
 			
 			port_controleur[0].unpublishPort() ;
 			port_consommation[0].unpublishPort();
@@ -213,7 +223,7 @@ public class LaveLinge extends AbstractComponent {
 			PortI[] port_controleur = this.findPortsFromInterface(ILaveLinge.class);
 			PortI[] port_consommation = this.findPortsFromInterface(IConsommation.class);
 			PortI[] port_ajoutappareil = this.findPortsFromInterface(IAjoutAppareil.class);
-			PortI[] port_assembleur = this.findPortsFromInterface(IEntiteDynamique.class);
+			PortI[] port_assembleur = this.findPortsFromInterface(IComposantDynamique.class);
 			
 			port_controleur[0].unpublishPort() ;
 			port_consommation[0].unpublishPort();

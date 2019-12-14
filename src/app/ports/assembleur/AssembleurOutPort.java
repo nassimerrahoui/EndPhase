@@ -20,4 +20,9 @@ public class AssembleurOutPort extends AbstractOutboundPort implements IAssemble
 	public void ajoutLogement(String uri) throws Exception {
 		((IAssembleur) this.connector).ajoutLogement(uri);
 	}
+
+	@Override
+	public void dynamicExecute() throws Exception {
+		((IAssembleur) this.connector).dynamicExecute();
+	}
 }

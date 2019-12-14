@@ -18,7 +18,7 @@ import app.interfaces.compteur.ICompteur;
 import app.interfaces.compteur.ICompteurControleur;
 import app.interfaces.controleur.IControleur;
 import app.interfaces.generateur.IAssembleur;
-import app.interfaces.generateur.IEntiteDynamique;
+import app.interfaces.generateur.IComposantDynamique;
 import app.interfaces.production.IBatterie;
 import app.interfaces.production.IPanneau;
 import app.ports.assembleur.AssembleurOutPort;
@@ -209,7 +209,7 @@ public class Assembleur extends AbstractComponent {
 		// Recuperation des ports entrants des entites pour le controleur et pour l'assembleur
 		
 		String[] entite_uri_inport = new String[6];
-		this.launch_uri_inport = new String[5];
+		this.launch_uri_inport = new String[7];
 		
 
 		ReflectionOutboundPort rop = new ReflectionOutboundPort(this);
@@ -217,31 +217,36 @@ public class Assembleur extends AbstractComponent {
 		
 		rop.doConnection(LISTE_REFLECTION_INPORT[1], ReflectionConnector.class.getCanonicalName());
 		entite_uri_inport[0] = rop.findInboundPortURIsFromInterface(IFrigo.class)[0];
-		launch_uri_inport[0] = rop.findInboundPortURIsFromInterface(IEntiteDynamique.class)[0];
+		launch_uri_inport[0] = rop.findInboundPortURIsFromInterface(IComposantDynamique.class)[0];
 		rop.doDisconnection();
 		
 		rop.doConnection(LISTE_REFLECTION_INPORT[2], ReflectionConnector.class.getCanonicalName());
 		entite_uri_inport[1] = rop.findInboundPortURIsFromInterface(ILaveLinge.class)[0];
-		launch_uri_inport[1] = rop.findInboundPortURIsFromInterface(IEntiteDynamique.class)[0];
+		launch_uri_inport[1] = rop.findInboundPortURIsFromInterface(IComposantDynamique.class)[0];
 		rop.doDisconnection();
 		
 		rop.doConnection(LISTE_REFLECTION_INPORT[3], ReflectionConnector.class.getCanonicalName());
 		entite_uri_inport[2] = rop.findInboundPortURIsFromInterface(IOrdinateur.class)[0];
-		launch_uri_inport[2] = rop.findInboundPortURIsFromInterface(IEntiteDynamique.class)[0];
+		launch_uri_inport[2] = rop.findInboundPortURIsFromInterface(IComposantDynamique.class)[0];
 		rop.doDisconnection();
 		
 		rop.doConnection(LISTE_REFLECTION_INPORT[4], ReflectionConnector.class.getCanonicalName());
 		entite_uri_inport[3] = rop.findInboundPortURIsFromInterface(IPanneau.class)[0];
-		launch_uri_inport[3] = rop.findInboundPortURIsFromInterface(IEntiteDynamique.class)[0];
+		launch_uri_inport[3] = rop.findInboundPortURIsFromInterface(IComposantDynamique.class)[0];
 		rop.doDisconnection();
 		
 		rop.doConnection(LISTE_REFLECTION_INPORT[5], ReflectionConnector.class.getCanonicalName());
 		entite_uri_inport[4] = rop.findInboundPortURIsFromInterface(IBatterie.class)[0];
-		launch_uri_inport[4] = rop.findInboundPortURIsFromInterface(IEntiteDynamique.class)[0];
+		launch_uri_inport[4] = rop.findInboundPortURIsFromInterface(IComposantDynamique.class)[0];
 		rop.doDisconnection();
 		
 		rop.doConnection(LISTE_REFLECTION_INPORT[6], ReflectionConnector.class.getCanonicalName());
 		entite_uri_inport[5] = rop.findInboundPortURIsFromInterface(ICompteurControleur.class)[0];
+		launch_uri_inport[5] = rop.findInboundPortURIsFromInterface(IComposantDynamique.class)[0];
+		rop.doDisconnection();
+		
+		rop.doConnection(LISTE_REFLECTION_INPORT[0], ReflectionConnector.class.getCanonicalName());
+		launch_uri_inport[6] = rop.findInboundPortURIsFromInterface(IComposantDynamique.class)[0];
 		rop.doDisconnection();
 		
 		// Connexion du controleur vers les entites
@@ -346,9 +351,6 @@ public class Assembleur extends AbstractComponent {
 
 		rop.doConnection(LISTE_REFLECTION_INPORT[1], ReflectionConnector.class.getCanonicalName());
 
-		rop.toggleTracing();
-		rop.toggleLogging();
-
 		rop.doPortConnection(URI.FRIGO_CONTROLEUR_OP_URI.getURI(), entite_uri_inport[0], 
 				AppareilControleurConnector.class.getCanonicalName());
 		this.doPortDisconnection(rop.getPortURI());
@@ -356,9 +358,6 @@ public class Assembleur extends AbstractComponent {
 		// ************************** Lave-Linge vers controleur **********************************
 
 		rop.doConnection(LISTE_REFLECTION_INPORT[2], ReflectionConnector.class.getCanonicalName());
-
-		rop.toggleTracing();
-		rop.toggleLogging();
 
 		rop.doPortConnection(URI.LAVELINGE_CONTROLEUR_OP_URI.getURI(), entite_uri_inport[0], 
 				AppareilControleurConnector.class.getCanonicalName());
@@ -368,9 +367,6 @@ public class Assembleur extends AbstractComponent {
 
 		rop.doConnection(LISTE_REFLECTION_INPORT[3], ReflectionConnector.class.getCanonicalName());
 
-		rop.toggleTracing();
-		rop.toggleLogging();
-
 		rop.doPortConnection(URI.ORDINATEUR_CONTROLEUR_OP_URI.getURI(), entite_uri_inport[0], 
 				AppareilControleurConnector.class.getCanonicalName());
 		this.doPortDisconnection(rop.getPortURI());
@@ -379,9 +375,6 @@ public class Assembleur extends AbstractComponent {
 
 		rop.doConnection(LISTE_REFLECTION_INPORT[4], ReflectionConnector.class.getCanonicalName());
 
-		rop.toggleTracing();
-		rop.toggleLogging();
-
 		rop.doPortConnection(URI.PANNEAUSOLAIRE_CONTROLEUR_OP_URI.getURI(), entite_uri_inport[0], 
 				UniteControleurConnector.class.getCanonicalName());
 		this.doPortDisconnection(rop.getPortURI());
@@ -389,9 +382,6 @@ public class Assembleur extends AbstractComponent {
 		// ************************** Batterie vers controleur **********************************
 
 		rop.doConnection(LISTE_REFLECTION_INPORT[5], ReflectionConnector.class.getCanonicalName());
-
-		rop.toggleTracing();
-		rop.toggleLogging();
 
 		rop.doPortConnection(URI.BATTERIE_CONTROLEUR_OP_URI.getURI(), entite_uri_inport[0], 
 				UniteControleurConnector.class.getCanonicalName());
@@ -425,26 +415,43 @@ public class Assembleur extends AbstractComponent {
 		this.doPortConnection(AssembleurOutPort.getPortURI(), launch_uri_inport[0],
 				AssembleurEntiteConnector.class.getCanonicalName());
 		AssembleurOutPort.ajoutLogement(URI.FRIGO_URI.getURI());
+		AssembleurOutPort.dynamicExecute();
 		this.doPortDisconnection(AssembleurOutPort.getPortURI());
 
 		this.doPortConnection(AssembleurOutPort.getPortURI(), launch_uri_inport[1],
 				AssembleurEntiteConnector.class.getCanonicalName());
 		AssembleurOutPort.ajoutLogement(URI.LAVELINGE_URI.getURI());
+		AssembleurOutPort.dynamicExecute();
 		this.doPortDisconnection(AssembleurOutPort.getPortURI());
 
 		this.doPortConnection(AssembleurOutPort.getPortURI(), launch_uri_inport[2],
 				AssembleurEntiteConnector.class.getCanonicalName());
 		AssembleurOutPort.ajoutLogement(URI.ORDINATEUR_URI.getURI());
+		AssembleurOutPort.dynamicExecute();
 		this.doPortDisconnection(AssembleurOutPort.getPortURI());
 
 		this.doPortConnection(AssembleurOutPort.getPortURI(), launch_uri_inport[3],
 				AssembleurEntiteConnector.class.getCanonicalName());
 		AssembleurOutPort.ajoutLogement(URI.PANNEAUSOLAIRE_URI.getURI());
+		AssembleurOutPort.dynamicExecute();
 		this.doPortDisconnection(AssembleurOutPort.getPortURI());
 
 		this.doPortConnection(AssembleurOutPort.getPortURI(), launch_uri_inport[4],
 				AssembleurEntiteConnector.class.getCanonicalName());
 		AssembleurOutPort.ajoutLogement(URI.BATTERIE_URI.getURI());
+		AssembleurOutPort.dynamicExecute();
+		this.doPortDisconnection(AssembleurOutPort.getPortURI());
+		
+		// execution du compteur
+		this.doPortConnection(AssembleurOutPort.getPortURI(), launch_uri_inport[5],
+				AssembleurEntiteConnector.class.getCanonicalName());
+		AssembleurOutPort.dynamicExecute();
+		this.doPortDisconnection(AssembleurOutPort.getPortURI());
+		
+		// execution du controleur
+		this.doPortConnection(AssembleurOutPort.getPortURI(), launch_uri_inport[6],
+				AssembleurEntiteConnector.class.getCanonicalName());
+		AssembleurOutPort.dynamicExecute();
 		this.doPortDisconnection(AssembleurOutPort.getPortURI());
 		
 		AssembleurOutPort.unpublishPort();

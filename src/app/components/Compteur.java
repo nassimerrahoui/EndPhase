@@ -3,6 +3,8 @@ package app.components;
 import java.util.concurrent.ConcurrentHashMap;
 import app.interfaces.compteur.ICompteur;
 import app.interfaces.compteur.ICompteurControleur;
+import app.interfaces.generateur.IComposantDynamique;
+import app.ports.compteur.CompteurAssembleurInPort;
 import app.ports.compteur.CompteurInPort;
 import app.ports.compteur.ConsommationProductionInPort;
 import app.util.URI;
@@ -14,7 +16,7 @@ import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
 
-@OfferedInterfaces(offered = { ICompteurControleur.class, ICompteur.class })
+@OfferedInterfaces(offered = { ICompteurControleur.class, ICompteur.class, IComposantDynamique.class })
 @RequiredInterfaces(required = { })
 public class Compteur extends AbstractComponent {
 
@@ -33,8 +35,12 @@ public class Compteur extends AbstractComponent {
 		// port entrant permettant au controleur de recuperer des informations depuis le compteur
 		CompteurInPort action_INPORT = new CompteurInPort(this);
 		
+		// port entrant pour l'assembleur
+		CompteurAssembleurInPort launch_port = new CompteurAssembleurInPort(this);
+		
 		consommation_production_INPORT.publishPort();
 		action_INPORT.publishPort();
+		launch_port.publishPort();
 		
 		if (AbstractCVM.isDistributed) {
 			this.executionLog.setDirectory(System.getProperty("user.dir")) ;
@@ -54,11 +60,13 @@ public class Compteur extends AbstractComponent {
 	public void ajouterAppareil(String uri) throws Exception {
 		this.appareil_consommation.put(uri, 0.0);
 		this.logMessage(uri + " a ete ajoute au compteur");
+		this.logMessage("...");
 	}
 	
 	public void ajouterUniteProduction(String uri) throws Exception {
 		this.unite_production.put(uri, 0.0);
 		this.logMessage(uri + " a ete ajoute au compteur");
+		this.logMessage("...");
 	}
 
 	public double envoyerConsommationGlobale() throws Exception {
@@ -72,14 +80,16 @@ public class Compteur extends AbstractComponent {
 	public void setAppareilConsommation(String uri, double consommation) throws Exception {
 		if(appareil_consommation.containsKey(uri)) {
 			appareil_consommation.put(uri, consommation);
-			this.logMessage(uri + " consomme " + consommation + " Watt");
+			this.logMessage(uri + " consomme " + consommation + " Watt.");
+			this.logMessage("...");
 		}
 	}
 
 	public void setUniteProduction(String uri, double production) throws Exception {
 		if(unite_production.containsKey(uri)) {
 			unite_production.put(uri, production);
-			this.logMessage(uri + " produit " + production + " Watt");
+			this.logMessage(uri + " produit " + production + " Watt.");
+			this.logMessage("...");
 		}
 	}
 	
@@ -90,6 +100,10 @@ public class Compteur extends AbstractComponent {
 		super.start();
 		this.logMessage("Demarrage du compteur...");
 		this.logMessage("Phase d'execution du compteur.");
+	}
+	
+	public void dynamicExecute() {
+		/** TODO */
 	}
 	
 	@Override
@@ -104,10 +118,11 @@ public class Compteur extends AbstractComponent {
 		try {
 			PortI[] p1 = this.findPortsFromInterface(ICompteur.class);
 			PortI[] p2 = this.findPortsFromInterface(ICompteurControleur.class);
+			PortI[] p3 = this.findPortsFromInterface(IComposantDynamique.class);
 			
 			p1[0].unpublishPort();
 			p2[0].unpublishPort();
-			
+			p3[0].unpublishPort();
 		} catch (Exception e) { throw new ComponentShutdownException(e); }
 		super.shutdown();
 	}
@@ -118,10 +133,11 @@ public class Compteur extends AbstractComponent {
 		try {
 			PortI[] p1 = this.findPortsFromInterface(ICompteur.class);
 			PortI[] p2 = this.findPortsFromInterface(ICompteurControleur.class);
+			PortI[] p3 = this.findPortsFromInterface(IComposantDynamique.class);
 			
 			p1[0].unpublishPort();
 			p2[0].unpublishPort();
-			
+			p3[0].unpublishPort();
 		} catch (Exception e) { throw new ComponentShutdownException(e); }
 		super.shutdownNow();
 	}

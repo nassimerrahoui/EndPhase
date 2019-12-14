@@ -9,6 +9,8 @@ import app.interfaces.controleur.IControleLaveLinge;
 import app.interfaces.controleur.IControleOrdinateur;
 import app.interfaces.controleur.IControlePanneau;
 import app.interfaces.controleur.IControleur;
+import app.interfaces.generateur.IComposantDynamique;
+import app.ports.controleur.ControleurAssembleurInPort;
 import app.ports.controleur.ControleurBatterieOutPort;
 import app.ports.controleur.ControleurCompteurOutPort;
 import app.ports.controleur.ControleurFrigoOutPort;
@@ -31,7 +33,7 @@ import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
 
-@OfferedInterfaces(offered = { IControleur.class })
+@OfferedInterfaces(offered = { IControleur.class, IComposantDynamique.class })
 @RequiredInterfaces(required = { 
 		IControleCompteur.class, 
 		IControleFrigo.class, 
@@ -72,6 +74,9 @@ public class Controleur extends AbstractComponent {
 		// port entrant permettant aux appareils et unites de production de s'inscrire
 		ControleurInPort inscription_INPORT = new ControleurInPort(this);
 		
+		// port pour l'assembleur
+		ControleurAssembleurInPort launch_INPORT = new ControleurAssembleurInPort(this);
+		
 		frigo_OUTPORT.publishPort();
 		lavelinge_OUTPORT.publishPort();
 		ordinateur_OUTPORT.publishPort();
@@ -79,6 +84,7 @@ public class Controleur extends AbstractComponent {
 		batterie_OUTPORT.publishPort();
 		compteur_OUTPORT.publishPort();
 		inscription_INPORT.publishPort();
+		launch_INPORT.publishPort();
 
 		if (AbstractCVM.isDistributed) {
 			this.executionLog.setDirectory(System.getProperty("user.dir")) ;
@@ -92,7 +98,6 @@ public class Controleur extends AbstractComponent {
 		// affichage
 		this.tracer.setTitle("Controleur");
 		this.tracer.setRelativePosition(1, 0);
-		//this.toggleTracing();
 	}
 	
 	// ******* Services requis pour allumer ou eteindre des appareils *********
@@ -171,6 +176,58 @@ public class Controleur extends AbstractComponent {
 
 	public void ajouterAppareil(String uri) throws Exception {
 		this.appareils.add(uri);
+		this.compteur_OUTPORT.demanderAjoutAppareil(uri);
+	}
+	
+	// ******* Service offert pour les unites de production  *********
+
+	public void ajouterUniteProduction(String uri) throws Exception {
+		this.unitesProduction.add(uri);
+		this.compteur_OUTPORT.demanderAjoutUniteProduction(uri);
+	}
+	
+	/**
+	 * Gerer et afficher ce qui se passe pendant l'execution du controleur
+	 * @throws Exception 
+	 */
+	public void runningAndPrint() throws Exception {
+		this.logMessage("Decisions controleur...");
+		
+		/** TODO code pour gerer les decisions du controleur */
+		
+		// TEST
+		int i = 0;
+		if(i == 0) {
+			envoyerMode(ModeOrdinateur.PerformanceReduite);
+			envoyerTemperature_Refrigerateur(4.0);
+			i++;
+		}
+		
+		this.logMessage("...");
+	}
+	
+	// ************* Cycle de vie du composant ************* 
+
+	@Override
+	public void start() throws ComponentStartException {
+		super.start();
+		this.logMessage("Demarrage du controleur...");
+	}
+	
+	public void dynamicExecute() throws Exception {
+		
+		this.logMessage("Phase d'execution du controleur.");
+		
+		this.logMessage("Execution en cours...");
+		
+		
+		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
+			@Override
+			public void run() {
+				try { ((Controleur) this.getTaskOwner()).runningAndPrint(); } 
+				catch (Exception e) { throw new RuntimeException(e); }
+			}
+		}, 4000, 5000, TimeUnit.MILLISECONDS);
 		
 		this.scheduleTask(new AbstractComponent.AbstractTask() {
 			@Override
@@ -203,53 +260,6 @@ public class Controleur extends AbstractComponent {
 				catch (Exception e) { throw new RuntimeException(e); }
 			}
 		}, 3000, TimeUnit.MILLISECONDS);
-		
-		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
-			@Override
-			public void run() {
-				try { ((Controleur) this.getTaskOwner()).runningAndPrint(); } 
-				catch (Exception e) { throw new RuntimeException(e); }
-			}
-		}, 4000, 1000, TimeUnit.MILLISECONDS);
-		
-		this.compteur_OUTPORT.demanderAjoutAppareil(uri);
-	}
-	
-	// ******* Service offert pour les unites de production  *********
-
-	public void ajouterUniteProduction(String uri) throws Exception {
-		this.unitesProduction.add(uri);
-		this.compteur_OUTPORT.demanderAjoutUniteProduction(uri);
-	}
-	
-	/**
-	 * Gerer et afficher ce qui se passe pendant l'execution du controleur
-	 * @throws Exception 
-	 */
-	public void runningAndPrint() throws Exception {
-		this.logMessage("Decisions controleur...");
-		
-		/** TODO code pour gerer les decisions du controleur */
-		
-		// TEST
-		int i = 0;
-		if(i == 0) {
-			envoyerMode(ModeOrdinateur.PerformanceReduite);
-			i++;
-		}
-	}
-	
-	// ************* Cycle de vie du composant ************* 
-
-	@Override
-	public void start() throws ComponentStartException {
-		super.start();
-		
-		this.logMessage("Demarrage du controleur...");
-		
-		this.logMessage("Phase d'execution du controleur.");
-		
-		this.logMessage("Execution en cours...");
 	}
 	
 	@Override
@@ -269,6 +279,7 @@ public class Controleur extends AbstractComponent {
 			PortI[] p5 = this.findPortsFromInterface(IControlePanneau.class);
 			PortI[] p6 = this.findPortsFromInterface(IControleBatterie.class);
 			PortI[] p7 = this.findPortsFromInterface(IControleCompteur.class);
+			PortI[] p8 = this.findPortsFromInterface(IComposantDynamique.class);
 			
 			p1[0].unpublishPort();
 			p2[0].unpublishPort();
@@ -277,6 +288,7 @@ public class Controleur extends AbstractComponent {
 			p5[0].unpublishPort();
 			p6[0].unpublishPort();
 			p7[0].unpublishPort();
+			p8[0].unpublishPort();
 			
 		} catch (Exception e) { throw new ComponentShutdownException(e); }
 		super.shutdown();
@@ -293,6 +305,7 @@ public class Controleur extends AbstractComponent {
 			PortI[] p5 = this.findPortsFromInterface(IControlePanneau.class);
 			PortI[] p6 = this.findPortsFromInterface(IControleBatterie.class);
 			PortI[] p7 = this.findPortsFromInterface(IControleCompteur.class);
+			PortI[] p8 = this.findPortsFromInterface(IComposantDynamique.class);
 			
 			p1[0].unpublishPort();
 			p2[0].unpublishPort();
@@ -301,6 +314,7 @@ public class Controleur extends AbstractComponent {
 			p5[0].unpublishPort();
 			p6[0].unpublishPort();
 			p7[0].unpublishPort();
+			p8[0].unpublishPort();
 			
 		} catch (Exception e) { throw new ComponentShutdownException(e); }
 		super.shutdownNow();

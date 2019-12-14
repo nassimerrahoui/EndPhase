@@ -1,7 +1,7 @@
 package app.components;
 
 import java.util.concurrent.TimeUnit;
-import app.interfaces.generateur.IEntiteDynamique;
+import app.interfaces.generateur.IComposantDynamique;
 import app.interfaces.production.IAjoutUniteProduction;
 import app.interfaces.production.IBatterie;
 import app.interfaces.production.IProduction;
@@ -19,7 +19,7 @@ import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
 
-@OfferedInterfaces(offered = { IBatterie.class, IEntiteDynamique.class })
+@OfferedInterfaces(offered = { IBatterie.class, IComposantDynamique.class })
 @RequiredInterfaces(required = { IAjoutUniteProduction.class, IProduction.class })
 public class Batterie extends AbstractComponent {
 
@@ -64,7 +64,6 @@ public class Batterie extends AbstractComponent {
 		// affichage
 		this.tracer.setTitle("Batterie");
 		this.tracer.setRelativePosition(0, 2);
-		this.toggleTracing();
 
 		// attributs
 		etat = EtatUniteProduction.OFF;
@@ -90,6 +89,9 @@ public class Batterie extends AbstractComponent {
 	public void start() throws ComponentStartException {
 		super.start();
 		this.logMessage("Demarrage de la batterie...");
+	}
+	
+	public void dynamicExecute() throws Exception {
 		
 		this.logMessage("Phase d'execution de la batterie.");
 		
@@ -118,7 +120,7 @@ public class Batterie extends AbstractComponent {
 			PortI[] p1 = this.findPortsFromInterface(IBatterie.class);
 			PortI[] p2 = this.findPortsFromInterface(IAjoutUniteProduction.class);
 			PortI[] p3 = this.findPortsFromInterface(IProduction.class);
-			PortI[] port_assembleur = this.findPortsFromInterface(IEntiteDynamique.class);
+			PortI[] port_assembleur = this.findPortsFromInterface(IComposantDynamique.class);
 			
 			p1[0].unpublishPort();
 			p2[0].unpublishPort();
@@ -137,7 +139,7 @@ public class Batterie extends AbstractComponent {
 			PortI[] p1 = this.findPortsFromInterface(IBatterie.class);
 			PortI[] p2 = this.findPortsFromInterface(IAjoutUniteProduction.class);
 			PortI[] p3 = this.findPortsFromInterface(IProduction.class);
-			PortI[] port_assembleur = this.findPortsFromInterface(IEntiteDynamique.class);
+			PortI[] port_assembleur = this.findPortsFromInterface(IComposantDynamique.class);
 			
 			p1[0].unpublishPort();
 			p2[0].unpublishPort();
