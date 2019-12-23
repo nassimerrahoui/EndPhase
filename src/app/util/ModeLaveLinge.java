@@ -7,10 +7,11 @@ package app.util;
  */
 public enum ModeLaveLinge {
 	
-	Veille,
-	Lavage,
-	Rincage,
-	Essorage,
-	Sechage,
-	Vidange
+	OFF,
+	VEILLE,
+	LAVAGE,
+	RINCAGE,
+	ESSORAGE,
+	SECHAGE,
+	VIDANGE
 }

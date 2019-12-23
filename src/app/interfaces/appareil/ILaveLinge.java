@@ -1,6 +1,5 @@
 package app.interfaces.appareil;
 
-import app.util.EtatAppareil;
 import app.util.ModeLaveLinge;
 import app.util.TemperatureLaveLinge;
 import fr.sorbonne_u.components.interfaces.OfferedI;
@@ -13,11 +12,11 @@ import fr.sorbonne_u.components.interfaces.OfferedI;
 public interface ILaveLinge extends OfferedI {
 
 	/**
-	 * Permet d'eteindre ou allumer un appareil
+	 * Permet de changer l'etat du lave-linge
 	 * @param etat
 	 * @throws Exception
 	 */
-	public void setEtatAppareil(EtatAppareil etat) throws Exception;
+	public void setModeLaveLinge(ModeLaveLinge etat) throws Exception;
 	
 	/**
 	 * Enclenche le cycle du lave-linge (lavage, rincage, essorage) a une heure et minutes donnee

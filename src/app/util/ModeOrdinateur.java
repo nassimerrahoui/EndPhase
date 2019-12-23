@@ -8,7 +8,8 @@ package app.util;
  */
 public enum ModeOrdinateur {
 	
-	Veille,
-	PerformanceReduite,
-	PerformanceMaximale
+	OFF,
+	VEILLE,
+	PERFORMANCE_REDUITE,
+	PERFORMANCE_MAXIMALE
 }

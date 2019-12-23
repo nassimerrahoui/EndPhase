@@ -1,6 +1,5 @@
 package app.interfaces.controleur;
 
-import app.util.EtatAppareil;
 import app.util.ModeFrigo;
 import fr.sorbonne_u.components.interfaces.RequiredI;
 
@@ -13,11 +12,11 @@ import fr.sorbonne_u.components.interfaces.RequiredI;
 public interface IControleFrigo extends RequiredI {
 	
 	/**
-	 * Permet d'allumer ou eteindre un appareil
+	 * Permet de changer le mode du frigo
 	 * @param etat
 	 * @throws Exception
 	 */
-	public void envoyerEtatAppareil(EtatAppareil etat) throws Exception;
+	public void envoyerModeFrigo(ModeFrigo etat) throws Exception;
 
 	/**
 	 * Permet d'etablir la temperature a atteindre pour le refrigerateur 
@@ -30,16 +29,4 @@ public interface IControleFrigo extends RequiredI {
 	 * @param temperature
 	 */
 	public void envoyerTemperature_Congelateur(double temperature) throws Exception;
-	
-	/**
-	 * Permet d'allumer ou eteindre la lumiere du refrigerateur
-	 * @param mf
-	 */
-	public void envoyerLumiere_Refrigerateur(ModeFrigo mf) throws Exception;
-
-	/**
-	 * Permet d'allumer ou eteindre la lumiere du congelateur
-	 * @param mf
-	 */
-	public void envoyerLumiere_Congelateur(ModeFrigo mf) throws Exception;
 }

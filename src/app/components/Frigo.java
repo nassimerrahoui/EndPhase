@@ -9,7 +9,6 @@ import app.ports.frigo.FrigoAssembleurInPort;
 import app.ports.frigo.FrigoCompteurOutPort;
 import app.ports.frigo.FrigoControleurOutPort;
 import app.ports.frigo.FrigoInPort;
-import app.util.EtatAppareil;
 import app.util.ModeFrigo;
 import app.util.TypeAppareil;
 import app.util.URI;
@@ -32,9 +31,7 @@ public class Frigo extends AbstractComponent {
 	protected FrigoCompteurOutPort consommation_OUTPORT;
 
 	protected TypeAppareil type;
-	protected EtatAppareil etat;
-	protected ModeFrigo lumiere_refrigerateur;
-	protected ModeFrigo lumiere_congelateur;
+	protected ModeFrigo etat;
 
 	protected Double congelateur_temperature_cible;
 	protected Double refrigerateur_temperature_cible;
@@ -76,12 +73,10 @@ public class Frigo extends AbstractComponent {
 
 		// attributs
 		this.type = type;
-		this.etat = EtatAppareil.OFF;
+		this.etat = ModeFrigo.OFF;
 		this.refrigerateur_temperature_cible = 3.0;
 		this.congelateur_temperature_cible = -10.0;
 		this.consommation = 55.0;
-		this.lumiere_refrigerateur = ModeFrigo.LIGHT_OFF;
-		this.lumiere_congelateur = ModeFrigo.LIGHT_OFF;
 	}
 
 	public void demandeAjoutControleur(String uri) throws Exception {
@@ -92,7 +87,7 @@ public class Frigo extends AbstractComponent {
 		this.consommation_OUTPORT.envoyerConsommation(uri, consommation);
 	}
 
-	public void setEtatAppareil(EtatAppareil etat) throws Exception {
+	public void setModeFrigo(ModeFrigo etat) throws Exception {
 		this.etat = etat;
 	}
 
@@ -104,14 +99,6 @@ public class Frigo extends AbstractComponent {
 		this.congelateur_temperature_cible = temperature;
 	}
 
-	public void setLumiere_Refrigerateur(ModeFrigo mf) throws Exception {
-		this.lumiere_refrigerateur = mf;
-	}
-
-	public void setLumiere_Congelateur(ModeFrigo mf) throws Exception {
-		this.lumiere_congelateur = mf;
-	}
-
 	/**
 	 * Actions du frigo pendant l'execution
 	 */
@@ -119,20 +106,12 @@ public class Frigo extends AbstractComponent {
 		
 		/** TODO */
 		
-		if(lumiere_refrigerateur == ModeFrigo.LIGHT_ON) {
-			if(lumiere_congelateur == ModeFrigo.LIGHT_ON) {
-				consommation = 4.0;
-			} else {
-				consommation = 2.0;
-			}
-		} else if(lumiere_congelateur == ModeFrigo.LIGHT_ON) {
-			if(lumiere_refrigerateur == ModeFrigo.LIGHT_ON) {
-				consommation = 4.0;
-			} else {
-				consommation = 2.0;
-			}
-		} else {
+		if(this.etat == ModeFrigo.OFF) {
 			consommation = 0.0;
+		} else if(this.etat == ModeFrigo.LIGHT_OFF) {
+			consommation = 2.0;
+		} else if(this.etat == ModeFrigo.LIGHT_ON) {
+			consommation = 3.0;
 		}
 		
 		this.logMessage("Temperature cible refrigerateur : " + refrigerateur_temperature_cible);

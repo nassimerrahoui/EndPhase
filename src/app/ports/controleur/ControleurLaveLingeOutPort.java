@@ -1,7 +1,6 @@
 package app.ports.controleur;
 
 import app.interfaces.controleur.IControleLaveLinge;
-import app.util.EtatAppareil;
 import app.util.ModeLaveLinge;
 import app.util.TemperatureLaveLinge;
 import fr.sorbonne_u.components.ComponentI;
@@ -18,10 +17,10 @@ public class ControleurLaveLingeOutPort extends AbstractOutboundPort implements 
 	public ControleurLaveLingeOutPort(ComponentI owner) throws Exception {
 		super(IControleLaveLinge.class, owner);
 	}
-
+	
 	@Override
-	public void envoyerEtatAppareil(EtatAppareil etat) throws Exception {
-		((IControleLaveLinge)this.connector).envoyerEtatAppareil(etat);
+	public void envoyerModeLaveLinge(ModeLaveLinge etat) throws Exception {
+		((IControleLaveLinge)this.connector).envoyerModeLaveLinge(etat);
 	}
 	
 	@Override
@@ -38,5 +37,4 @@ public class ControleurLaveLingeOutPort extends AbstractOutboundPort implements 
 	public void envoyerTemperature(TemperatureLaveLinge tl) throws Exception {
 		((IControleLaveLinge)this.connector).envoyerTemperature(tl);
 	}
-
 }

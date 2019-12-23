@@ -2,7 +2,6 @@ package app.connectors;
 
 import app.interfaces.appareil.ILaveLinge;
 import app.interfaces.controleur.IControleLaveLinge;
-import app.util.EtatAppareil;
 import app.util.ModeLaveLinge;
 import app.util.TemperatureLaveLinge;
 import fr.sorbonne_u.components.connectors.AbstractConnector;
@@ -10,8 +9,8 @@ import fr.sorbonne_u.components.connectors.AbstractConnector;
 public class ControleurLaveLingeConnector extends AbstractConnector implements IControleLaveLinge {
 
 	@Override
-	public void envoyerEtatAppareil(EtatAppareil etat) throws Exception {
-		((ILaveLinge) this.offering).setEtatAppareil(etat);
+	public void envoyerModeLaveLinge(ModeLaveLinge etat) throws Exception {
+		((ILaveLinge) this.offering).setModeLaveLinge(etat);
 	}
 
 	@Override

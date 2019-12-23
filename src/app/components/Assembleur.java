@@ -155,8 +155,8 @@ public class Assembleur extends AbstractComponent {
 						URI.ORDINATEUR_URI.getURI(), 
 						URI.ORDINATEUR_COMPTEUR_OP_URI.getURI(),
 						URI.ORDINATEUR_CONTROLEUR_OP_URI.getURI(),
-						Integer.valueOf(8),
-						Integer.valueOf(8),
+						Integer.valueOf(2),
+						Integer.valueOf(2),
 						TypeAppareil.CONSO_INCONTROLABLE});
 
 		i++;

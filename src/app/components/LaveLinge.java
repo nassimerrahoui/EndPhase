@@ -9,7 +9,6 @@ import app.ports.lavelinge.LaveLingeAssembleurInPort;
 import app.ports.lavelinge.LaveLingeCompteurOutPort;
 import app.ports.lavelinge.LaveLingeControleurOutPort;
 import app.ports.lavelinge.LaveLingeInPort;
-import app.util.EtatAppareil;
 import app.util.ModeLaveLinge;
 import app.util.TemperatureLaveLinge;
 import app.util.TypeAppareil;
@@ -33,8 +32,7 @@ public class LaveLinge extends AbstractComponent {
 	protected LaveLingeCompteurOutPort consommation_OUTPORT;
 
 	protected TypeAppareil type;
-	protected EtatAppareil etat;
-	protected ModeLaveLinge mode;
+	protected ModeLaveLinge etat;
 	
 	protected int heure;
 	protected int minutes;
@@ -78,11 +76,10 @@ public class LaveLinge extends AbstractComponent {
 		// attributs
 		this.heure = 0;
 		this.minutes = 0;
-		this.etat = EtatAppareil.OFF;
+		this.etat = ModeLaveLinge.OFF;
 		this.consommation = 0.0;
 		this.type = type;
 		this.temperature = TemperatureLaveLinge.QUARANTE_DEGRES;
-		this.mode = ModeLaveLinge.Veille;
 	}
 	
 	public void demandeAjoutControleur(String uri) throws Exception {
@@ -93,28 +90,27 @@ public class LaveLinge extends AbstractComponent {
 		this.consommation_OUTPORT.envoyerConsommation(uri, consommation);
 	}
 
-	public void setEtatAppareil(EtatAppareil etat) throws Exception {
+	public void setModeLaveLinge(ModeLaveLinge etat) throws Exception {
 		this.etat = etat;
 	}
 
 	public void planifierCycle(int heure, int min) throws Exception {
 		/** TODO */
 		if(heure > 0 && heure <= 23 && min >= 0 && min < 59) {
-			planifierMode(ModeLaveLinge.Veille, heure, min);
-			planifierMode(ModeLaveLinge.Lavage, heure, min+10);
-			planifierMode(ModeLaveLinge.Rincage, heure, min+20);
-			planifierMode(ModeLaveLinge.Essorage, heure, min+30);
-			planifierMode(ModeLaveLinge.Veille, heure, min+40);
+			planifierMode(ModeLaveLinge.VEILLE, heure, min);
+			planifierMode(ModeLaveLinge.LAVAGE, heure, min+10);
+			planifierMode(ModeLaveLinge.RINCAGE, heure, min+20);
+			planifierMode(ModeLaveLinge.ESSORAGE, heure, min+30);
+			planifierMode(ModeLaveLinge.VEILLE, heure, min+40);
 			
 			this.logMessage("Cycle planifier a : " + heure + "h" + min);
 		}
 	}
 
 	public void planifierMode(ModeLaveLinge ml, int heure, int min) throws Exception {
-		if(etat == EtatAppareil.ON) {
+		if(etat == ModeLaveLinge.VEILLE) {
 			this.heure = heure;
 			this.minutes = min;
-			this.mode = ml;
 		}
 	}
 
@@ -127,20 +123,20 @@ public class LaveLinge extends AbstractComponent {
 	 */
 	public void runningAndPrint() {
 		/** TODO Redefinir toString a la place de name */
-		this.logMessage("Mode actuel : " + mode.name());
+		this.logMessage("Mode actuel : " + etat.name());
 		
 		/** TODO code pour gerer ce qui se passe pendant un mode */
-		if(mode == ModeLaveLinge.Veille) {
+		if(etat == ModeLaveLinge.VEILLE) {
 			consommation = 0.0;
-		} else if(mode == ModeLaveLinge.Lavage) {
+		} else if(etat == ModeLaveLinge.LAVAGE) {
 			consommation = 2.0;
-		} else if (mode == ModeLaveLinge.Rincage) {
+		} else if (etat == ModeLaveLinge.RINCAGE) {
 			consommation = 2.0;
-		} else if (mode == ModeLaveLinge.Essorage) {
+		} else if (etat == ModeLaveLinge.ESSORAGE) {
 			consommation = 4.0;
-		} else if (mode == ModeLaveLinge.Sechage) {
+		} else if (etat == ModeLaveLinge.SECHAGE) {
 			consommation = 6.0;
-		} else if (mode == ModeLaveLinge.Vidange) {
+		} else if (etat == ModeLaveLinge.VIDANGE) {
 			consommation = 1.0;
 		}
 		

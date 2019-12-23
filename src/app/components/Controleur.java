@@ -18,7 +18,6 @@ import app.ports.controleur.ControleurInPort;
 import app.ports.controleur.ControleurLaveLingeOutPort;
 import app.ports.controleur.ControleurOrdinateurOutPort;
 import app.ports.controleur.ControleurPanneauOutPort;
-import app.util.EtatAppareil;
 import app.util.EtatUniteProduction;
 import app.util.ModeFrigo;
 import app.util.ModeLaveLinge;
@@ -92,6 +91,7 @@ public class Controleur extends AbstractComponent {
 			this.executionLog.setDirectory(System.getProperty("user.home")) ;
 		}
 		
+		/** TODO definir des constantes pour les pools */
 		this.createNewExecutorService(URI.POOL_AJOUT_CONTROLEUR_URI.getURI(), 5, false) ;
 		this.createNewExecutorService(URI.POOL_CONSO_PROD_CONTROLEUR_URI.getURI(), 5, false) ;
 		
@@ -100,18 +100,18 @@ public class Controleur extends AbstractComponent {
 		this.tracer.setRelativePosition(1, 0);
 	}
 	
-	// ******* Services requis pour allumer ou eteindre des appareils *********
+	// ******* Services requis pour changer le mode des appareils *********
 
-	public void envoyerEtatFrigo(EtatAppareil etat) throws Exception {
-		this.frigo_OUTPORT.envoyerEtatAppareil(etat);
+	public void envoyerEtatFrigo(ModeFrigo etat) throws Exception {
+		this.frigo_OUTPORT.envoyerModeFrigo(etat);
 	}
 	
-	public void envoyerEtatLaveLinge(EtatAppareil etat) throws Exception {
-		this.lavelinge_OUTPORT.envoyerEtatAppareil(etat);
+	public void envoyerEtatLaveLinge(ModeLaveLinge etat) throws Exception {
+		this.lavelinge_OUTPORT.envoyerModeLaveLinge(etat);
 	}
 	
-	public void envoyerEtatOrdinateur(EtatAppareil etat) throws Exception {
-		this.ordinateur_OUTPORT.envoyerEtatAppareil(etat);
+	public void envoyerEtatOrdinateur(ModeOrdinateur etat) throws Exception {
+		this.ordinateur_OUTPORT.envoyerModeOrdinateur(etat);
 	}
 
 	// ******* Services requis pour allumer ou eteindre des unites de production *********
@@ -147,20 +147,6 @@ public class Controleur extends AbstractComponent {
 	public void envoyerTemperature_Congelateur(double temperature) throws Exception {
 		this.frigo_OUTPORT.envoyerTemperature_Congelateur(temperature);
 	}
-
-	public void envoyerLumiere_Refrigerateur(ModeFrigo mf) throws Exception {
-		this.frigo_OUTPORT.envoyerLumiere_Refrigerateur(mf);
-	}
-
-	public void envoyerLumiere_Congelateur(ModeFrigo mf) throws Exception {
-		this.frigo_OUTPORT.envoyerLumiere_Congelateur(mf);		
-	}
-	
-	// ******* Services requis pour effectuer des actions sur ordinateur *********
-
-	public void envoyerMode(ModeOrdinateur mo) throws Exception {
-		this.ordinateur_OUTPORT.envoyerMode(mo);	
-	}
 	
 	// ******* Services requis pour recuperer les informations du compteur *********
 	
@@ -193,12 +179,11 @@ public class Controleur extends AbstractComponent {
 	public void runningAndPrint() throws Exception {
 		this.logMessage("Decisions controleur...");
 		
-		/** TODO code pour gerer les decisions du controleur */
+		/** TODO code pour gerer les decisions reactives du controleur */
 		
 		// TEST
 		int i = 0;
 		if(i == 0) {
-			envoyerMode(ModeOrdinateur.PerformanceReduite);
 			envoyerTemperature_Refrigerateur(4.0);
 			i++;
 		}
@@ -220,6 +205,10 @@ public class Controleur extends AbstractComponent {
 		
 		this.logMessage("Execution en cours...");
 		
+		/** TODO Traitement global deliberatif ??? 
+		 * en utilisant des synthese (historique, donnees)
+		 * donnees -> etat -> planification
+		 * */
 		
 		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
 			@Override
@@ -248,7 +237,7 @@ public class Controleur extends AbstractComponent {
 		this.scheduleTask(new AbstractComponent.AbstractTask() {
 			@Override
 			public void run() {
-				try { ((Controleur) this.getTaskOwner()).envoyerEtatFrigo(EtatAppareil.ON); }
+				try { ((Controleur) this.getTaskOwner()).envoyerEtatFrigo(ModeFrigo.LIGHT_OFF); }
 				catch (Exception e) { throw new RuntimeException(e); }
 			}
 		}, 3000, TimeUnit.MILLISECONDS);
@@ -256,7 +245,7 @@ public class Controleur extends AbstractComponent {
 		this.scheduleTask(new AbstractComponent.AbstractTask() {
 			@Override
 			public void run() {
-				try { ((Controleur) this.getTaskOwner()).envoyerEtatOrdinateur(EtatAppareil.ON); }
+				try { ((Controleur) this.getTaskOwner()).envoyerEtatOrdinateur(ModeOrdinateur.PERFORMANCE_REDUITE); }
 				catch (Exception e) { throw new RuntimeException(e); }
 			}
 		}, 3000, TimeUnit.MILLISECONDS);

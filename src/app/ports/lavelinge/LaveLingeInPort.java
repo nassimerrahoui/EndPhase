@@ -2,7 +2,6 @@ package app.ports.lavelinge;
 
 import app.components.LaveLinge;
 import app.interfaces.appareil.ILaveLinge;
-import app.util.EtatAppareil;
 import app.util.ModeLaveLinge;
 import app.util.TemperatureLaveLinge;
 import app.util.URI;
@@ -23,10 +22,10 @@ public class LaveLingeInPort extends AbstractInboundPort implements ILaveLinge {
 	}
 
 	@Override
-	public void setEtatAppareil(EtatAppareil etat) throws Exception {
+	public void setModeLaveLinge(ModeLaveLinge etat) throws Exception {
 		AbstractComponent.AbstractService<Void> task = new AbstractComponent.AbstractService<Void>() {
 			public Void call() throws Exception {
-				((LaveLinge) owner).setEtatAppareil(etat);
+				((LaveLinge) owner).setModeLaveLinge(etat);
 				return null;
 			}
 		};
