@@ -2,7 +2,6 @@ package app.ports.frigo;
 
 import app.components.Frigo;
 import app.interfaces.appareil.IFrigo;
-import app.util.EtatAppareil;
 import app.util.ModeFrigo;
 import app.util.URI;
 import fr.sorbonne_u.components.AbstractComponent;
@@ -22,11 +21,11 @@ public class FrigoInPort extends AbstractInboundPort implements IFrigo {
 	}
 
 	@Override
-	public void setEtatAppareil(EtatAppareil etat) throws Exception {
+	public void setModeFrigo(ModeFrigo etat) throws Exception {
 
 		AbstractComponent.AbstractService<Void> task = new AbstractComponent.AbstractService<Void>() {
 			public Void call() throws Exception {
-				((Frigo) owner).setEtatAppareil(etat);
+				((Frigo) owner).setModeFrigo(etat);
 				return null;
 			}
 		};
@@ -58,29 +57,4 @@ public class FrigoInPort extends AbstractInboundPort implements IFrigo {
 
 		this.owner.handleRequestAsync(URI.POOL_ACTION_FRIGO_URI.getURI(), task);
 	}
-
-	@Override
-	public void setLumiere_Refrigerateur(ModeFrigo mf) throws Exception {
-		AbstractComponent.AbstractService<Void> task = new AbstractComponent.AbstractService<Void>() {
-			public Void call() throws Exception {
-				((Frigo) owner).setLumiere_Refrigerateur(mf);
-				return null;
-			}
-		};
-
-		this.owner.handleRequestAsync(URI.POOL_ACTION_FRIGO_URI.getURI(), task);
-	}
-
-	@Override
-	public void setLumiere_Congelateur(ModeFrigo mf) throws Exception {
-		AbstractComponent.AbstractService<Void> task = new AbstractComponent.AbstractService<Void>() {
-			public Void call() throws Exception {
-				((Frigo) owner).setLumiere_Congelateur(mf);
-				return null;
-			}
-		};
-
-		this.owner.handleRequestAsync(URI.POOL_ACTION_FRIGO_URI.getURI(), task);
-	}
-
 }

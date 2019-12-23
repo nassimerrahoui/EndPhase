@@ -4,10 +4,14 @@ import app.components.Assembleur;
 import app.util.URI;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
+import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
 
 public class CVM extends AbstractCVM {
 
-	public CVM() throws Exception { super(); }
+	public CVM() throws Exception { 
+		super();
+		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 10L;
+	}
 	
 	@Override
 	public void deploy() throws Exception {
@@ -33,7 +37,7 @@ public class CVM extends AbstractCVM {
 	public static void main(String[] args) {
 		try {
 			CVM c = new CVM();
-			c.startStandardLifeCycle(40000L);
+			c.startStandardLifeCycle(20000L);
 			Thread.sleep(5000L);
 			System.exit(0);
 		} catch (Exception e) { throw new RuntimeException(e); }

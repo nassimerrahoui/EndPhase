@@ -2,7 +2,6 @@ package app.ports.ordinateur;
 
 import app.components.Ordinateur;
 import app.interfaces.appareil.IOrdinateur;
-import app.util.EtatAppareil;
 import app.util.ModeOrdinateur;
 import app.util.URI;
 import fr.sorbonne_u.components.AbstractComponent;
@@ -22,10 +21,10 @@ public class OrdinateurInPort extends AbstractInboundPort implements IOrdinateur
 	}
 
 	@Override
-	public void setEtatAppareil(EtatAppareil etat) throws Exception {
+	public void setModeOrdinateur(ModeOrdinateur etat) throws Exception {
 		AbstractComponent.AbstractService<Void> task = new AbstractComponent.AbstractService<Void>() {
 			public Void call() throws Exception {
-				((Ordinateur)owner).setEtatAppareil(etat);
+				((Ordinateur)owner).setModeOrdinateur(etat);
 				return null;
 			}
 		};
@@ -33,18 +32,4 @@ public class OrdinateurInPort extends AbstractInboundPort implements IOrdinateur
 		this.owner.handleRequestAsync(URI.POOL_ACTION_ORDINATEUR_URI.getURI(), task);
 		
 	}
-
-	@Override
-	public void setMode(ModeOrdinateur mo) throws Exception {
-		AbstractComponent.AbstractService<Void> task = new AbstractComponent.AbstractService<Void>() {
-			public Void call() throws Exception {
-				((Ordinateur)owner).setMode(mo);
-				return null;
-			}
-		};
-
-		this.owner.handleRequestAsync(URI.POOL_ACTION_ORDINATEUR_URI.getURI(), task);
-		
-	}
-
 }

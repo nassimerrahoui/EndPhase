@@ -1,6 +1,5 @@
 package app.interfaces.appareil;
 
-import app.util.EtatAppareil;
 import app.util.ModeOrdinateur;
 import fr.sorbonne_u.components.interfaces.OfferedI;
 
@@ -12,16 +11,9 @@ import fr.sorbonne_u.components.interfaces.OfferedI;
 public interface IOrdinateur extends OfferedI {
 
 	/**
-	 * Permet d'eteindre ou allumer un appareil
+	 * Permet de changer l'etat de l'ordinateur
 	 * @param etat
 	 * @throws Exception
 	 */
-	public void setEtatAppareil(EtatAppareil etat) throws Exception;
-	
-	/**
-	 * Permet de definir le mode de consommation electrique de l'ordinateur
-	 * @param mo
-	 * @throws Exception
-	 */
-	public void setMode(ModeOrdinateur mo) throws Exception;
+	public void setModeOrdinateur(ModeOrdinateur etat) throws Exception;
 }

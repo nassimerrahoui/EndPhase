@@ -1,5 +1,6 @@
 package app.components;
 
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 import app.interfaces.appareil.IAjoutAppareil;
 import app.interfaces.appareil.IConsommation;
@@ -9,7 +10,6 @@ import app.ports.ordinateur.OrdinateurAssembleurInPort;
 import app.ports.ordinateur.OrdinateurCompteurOutPort;
 import app.ports.ordinateur.OrdinateurControleurOutPort;
 import app.ports.ordinateur.OrdinateurInPort;
-import app.util.EtatAppareil;
 import app.util.ModeOrdinateur;
 import app.util.TypeAppareil;
 import app.util.URI;
@@ -17,13 +17,22 @@ import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
+import fr.sorbonne_u.components.cyphy.AbstractCyPhyComponent;
+import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentStateAccessI;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
+import fr.sorbonne_u.devs_simulation.architectures.Architecture;
+import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
+import simulator.models.OrdinateurCoupledModel;
+import simulator.models.OrdinateurModel;
+import simulator.plugins.OrdinateurSimulatorPlugin;
 
 @OfferedInterfaces(offered = { IOrdinateur.class, IComposantDynamique.class })
 @RequiredInterfaces(required = { IAjoutAppareil.class, IConsommation.class })
-public class Ordinateur extends AbstractComponent {
+public class Ordinateur 
+	extends AbstractCyPhyComponent 
+	implements EmbeddingComponentStateAccessI {
 
 	/** port sortant permettant a l'appareil de s'inscrire sur la liste des appareil du controleur */
 	protected OrdinateurControleurOutPort controleur_OUTPORT;
@@ -32,9 +41,10 @@ public class Ordinateur extends AbstractComponent {
 	protected OrdinateurCompteurOutPort consommation_OUTPORT;
 
 	protected TypeAppareil type;
-	protected EtatAppareil etat;
-	protected ModeOrdinateur mode;
+	protected ModeOrdinateur etat;
 	protected Double consommation;
+	
+	protected OrdinateurSimulatorPlugin asp;
 
 	protected Ordinateur(
 			String ORDINATEUR_URI, 
@@ -71,10 +81,11 @@ public class Ordinateur extends AbstractComponent {
 		this.tracer.setRelativePosition(2, 1);
 		
 		// attributs
-		this.etat = EtatAppareil.OFF;
-		this.mode = ModeOrdinateur.Veille;
+		this.etat = ModeOrdinateur.OFF;
 		this.consommation = 0.0;
 		this.type = type;
+		
+		this.initialise();
 	}
 
 	public void demandeAjoutControleur(String uri) throws Exception {
@@ -85,12 +96,8 @@ public class Ordinateur extends AbstractComponent {
 		this.consommation_OUTPORT.envoyerConsommation(uri, consommation);
 	}
 
-	public void setEtatAppareil(EtatAppareil etat) throws Exception {
+	public void setModeOrdinateur(ModeOrdinateur etat) throws Exception {
 		this.etat = etat;
-	}
-
-	public void setMode(ModeOrdinateur mo) throws Exception {
-		this.mode = mo;
 	}
 	
 	/**
@@ -98,15 +105,17 @@ public class Ordinateur extends AbstractComponent {
 	 */
 	public void runningAndPrint() {
 		/** TODO Redefinir toString a la place de name */
-		this.logMessage("Mode actuel : " + mode.name());
+		this.logMessage("Mode actuel : " + etat.name());
 		
 		/** TODO code pour gerer ce qui se passe pendant un mode */
-		if(mode == ModeOrdinateur.Veille) {
+		if(etat == ModeOrdinateur.VEILLE) {
 			consommation = 0.0;
-		} else if(mode == ModeOrdinateur.PerformanceReduite) {
+		} else if(etat == ModeOrdinateur.PERFORMANCE_REDUITE) {
 			consommation = 2.0;
-		} else if(mode == ModeOrdinateur.PerformanceMaximale) {
+		} else if(etat == ModeOrdinateur.PERFORMANCE_MAXIMALE) {
 			consommation = 4.0;
+		} else if(etat == ModeOrdinateur.OFF) {
+			consommation = 0.0;
 		}
 	}
 	
@@ -139,6 +148,37 @@ public class Ordinateur extends AbstractComponent {
 				catch (Exception e) { throw new RuntimeException(e); }
 			}
 		}, 4000, 1000, TimeUnit.MILLISECONDS);
+		
+		execute();
+	}
+	
+	@Override
+	public void execute() throws Exception {
+		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 10L ;
+
+		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
+		simParams.put("componentRef", this) ;
+		this.asp.setSimulationRunParameters(simParams) ;
+
+		this.runTask(
+				new AbstractComponent.AbstractTask() {
+					@Override
+					public void run() {
+						try {
+							asp.doStandAloneSimulation(0.0, 20000.0) ;
+						} catch (Exception e) {
+							throw new RuntimeException(e) ;
+						}
+					}
+				}) ;
+		Thread.sleep(10L) ;
+		for (int i = 0 ; i < 1000000 ; i++) {
+			this.logMessage("Ordinateur " +
+				this.asp.getModelStateValue(OrdinateurModel.URI, "state") + " " +
+				this.asp.getModelStateValue(OrdinateurModel.URI, "intensity")) ;
+			this.etat = (ModeOrdinateur) this.asp.getModelStateValue(OrdinateurModel.URI, "state");
+			Thread.sleep(10L);
+		}
 	}
 	
 	@Override
@@ -179,5 +219,25 @@ public class Ordinateur extends AbstractComponent {
 			port_assembleur[0].unpublishPort();
 		} catch (Exception e) { throw new ComponentShutdownException(e); }
 		super.shutdownNow();
+	}
+	
+	// ******************* Simulation *************************
+
+	@Override
+	protected Architecture createLocalArchitecture(String architectureURI) throws Exception {
+		return OrdinateurCoupledModel.build();
+	}
+
+	@Override
+	public Object getEmbeddingComponentStateValue(String name) throws Exception {
+		return etat;
+	}
+	
+	protected void initialise() throws Exception {
+		Architecture localArchitecture = this.createLocalArchitecture(null) ;
+		this.asp = new OrdinateurSimulatorPlugin() ;
+		this.asp.setPluginURI(localArchitecture.getRootModelURI()) ;
+		this.asp.setSimulationArchitecture(localArchitecture) ;
+		this.installPlugin(this.asp) ;
 	}
 }

@@ -13,6 +13,7 @@ public enum TypeAppareil {
 	CONSO_INCONTROLABLE(3);
 	
 	private final int value;
+	
     private TypeAppareil(int value) {
         this.value = value;
     }
