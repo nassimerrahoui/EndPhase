@@ -1,4 +1,4 @@
-package simulator.models;
+package simulator.models.aspirateur;
 
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.math3.random.RandomDataGenerator;
@@ -10,16 +10,16 @@ import fr.sorbonne_u.devs_simulation.models.time.Duration;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
-import simulator.events.SetPerformanceMaximale;
-import simulator.events.SetPerformanceReduite;
-import simulator.events.SwitchOff;
-import simulator.events.SwitchOn;
+import simulator.events.aspirateur.SetPerformanceMaximale;
+import simulator.events.aspirateur.SetPerformanceReduite;
+import simulator.events.aspirateur.SwitchAspirateurOff;
+import simulator.events.aspirateur.SwitchAspirateurOn;
 
 import java.util.Vector;
 
 @ModelExternalEvents(exported = { 
-		SwitchOn.class, 
-		SwitchOff.class, 
+		SwitchAspirateurOn.class, 
+		SwitchAspirateurOff.class, 
 		SetPerformanceReduite.class, 
 		SetPerformanceMaximale.class })
 
@@ -48,7 +48,7 @@ public class AspirateurUserModel extends AtomicES_Model {
 	@Override
 	public void initialiseState(Time initialTime) {
 		this.initialDelay = 10.0;
-		this.interdayDelay = 100.0;
+		this.interdayDelay = 30.0;
 		this.meanTimeBetweenUsages = 1.0;
 		this.meanTimeAtPerformanceMaximale = 10.0;
 		this.meanTimeAtPerformanceReduite = 10.0;
@@ -62,7 +62,7 @@ public class AspirateurUserModel extends AtomicES_Model {
 		Duration d2 = new Duration(2.0 * this.meanTimeBetweenUsages * this.rg.nextBeta(1.75, 1.75),
 				this.getSimulatedTimeUnit());
 		Time t = this.getCurrentStateTime().add(d1).add(d2);
-		this.scheduleEvent(new SwitchOn(t));
+		this.scheduleEvent(new SwitchAspirateurOn(t));
 
 		this.nextTimeAdvance = this.timeAdvance();
 		this.timeOfNextEvent = this.getCurrentStateTime().add(this.nextTimeAdvance);
@@ -100,14 +100,14 @@ public class AspirateurUserModel extends AtomicES_Model {
 	public void userDefinedInternalTransition(Duration elapsedTime) {
 
 		Duration d;
-		if (this.nextEvent.equals(SwitchOn.class)) {
+		if (this.nextEvent.equals(SwitchAspirateurOn.class)) {
 
 			d = new Duration(2.0 * this.rg.nextBeta(1.75, 1.75), this.getSimulatedTimeUnit());
 			Time t = this.getCurrentStateTime().add(d);
 			this.scheduleEvent(new SetPerformanceMaximale(t));
 
 			d = new Duration(this.interdayDelay, this.getSimulatedTimeUnit());
-			this.scheduleEvent(new SwitchOn(this.getCurrentStateTime().add(d)));
+			this.scheduleEvent(new SwitchAspirateurOn(this.getCurrentStateTime().add(d)));
 			
 		} else if (this.nextEvent.equals(SetPerformanceMaximale.class)) {
 
@@ -116,7 +116,7 @@ public class AspirateurUserModel extends AtomicES_Model {
 		} else if (this.nextEvent.equals(SetPerformanceReduite.class)) {
 
 			d = new Duration(2.0 * this.meanTimeAtPerformanceReduite * this.rg.nextBeta(1.75, 1.75), this.getSimulatedTimeUnit());
-			this.scheduleEvent(new SwitchOff(this.getCurrentStateTime().add(d)));
+			this.scheduleEvent(new SwitchAspirateurOff(this.getCurrentStateTime().add(d)));
 		}
 	}
 }

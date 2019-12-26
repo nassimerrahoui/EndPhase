@@ -1,4 +1,4 @@
-package simulator.models;
+package simulator.models.aspirateur;
 
 import java.util.Map;
 import java.util.Set;
@@ -22,10 +22,10 @@ import fr.sorbonne_u.devs_simulation.models.events.EventSource;
 import fr.sorbonne_u.devs_simulation.models.events.ReexportedEvent;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import fr.sorbonne_u.devs_simulation.utils.StandardCoupledModelReport;
-import simulator.events.SetPerformanceMaximale;
-import simulator.events.SetPerformanceReduite;
-import simulator.events.SwitchOff;
-import simulator.events.SwitchOn;
+import simulator.events.aspirateur.SetPerformanceMaximale;
+import simulator.events.aspirateur.SetPerformanceReduite;
+import simulator.events.aspirateur.SwitchAspirateurOff;
+import simulator.events.aspirateur.SwitchAspirateurOn;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -70,11 +70,11 @@ public class AspirateurCoupledModel extends CoupledModel {
 		submodels.add(AspirateurUserModel.URI);
 
 		Map<EventSource, EventSink[]> connections = new HashMap<EventSource, EventSink[]>();
-		EventSource from1 = new EventSource(AspirateurUserModel.URI, SwitchOn.class);
-		EventSink[] to1 = new EventSink[] { new EventSink(AspirateurModel.URI, SwitchOn.class) };
+		EventSource from1 = new EventSource(AspirateurUserModel.URI, SwitchAspirateurOn.class);
+		EventSink[] to1 = new EventSink[] { new EventSink(AspirateurModel.URI, SwitchAspirateurOn.class) };
 		connections.put(from1, to1);
-		EventSource from2 = new EventSource(AspirateurUserModel.URI, SwitchOff.class);
-		EventSink[] to2 = new EventSink[] { new EventSink(AspirateurModel.URI, SwitchOff.class) };
+		EventSource from2 = new EventSource(AspirateurUserModel.URI, SwitchAspirateurOff.class);
+		EventSink[] to2 = new EventSink[] { new EventSink(AspirateurModel.URI, SwitchAspirateurOff.class) };
 		connections.put(from2, to2);
 		EventSource from3 = new EventSource(AspirateurUserModel.URI, SetPerformanceReduite.class);
 		EventSink[] to3 = new EventSink[] { new EventSink(AspirateurModel.URI, SetPerformanceReduite.class) };

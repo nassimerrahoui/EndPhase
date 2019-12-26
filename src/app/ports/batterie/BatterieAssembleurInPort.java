@@ -1,7 +1,7 @@
 package app.ports.batterie;
 
 import app.components.Batterie;
-import app.interfaces.generateur.IComposantDynamique;
+import app.interfaces.assembleur.IComposantDynamique;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;

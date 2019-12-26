@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit;
 import app.interfaces.appareil.IAjoutAppareil;
 import app.interfaces.appareil.IConsommation;
 import app.interfaces.appareil.IFrigo;
-import app.interfaces.generateur.IComposantDynamique;
+import app.interfaces.assembleur.IComposantDynamique;
 import app.ports.frigo.FrigoAssembleurInPort;
 import app.ports.frigo.FrigoCompteurOutPort;
 import app.ports.frigo.FrigoControleurOutPort;
@@ -16,13 +16,18 @@ import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
+import fr.sorbonne_u.components.cyphy.AbstractCyPhyComponent;
+import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentStateAccessI;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
+import fr.sorbonne_u.devs_simulation.architectures.Architecture;
 
 @OfferedInterfaces(offered = { IFrigo.class, IComposantDynamique.class })
 @RequiredInterfaces(required = { IAjoutAppareil.class, IConsommation.class })
-public class Frigo extends AbstractComponent {
+public class Frigo	
+	extends AbstractCyPhyComponent 
+	implements EmbeddingComponentStateAccessI {
 	
 	/** port sortant permettant a l'appareil de s'inscrire sur la liste des appareil du controleur */
 	protected FrigoControleurOutPort controleur_OUTPORT;
@@ -189,5 +194,28 @@ public class Frigo extends AbstractComponent {
 			port_assembleur[0].unpublishPort();
 		} catch (Exception e) { throw new ComponentShutdownException(e); }
 		super.shutdownNow();
+	}
+	
+	// ******************* Simulation *************************
+
+	@Override
+	protected Architecture createLocalArchitecture(String architectureURI) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+
+	@Override
+	public Object getEmbeddingComponentStateValue(String name) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	protected void initialise() throws Exception {
+//		Architecture localArchitecture = this.createLocalArchitecture(null) ;
+//		this.asp = new AspirateurSimulatorPlugin() ;
+//		this.asp.setPluginURI(localArchitecture.getRootModelURI()) ;
+//		this.asp.setSimulationArchitecture(localArchitecture) ;
+//		this.installPlugin(this.asp) ;
 	}
 }

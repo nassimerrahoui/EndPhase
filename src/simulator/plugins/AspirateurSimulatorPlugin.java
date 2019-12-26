@@ -2,7 +2,7 @@ package simulator.plugins;
 
 import fr.sorbonne_u.components.cyphy.plugins.devs.AtomicSimulatorPlugin;
 import fr.sorbonne_u.devs_simulation.interfaces.ModelDescriptionI;
-import simulator.models.AspirateurModel;
+import simulator.models.aspirateur.AspirateurModel;
 
 public class AspirateurSimulatorPlugin extends AtomicSimulatorPlugin {
 	private static final long serialVersionUID = 1L;
@@ -17,8 +17,8 @@ public class AspirateurSimulatorPlugin extends AtomicSimulatorPlugin {
 		if (name.equals("state")) {
 			return ((AspirateurModel) m).getState();
 		} else {
-			assert name.equals("intensity");
-			return ((AspirateurModel) m).getIntensity();
+			assert name.equals("consommation");
+			return ((AspirateurModel) m).getConsommation();
 		}
 	}
 }

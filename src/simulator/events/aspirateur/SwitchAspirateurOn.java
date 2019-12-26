@@ -1,22 +1,22 @@
-package simulator.events;
+package simulator.events.aspirateur;
 
 import app.util.ModeAspirateur;
 import fr.sorbonne_u.devs_simulation.models.AtomicModel;
 import fr.sorbonne_u.devs_simulation.models.events.EventI;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
-import simulator.models.AspirateurModel;
+import simulator.models.aspirateur.AspirateurModel;
 
-public class SwitchOn extends AbstractAspirateurEvent {
+public class SwitchAspirateurOn extends AbstractAspirateurEvent {
 
 	private static final long serialVersionUID = 1L;
 
-	public SwitchOn(Time timeOfOccurrence) {
+	public SwitchAspirateurOn(Time timeOfOccurrence) {
 		super(timeOfOccurrence, null);
 	}
 	
 	@Override
 	public String eventAsString() {
-		return "Aspirateur::SwitchOn";
+		return "Aspirateur::SwitchAspirateurOn";
 	}
 
 	@Override

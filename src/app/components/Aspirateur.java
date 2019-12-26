@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 import app.interfaces.appareil.IAjoutAppareil;
 import app.interfaces.appareil.IConsommation;
+import app.interfaces.assembleur.IComposantDynamique;
 import app.interfaces.appareil.IAspirateur;
-import app.interfaces.generateur.IComposantDynamique;
 import app.ports.aspirateur.AspirateurAssembleurInPort;
 import app.ports.aspirateur.AspirateurCompteurOutPort;
 import app.ports.aspirateur.AspirateurControleurOutPort;
@@ -24,8 +24,8 @@ import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
 import fr.sorbonne_u.devs_simulation.architectures.Architecture;
 import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
-import simulator.models.AspirateurCoupledModel;
-import simulator.models.AspirateurModel;
+import simulator.models.aspirateur.AspirateurCoupledModel;
+import simulator.models.aspirateur.AspirateurModel;
 import simulator.plugins.AspirateurSimulatorPlugin;
 
 @OfferedInterfaces(offered = { IAspirateur.class, IComposantDynamique.class })
@@ -106,17 +106,6 @@ public class Aspirateur
 	public void runningAndPrint() {
 		/** TODO Redefinir toString a la place de name */
 		this.logMessage("Mode actuel : " + etat.name());
-		
-		/** TODO code pour gerer ce qui se passe pendant un mode */
-		if(etat == ModeAspirateur.VEILLE) {
-			consommation = 0.0;
-		} else if(etat == ModeAspirateur.PERFORMANCE_REDUITE) {
-			consommation = 2.0;
-		} else if(etat == ModeAspirateur.PERFORMANCE_MAXIMALE) {
-			consommation = 4.0;
-		} else if(etat == ModeAspirateur.OFF) {
-			consommation = 0.0;
-		}
 	}
 	
 	// ************* Cycle de vie du composant ************* 
@@ -147,7 +136,7 @@ public class Aspirateur
 				try { ((Aspirateur) this.getTaskOwner()).envoyerConsommation(URI.ASPIRATEUR_URI.getURI(), consommation); } 
 				catch (Exception e) { throw new RuntimeException(e); }
 			}
-		}, 4000, 1000, TimeUnit.MILLISECONDS);
+		}, 4000, 10, TimeUnit.MILLISECONDS);
 		
 		execute();
 	}
@@ -165,7 +154,7 @@ public class Aspirateur
 					@Override
 					public void run() {
 						try {
-							asp.doStandAloneSimulation(0.0, 20000.0) ;
+							asp.doStandAloneSimulation(0.0, 500.0) ;
 						} catch (Exception e) {
 							throw new RuntimeException(e) ;
 						}
@@ -175,9 +164,10 @@ public class Aspirateur
 		for (int i = 0 ; i < 1000000 ; i++) {
 			this.logMessage("Aspirateur " +
 				this.asp.getModelStateValue(AspirateurModel.URI, "state") + " " +
-				this.asp.getModelStateValue(AspirateurModel.URI, "intensity")) ;
+				this.asp.getModelStateValue(AspirateurModel.URI, "consommation")) ;
 			this.etat = (ModeAspirateur) this.asp.getModelStateValue(AspirateurModel.URI, "state");
-			this.consommation =(Double) this.asp.getModelStateValue(AspirateurModel.URI, "intensity");
+			this.consommation = (Double) this.asp.getModelStateValue(AspirateurModel.URI, "consommation");
+			this.logMessage("CONSO : " + consommation);
 			Thread.sleep(10L);
 		}
 	}
@@ -233,7 +223,7 @@ public class Aspirateur
 	public Object getEmbeddingComponentStateValue(String name) throws Exception {
 		if(name.equals("state")) {
 			return etat;
-		} else if(name.equals("intensity")) {
+		} else if(name.equals("consommation")) {
 			return consommation;
 		}
 		return null;

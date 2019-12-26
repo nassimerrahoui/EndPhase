@@ -1,9 +1,9 @@
-package simulator.events;
+package simulator.events.aspirateur;
 
 import fr.sorbonne_u.devs_simulation.models.AtomicModel;
 import fr.sorbonne_u.devs_simulation.models.events.EventI;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
-import simulator.models.AspirateurModel;
+import simulator.models.aspirateur.AspirateurModel;
 import app.util.ModeAspirateur;
 
 public class SetPerformanceMaximale extends AbstractAspirateurEvent {
@@ -21,7 +21,7 @@ public class SetPerformanceMaximale extends AbstractAspirateurEvent {
 
 	@Override
 	public boolean hasPriorityOver(EventI e) {
-		if (e instanceof SwitchOn || e instanceof SetPerformanceReduite) {
+		if (e instanceof SwitchAspirateurOn || e instanceof SetPerformanceReduite) {
 			return false;
 		} else {
 			return true;

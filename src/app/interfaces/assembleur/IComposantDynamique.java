@@ -1,4 +1,4 @@
-package app.interfaces.generateur;
+package app.interfaces.assembleur;
 
 import fr.sorbonne_u.components.interfaces.OfferedI;
 

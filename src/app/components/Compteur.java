@@ -1,9 +1,10 @@
 package app.components;
 
 import java.util.concurrent.ConcurrentHashMap;
+
+import app.interfaces.assembleur.IComposantDynamique;
 import app.interfaces.compteur.ICompteur;
 import app.interfaces.compteur.ICompteurControleur;
-import app.interfaces.generateur.IComposantDynamique;
 import app.ports.compteur.CompteurAssembleurInPort;
 import app.ports.compteur.CompteurInPort;
 import app.ports.compteur.ConsommationProductionInPort;

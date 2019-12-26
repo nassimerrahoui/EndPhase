@@ -1,6 +1,6 @@
 package app.ports.assembleur;
 
-import app.interfaces.generateur.IAssembleur;
+import app.interfaces.assembleur.IAssembleur;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 

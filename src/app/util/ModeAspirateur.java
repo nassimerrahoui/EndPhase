@@ -9,7 +9,6 @@ package app.util;
 public enum ModeAspirateur {
 	
 	OFF,
-	VEILLE,
 	PERFORMANCE_REDUITE,
 	PERFORMANCE_MAXIMALE
 }

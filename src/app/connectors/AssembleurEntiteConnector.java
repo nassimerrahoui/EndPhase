@@ -1,7 +1,7 @@
 package app.connectors;
 
-import app.interfaces.generateur.IAssembleur;
-import app.interfaces.generateur.IComposantDynamique;
+import app.interfaces.assembleur.IAssembleur;
+import app.interfaces.assembleur.IComposantDynamique;
 import fr.sorbonne_u.components.connectors.AbstractConnector;
 
 public class AssembleurEntiteConnector extends AbstractConnector implements IAssembleur {
