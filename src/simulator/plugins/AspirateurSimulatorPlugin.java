@@ -2,9 +2,9 @@ package simulator.plugins;
 
 import fr.sorbonne_u.components.cyphy.plugins.devs.AtomicSimulatorPlugin;
 import fr.sorbonne_u.devs_simulation.interfaces.ModelDescriptionI;
-import simulator.models.OrdinateurModel;
+import simulator.models.AspirateurModel;
 
-public class OrdinateurSimulatorPlugin extends AtomicSimulatorPlugin {
+public class AspirateurSimulatorPlugin extends AtomicSimulatorPlugin {
 	private static final long serialVersionUID = 1L;
 
 	@Override
@@ -12,13 +12,13 @@ public class OrdinateurSimulatorPlugin extends AtomicSimulatorPlugin {
 
 		ModelDescriptionI m = this.simulator.getDescendentModel(modelURI);
 
-		assert m instanceof OrdinateurModel;
+		assert m instanceof AspirateurModel;
 
 		if (name.equals("state")) {
-			return ((OrdinateurModel) m).getState();
+			return ((AspirateurModel) m).getState();
 		} else {
 			assert name.equals("intensity");
-			return ((OrdinateurModel) m).getIntensity();
+			return ((AspirateurModel) m).getIntensity();
 		}
 	}
 }

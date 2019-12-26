@@ -1,12 +1,12 @@
 package app.util;
 
 /**
- * Un appareil ordinateur peut passer dans differents modes
+ * Un appareil aspirateur peut passer dans differents modes
  * afin de controler sa consommation electrique suivant son utilisation
  * @author Willy Nassim
  *
  */
-public enum ModeOrdinateur {
+public enum ModeAspirateur {
 	
 	OFF,
 	VEILLE,

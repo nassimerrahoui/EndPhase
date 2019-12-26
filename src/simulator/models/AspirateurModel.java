@@ -3,7 +3,7 @@ package simulator.models;
 import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
-import app.util.ModeOrdinateur;
+import app.util.ModeAspirateur;
 import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentStateAccessI;
 import fr.sorbonne_u.devs_simulation.hioa.annotations.ExportedVariable;
 import fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOAwithEquations;
@@ -19,31 +19,35 @@ import fr.sorbonne_u.devs_simulation.utils.AbstractSimulationReport;
 import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
 import fr.sorbonne_u.utils.PlotterDescription;
 import fr.sorbonne_u.utils.XYPlotter;
-import simulator.events.AbstractOrdinateurEvent;
+import simulator.events.AbstractAspirateurEvent;
 import simulator.events.SetPerformanceMaximale;
 import simulator.events.SetPerformanceReduite;
 import simulator.events.SwitchOff;
 import simulator.events.SwitchOn;
 
-@ModelExternalEvents(imported = { SwitchOn.class, SwitchOff.class, SetPerformanceReduite.class,
+@ModelExternalEvents(imported = { 
+		SwitchOn.class, 
+		SwitchOff.class, 
+		SetPerformanceReduite.class,
 		SetPerformanceMaximale.class })
-public class OrdinateurModel extends AtomicHIOAwithEquations {
 
-	public static class OrdinateurReport extends AbstractSimulationReport {
+public class AspirateurModel extends AtomicHIOAwithEquations {
+
+	public static class AspirateurReport extends AbstractSimulationReport {
 		private static final long serialVersionUID = 1L;
 
-		public OrdinateurReport(String modelURI) {
+		public AspirateurReport(String modelURI) {
 			super(modelURI);
 		}
 
 		@Override
 		public String toString() {
-			return "OrdinateurReport(" + this.getModelURI() + ")";
+			return "AspirateurReport(" + this.getModelURI() + ")";
 		}
 	}
 
 	private static final long serialVersionUID = 1L;
-	public static final String URI = "OrdinateurModel";
+	public static final String URI = "AspirateurModel";
 
 	private static final String SERIES = "intensity";
 
@@ -54,15 +58,15 @@ public class OrdinateurModel extends AtomicHIOAwithEquations {
 	/** current intensity in Amperes; intensity is power/tension. */
 	@ExportedVariable(type = Double.class)
 	protected final Value<Double> currentIntensity = new Value<Double>(this, 0.0, 0);
-	protected ModeOrdinateur currentState;
+	protected ModeAspirateur currentState;
 
 	protected XYPlotter intensityPlotter;
 
 	protected EmbeddingComponentStateAccessI componentRef;
 
-	public OrdinateurModel(String uri, TimeUnit simulatedTimeUnit, SimulatorI simulationEngine) throws Exception {
+	public AspirateurModel(String uri, TimeUnit simulatedTimeUnit, SimulatorI simulationEngine) throws Exception {
 		super(uri, simulatedTimeUnit, simulationEngine);
-		PlotterDescription pd = new PlotterDescription("Intensite Ordinateur", "Temps (sec)", "Intensite (Amp)", 100, 0,
+		PlotterDescription pd = new PlotterDescription("Intensite Aspirateur", "Temps (sec)", "Intensite (Amp)", 100, 0,
 				600, 400);
 		this.intensityPlotter = new XYPlotter(pd);
 		this.intensityPlotter.createSeries(SERIES);
@@ -77,7 +81,7 @@ public class OrdinateurModel extends AtomicHIOAwithEquations {
 
 	@Override
 	public void initialiseState(Time initialTime) {
-		this.currentState = ModeOrdinateur.OFF;
+		this.currentState = ModeAspirateur.OFF;
 		this.intensityPlotter.initialise();
 		this.intensityPlotter.showPlotter();
 
@@ -118,6 +122,7 @@ public class OrdinateurModel extends AtomicHIOAwithEquations {
 		if (this.componentRef != null) {
 			try {
 				this.logMessage("component state = " + componentRef.getEmbeddingComponentStateValue("state"));
+				this.logMessage("component intensity = " + componentRef.getEmbeddingComponentStateValue("intensity"));
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
@@ -127,35 +132,35 @@ public class OrdinateurModel extends AtomicHIOAwithEquations {
 	@Override
 	public void userDefinedExternalTransition(Duration elapsedTime) {
 		if (this.hasDebugLevel(2)) {
-			this.logMessage("OrdinateurModel::userDefinedExternalTransition 1");
+			this.logMessage("AspirateurModel::userDefinedExternalTransition 1");
 		}
 
 		Vector<EventI> currentEvents = this.getStoredEventAndReset();
 		assert currentEvents != null && currentEvents.size() == 1;
 
 		Event ce = (Event) currentEvents.get(0);
-		assert ce instanceof AbstractOrdinateurEvent;
+		assert ce instanceof AbstractAspirateurEvent;
 		if (this.hasDebugLevel(2)) {
-			this.logMessage("OrdinateurModel::userDefinedExternalTransition 2 " + ce.getClass().getCanonicalName());
+			this.logMessage("AspirateurModel::userDefinedExternalTransition 2 " + ce.getClass().getCanonicalName());
 		}
 
 		this.intensityPlotter.addData(SERIES, this.getCurrentStateTime().getSimulatedTime(), this.getIntensity());
 
 		if (this.hasDebugLevel(2)) {
-			this.logMessage("OrdinateurModel::userDefinedExternalTransition 3 " + this.getState());
+			this.logMessage("AspirateurModel::userDefinedExternalTransition 3 " + this.getState());
 		}
 
 		ce.executeOn(this);
 
 		if (this.hasDebugLevel(1)) {
-			this.logMessage("OrdinateurModel::userDefinedExternalTransition 4 " + this.getState());
+			this.logMessage("AspirateurModel::userDefinedExternalTransition 4 " + this.getState());
 		}
 
 		this.intensityPlotter.addData(SERIES, this.getCurrentStateTime().getSimulatedTime(), this.getIntensity());
 
 		super.userDefinedExternalTransition(elapsedTime);
 		if (this.hasDebugLevel(2)) {
-			this.logMessage("OrdinateurModel::userDefinedExternalTransition 5");
+			this.logMessage("AspirateurModel::userDefinedExternalTransition 5");
 		}
 	}
 
@@ -170,10 +175,10 @@ public class OrdinateurModel extends AtomicHIOAwithEquations {
 
 	@Override
 	public SimulationReportI getFinalReport() throws Exception {
-		return new OrdinateurReport(this.getURI());
+		return new AspirateurReport(this.getURI());
 	}
 
-	public void setState(ModeOrdinateur s) {
+	public void setState(ModeAspirateur s) {
 		this.currentState = s;
 		switch (s) {
 		case OFF:
@@ -190,7 +195,7 @@ public class OrdinateurModel extends AtomicHIOAwithEquations {
 		}
 	}
 
-	public ModeOrdinateur getState() {
+	public ModeAspirateur getState() {
 		return this.currentState;
 	}
 

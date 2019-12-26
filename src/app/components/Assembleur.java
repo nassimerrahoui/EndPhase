@@ -7,13 +7,13 @@ import app.connectors.ControleurBatterieConnector;
 import app.connectors.ControleurCompteurConnector;
 import app.connectors.ControleurFrigoConnector;
 import app.connectors.ControleurLaveLingeConnector;
-import app.connectors.ControleurOrdinateurConnector;
+import app.connectors.ControleurAspirateurConnector;
 import app.connectors.ControleurPanneauSolaireConnector;
 import app.connectors.UniteCompteurConnector;
 import app.connectors.UniteControleurConnector;
 import app.interfaces.appareil.IFrigo;
 import app.interfaces.appareil.ILaveLinge;
-import app.interfaces.appareil.IOrdinateur;
+import app.interfaces.appareil.IAspirateur;
 import app.interfaces.compteur.ICompteur;
 import app.interfaces.compteur.ICompteurControleur;
 import app.interfaces.controleur.IControleur;
@@ -104,7 +104,7 @@ public class Assembleur extends AbstractComponent {
 						URI.CONTROLEUR_URI.getURI(),
 						URI.CONTROLEUR_OP_FRIGO_URI.getURI(),
 						URI.CONTROLEUR_OP_LAVELINGE_URI.getURI(),
-						URI.CONTROLEUR_OP_ORDINATEUR_URI.getURI(),
+						URI.CONTROLEUR_OP_ASPIRATEUR_URI.getURI(),
 						URI.CONTROLEUR_OP_PANNEAUSOLAIRE_URI.getURI(),
 						URI.CONTROLEUR_OP_BATTERIE_URI.getURI(),
 						URI.CONTROLEUR_OP_COMPTEUR_URI.getURI(),
@@ -150,11 +150,11 @@ public class Assembleur extends AbstractComponent {
 				LISTE_JVM_URI[i] + AbstractCVM.DCC_INBOUNDPORT_URI_SUFFIX,
 				DynamicComponentCreationConnector.class.getCanonicalName());
 		
-		LISTE_REFLECTION_INPORT[3] = DynamicOutPort.createComponent(Ordinateur.class.getCanonicalName(),
+		LISTE_REFLECTION_INPORT[3] = DynamicOutPort.createComponent(Aspirateur.class.getCanonicalName(),
 				new Object[] { 
-						URI.ORDINATEUR_URI.getURI(), 
-						URI.ORDINATEUR_COMPTEUR_OP_URI.getURI(),
-						URI.ORDINATEUR_CONTROLEUR_OP_URI.getURI(),
+						URI.ASPIRATEUR_URI.getURI(), 
+						URI.ASPIRATEUR_COMPTEUR_OP_URI.getURI(),
+						URI.ASPIRATEUR_CONTROLEUR_OP_URI.getURI(),
 						Integer.valueOf(2),
 						Integer.valueOf(2),
 						TypeAppareil.CONSO_INCONTROLABLE});
@@ -226,7 +226,7 @@ public class Assembleur extends AbstractComponent {
 		rop.doDisconnection();
 		
 		rop.doConnection(LISTE_REFLECTION_INPORT[3], ReflectionConnector.class.getCanonicalName());
-		entite_uri_inport[2] = rop.findInboundPortURIsFromInterface(IOrdinateur.class)[0];
+		entite_uri_inport[2] = rop.findInboundPortURIsFromInterface(IAspirateur.class)[0];
 		launch_uri_inport[2] = rop.findInboundPortURIsFromInterface(IComposantDynamique.class)[0];
 		rop.doDisconnection();
 		
@@ -265,8 +265,8 @@ public class Assembleur extends AbstractComponent {
 				ControleurLaveLingeConnector.class.getCanonicalName());
 		
 		j++;
-		rop.doPortConnection(URI.CONTROLEUR_OP_ORDINATEUR_URI.getURI(), entite_uri_inport[j], 
-				ControleurOrdinateurConnector.class.getCanonicalName());
+		rop.doPortConnection(URI.CONTROLEUR_OP_ASPIRATEUR_URI.getURI(), entite_uri_inport[j], 
+				ControleurAspirateurConnector.class.getCanonicalName());
 
 		j++;
 		rop.doPortConnection(URI.CONTROLEUR_OP_PANNEAUSOLAIRE_URI.getURI(), entite_uri_inport[j],
@@ -308,14 +308,14 @@ public class Assembleur extends AbstractComponent {
 				AppareilCompteurConnector.class.getCanonicalName());
 		this.doPortDisconnection(rop.getPortURI());
 		
-		// ******************* Ordinateur vers compteur *********************
+		// ******************* Aspirateur vers compteur *********************
 
 		rop.doConnection(LISTE_REFLECTION_INPORT[3], ReflectionConnector.class.getCanonicalName());
 
 		rop.toggleTracing();
 		rop.toggleLogging();
 
-		rop.doPortConnection(URI.ORDINATEUR_COMPTEUR_OP_URI.getURI(), entite_uri_inport[0], 
+		rop.doPortConnection(URI.ASPIRATEUR_COMPTEUR_OP_URI.getURI(), entite_uri_inport[0], 
 				AppareilCompteurConnector.class.getCanonicalName());
 		this.doPortDisconnection(rop.getPortURI());
 		
@@ -363,11 +363,11 @@ public class Assembleur extends AbstractComponent {
 				AppareilControleurConnector.class.getCanonicalName());
 		this.doPortDisconnection(rop.getPortURI());
 		
-		// ************************** Ordinateur vers controleur **********************************
+		// ************************** Aspirateur vers controleur **********************************
 
 		rop.doConnection(LISTE_REFLECTION_INPORT[3], ReflectionConnector.class.getCanonicalName());
 
-		rop.doPortConnection(URI.ORDINATEUR_CONTROLEUR_OP_URI.getURI(), entite_uri_inport[0], 
+		rop.doPortConnection(URI.ASPIRATEUR_CONTROLEUR_OP_URI.getURI(), entite_uri_inport[0], 
 				AppareilControleurConnector.class.getCanonicalName());
 		this.doPortDisconnection(rop.getPortURI());
 		
@@ -426,7 +426,7 @@ public class Assembleur extends AbstractComponent {
 
 		this.doPortConnection(AssembleurOutPort.getPortURI(), launch_uri_inport[2],
 				AssembleurEntiteConnector.class.getCanonicalName());
-		AssembleurOutPort.ajoutLogement(URI.ORDINATEUR_URI.getURI());
+		AssembleurOutPort.ajoutLogement(URI.ASPIRATEUR_URI.getURI());
 		AssembleurOutPort.dynamicExecute();
 		this.doPortDisconnection(AssembleurOutPort.getPortURI());
 

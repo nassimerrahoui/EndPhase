@@ -4,13 +4,13 @@ import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 import app.interfaces.appareil.IAjoutAppareil;
 import app.interfaces.appareil.IConsommation;
-import app.interfaces.appareil.IOrdinateur;
+import app.interfaces.appareil.IAspirateur;
 import app.interfaces.generateur.IComposantDynamique;
-import app.ports.ordinateur.OrdinateurAssembleurInPort;
-import app.ports.ordinateur.OrdinateurCompteurOutPort;
-import app.ports.ordinateur.OrdinateurControleurOutPort;
-import app.ports.ordinateur.OrdinateurInPort;
-import app.util.ModeOrdinateur;
+import app.ports.aspirateur.AspirateurAssembleurInPort;
+import app.ports.aspirateur.AspirateurCompteurOutPort;
+import app.ports.aspirateur.AspirateurControleurOutPort;
+import app.ports.aspirateur.AspirateurInPort;
+import app.util.ModeAspirateur;
 import app.util.TypeAppareil;
 import app.util.URI;
 import fr.sorbonne_u.components.AbstractComponent;
@@ -24,44 +24,44 @@ import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
 import fr.sorbonne_u.devs_simulation.architectures.Architecture;
 import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
-import simulator.models.OrdinateurCoupledModel;
-import simulator.models.OrdinateurModel;
-import simulator.plugins.OrdinateurSimulatorPlugin;
+import simulator.models.AspirateurCoupledModel;
+import simulator.models.AspirateurModel;
+import simulator.plugins.AspirateurSimulatorPlugin;
 
-@OfferedInterfaces(offered = { IOrdinateur.class, IComposantDynamique.class })
+@OfferedInterfaces(offered = { IAspirateur.class, IComposantDynamique.class })
 @RequiredInterfaces(required = { IAjoutAppareil.class, IConsommation.class })
-public class Ordinateur 
+public class Aspirateur 
 	extends AbstractCyPhyComponent 
 	implements EmbeddingComponentStateAccessI {
 
 	/** port sortant permettant a l'appareil de s'inscrire sur la liste des appareil du controleur */
-	protected OrdinateurControleurOutPort controleur_OUTPORT;
+	protected AspirateurControleurOutPort controleur_OUTPORT;
 	
-	/** port sortant permettant au compteur de recupere la consommation de l'ordinateur */
-	protected OrdinateurCompteurOutPort consommation_OUTPORT;
+	/** port sortant permettant au compteur de recupere la consommation de l'aspirateur */
+	protected AspirateurCompteurOutPort consommation_OUTPORT;
 
 	protected TypeAppareil type;
-	protected ModeOrdinateur etat;
+	protected ModeAspirateur etat;
 	protected Double consommation;
 	
-	protected OrdinateurSimulatorPlugin asp;
+	protected AspirateurSimulatorPlugin asp;
 
-	protected Ordinateur(
-			String ORDINATEUR_URI, 
-			String ORDINATEUR_COMPTEUR_OP_URI,
-			String ORDINATEUR_CONTROLEUR_OP_URI,
+	protected Aspirateur(
+			String ASPIRATEUR_URI, 
+			String ASPIRATEUR_COMPTEUR_OP_URI,
+			String ASPIRATEUR_CONTROLEUR_OP_URI,
 			int nbThreads, int nbSchedulableThreads, 
 			TypeAppareil type) throws Exception {
-		super(ORDINATEUR_URI, nbThreads, nbSchedulableThreads);
+		super(ASPIRATEUR_URI, nbThreads, nbSchedulableThreads);
 
-		controleur_OUTPORT = new OrdinateurControleurOutPort(ORDINATEUR_CONTROLEUR_OP_URI,this);
-		consommation_OUTPORT = new OrdinateurCompteurOutPort(ORDINATEUR_COMPTEUR_OP_URI,this);
+		controleur_OUTPORT = new AspirateurControleurOutPort(ASPIRATEUR_CONTROLEUR_OP_URI,this);
+		consommation_OUTPORT = new AspirateurCompteurOutPort(ASPIRATEUR_COMPTEUR_OP_URI,this);
 		
-		// port entrant permettant au controleur d'effectuer des actions sur l'ordinateur
-		OrdinateurInPort action_INPORT = new OrdinateurInPort(this);
+		// port entrant permettant au controleur d'effectuer des actions sur l'aspirateur
+		AspirateurInPort action_INPORT = new AspirateurInPort(this);
 		
 		// port entrant permettant a l'assembleur d'effectuer d'integrer l'entite au logement
-		OrdinateurAssembleurInPort launch_INPORT = new OrdinateurAssembleurInPort(this);
+		AspirateurAssembleurInPort launch_INPORT = new AspirateurAssembleurInPort(this);
 		
 		controleur_OUTPORT.publishPort();
 		consommation_OUTPORT.publishPort();
@@ -74,14 +74,14 @@ public class Ordinateur
 			this.executionLog.setDirectory(System.getProperty("user.home")) ;
 		}
 		
-		this.createNewExecutorService(URI.POOL_ACTION_ORDINATEUR_URI.getURI(), 5, false) ;
+		this.createNewExecutorService(URI.POOL_ACTION_ASPIRATEUR_URI.getURI(), 5, false) ;
 		
 		// affichage
-		this.tracer.setTitle("Ordinateur");
+		this.tracer.setTitle("Aspirateur");
 		this.tracer.setRelativePosition(2, 1);
 		
 		// attributs
-		this.etat = ModeOrdinateur.OFF;
+		this.etat = ModeAspirateur.OFF;
 		this.consommation = 0.0;
 		this.type = type;
 		
@@ -96,7 +96,7 @@ public class Ordinateur
 		this.consommation_OUTPORT.envoyerConsommation(uri, consommation);
 	}
 
-	public void setModeOrdinateur(ModeOrdinateur etat) throws Exception {
+	public void setModeAspirateur(ModeAspirateur etat) throws Exception {
 		this.etat = etat;
 	}
 	
@@ -108,13 +108,13 @@ public class Ordinateur
 		this.logMessage("Mode actuel : " + etat.name());
 		
 		/** TODO code pour gerer ce qui se passe pendant un mode */
-		if(etat == ModeOrdinateur.VEILLE) {
+		if(etat == ModeAspirateur.VEILLE) {
 			consommation = 0.0;
-		} else if(etat == ModeOrdinateur.PERFORMANCE_REDUITE) {
+		} else if(etat == ModeAspirateur.PERFORMANCE_REDUITE) {
 			consommation = 2.0;
-		} else if(etat == ModeOrdinateur.PERFORMANCE_MAXIMALE) {
+		} else if(etat == ModeAspirateur.PERFORMANCE_MAXIMALE) {
 			consommation = 4.0;
-		} else if(etat == ModeOrdinateur.OFF) {
+		} else if(etat == ModeAspirateur.OFF) {
 			consommation = 0.0;
 		}
 	}
@@ -124,19 +124,19 @@ public class Ordinateur
 	@Override
 	public void start() throws ComponentStartException {
 		super.start();
-		this.logMessage("Demarrage de l'ordinateur...");
+		this.logMessage("Demarrage de l'aspirateur...");
 	}
 	
 	public void dynamicExecute() throws Exception {
 
-		this.logMessage("Phase d'execution de l'ordinateur.");
+		this.logMessage("Phase d'execution de l'aspirateur.");
 		
 		this.logMessage("Execution en cours...");
 		
 		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
 			@Override
 			public void run() {
-				try { ((Ordinateur) this.getTaskOwner()).runningAndPrint(); } 
+				try { ((Aspirateur) this.getTaskOwner()).runningAndPrint(); } 
 				catch (Exception e) { throw new RuntimeException(e); }
 			}
 		}, 2000, 1000, TimeUnit.MILLISECONDS);
@@ -144,7 +144,7 @@ public class Ordinateur
 		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
 			@Override
 			public void run() {
-				try { ((Ordinateur) this.getTaskOwner()).envoyerConsommation(URI.ORDINATEUR_URI.getURI(), consommation); } 
+				try { ((Aspirateur) this.getTaskOwner()).envoyerConsommation(URI.ASPIRATEUR_URI.getURI(), consommation); } 
 				catch (Exception e) { throw new RuntimeException(e); }
 			}
 		}, 4000, 1000, TimeUnit.MILLISECONDS);
@@ -173,17 +173,18 @@ public class Ordinateur
 				}) ;
 		Thread.sleep(10L) ;
 		for (int i = 0 ; i < 1000000 ; i++) {
-			this.logMessage("Ordinateur " +
-				this.asp.getModelStateValue(OrdinateurModel.URI, "state") + " " +
-				this.asp.getModelStateValue(OrdinateurModel.URI, "intensity")) ;
-			this.etat = (ModeOrdinateur) this.asp.getModelStateValue(OrdinateurModel.URI, "state");
+			this.logMessage("Aspirateur " +
+				this.asp.getModelStateValue(AspirateurModel.URI, "state") + " " +
+				this.asp.getModelStateValue(AspirateurModel.URI, "intensity")) ;
+			this.etat = (ModeAspirateur) this.asp.getModelStateValue(AspirateurModel.URI, "state");
+			this.consommation =(Double) this.asp.getModelStateValue(AspirateurModel.URI, "intensity");
 			Thread.sleep(10L);
 		}
 	}
 	
 	@Override
 	public void finalise() throws Exception {
-		this.logMessage("Arret du composant ordinateur...") ;
+		this.logMessage("Arret du composant aspirateur...") ;
 		super.finalise();
 	}
 	
@@ -191,7 +192,7 @@ public class Ordinateur
 	public void	shutdown() throws ComponentShutdownException
 	{
 		try {
-			PortI[] port_controleur = this.findPortsFromInterface(IOrdinateur.class);
+			PortI[] port_controleur = this.findPortsFromInterface(IAspirateur.class);
 			PortI[] port_consommation = this.findPortsFromInterface(IConsommation.class);
 			PortI[] port_ajoutappareil = this.findPortsFromInterface(IAjoutAppareil.class);
 			PortI[] port_assembleur = this.findPortsFromInterface(IComposantDynamique.class);
@@ -208,7 +209,7 @@ public class Ordinateur
 	public void shutdownNow() throws ComponentShutdownException
 	{
 		try {
-			PortI[] port_controleur = this.findPortsFromInterface(IOrdinateur.class);
+			PortI[] port_controleur = this.findPortsFromInterface(IAspirateur.class);
 			PortI[] port_consommation = this.findPortsFromInterface(IConsommation.class);
 			PortI[] port_ajoutappareil = this.findPortsFromInterface(IAjoutAppareil.class);
 			PortI[] port_assembleur = this.findPortsFromInterface(IComposantDynamique.class);
@@ -225,17 +226,22 @@ public class Ordinateur
 
 	@Override
 	protected Architecture createLocalArchitecture(String architectureURI) throws Exception {
-		return OrdinateurCoupledModel.build();
+		return AspirateurCoupledModel.build();
 	}
 
 	@Override
 	public Object getEmbeddingComponentStateValue(String name) throws Exception {
-		return etat;
+		if(name.equals("state")) {
+			return etat;
+		} else if(name.equals("intensity")) {
+			return consommation;
+		}
+		return null;
 	}
 	
 	protected void initialise() throws Exception {
 		Architecture localArchitecture = this.createLocalArchitecture(null) ;
-		this.asp = new OrdinateurSimulatorPlugin() ;
+		this.asp = new AspirateurSimulatorPlugin() ;
 		this.asp.setPluginURI(localArchitecture.getRootModelURI()) ;
 		this.asp.setSimulationArchitecture(localArchitecture) ;
 		this.installPlugin(this.asp) ;

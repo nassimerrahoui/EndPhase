@@ -30,13 +30,13 @@ import simulator.events.SwitchOn;
 import java.util.HashMap;
 import java.util.HashSet;
 
-public class OrdinateurCoupledModel extends CoupledModel {
+public class AspirateurCoupledModel extends CoupledModel {
 	
 	private static final long serialVersionUID = 1L;
 	/** URI of the unique instance of this class (in this example). */
-	public static final String URI = "OrdinateurCoupledModel";
+	public static final String URI = "AspirateurCoupledModel";
 
-	public OrdinateurCoupledModel(String uri, TimeUnit simulatedTimeUnit, SimulatorI simulationEngine,
+	public AspirateurCoupledModel(String uri, TimeUnit simulatedTimeUnit, SimulatorI simulationEngine,
 			ModelDescriptionI[] submodels, Map<Class<? extends EventI>, EventSink[]> imported,
 			Map<Class<? extends EventI>, ReexportedEvent> reexported, Map<EventSource, EventSink[]> connections,
 			Map<StaticVariableDescriptor, VariableSink[]> importedVars,
@@ -58,36 +58,36 @@ public class OrdinateurCoupledModel extends CoupledModel {
 	public static Architecture build() throws Exception {
 		Map<String, AbstractAtomicModelDescriptor> atomicModelDescriptors = new HashMap<>();
 
-		atomicModelDescriptors.put(OrdinateurModel.URI, AtomicHIOA_Descriptor.create(OrdinateurModel.class,
-				OrdinateurModel.URI, TimeUnit.SECONDS, null, SimulationEngineCreationMode.ATOMIC_ENGINE));
-		atomicModelDescriptors.put(OrdinateurUserModel.URI, AtomicModelDescriptor.create(OrdinateurUserModel.class,
-				OrdinateurUserModel.URI, TimeUnit.SECONDS, null, SimulationEngineCreationMode.ATOMIC_ENGINE));
+		atomicModelDescriptors.put(AspirateurModel.URI, AtomicHIOA_Descriptor.create(AspirateurModel.class,
+				AspirateurModel.URI, TimeUnit.SECONDS, null, SimulationEngineCreationMode.ATOMIC_ENGINE));
+		atomicModelDescriptors.put(AspirateurUserModel.URI, AtomicModelDescriptor.create(AspirateurUserModel.class,
+				AspirateurUserModel.URI, TimeUnit.SECONDS, null, SimulationEngineCreationMode.ATOMIC_ENGINE));
 
 		Map<String, CoupledModelDescriptor> coupledModelDescriptors = new HashMap<String, CoupledModelDescriptor>();
 
 		Set<String> submodels = new HashSet<String>();
-		submodels.add(OrdinateurModel.URI);
-		submodels.add(OrdinateurUserModel.URI);
+		submodels.add(AspirateurModel.URI);
+		submodels.add(AspirateurUserModel.URI);
 
 		Map<EventSource, EventSink[]> connections = new HashMap<EventSource, EventSink[]>();
-		EventSource from1 = new EventSource(OrdinateurUserModel.URI, SwitchOn.class);
-		EventSink[] to1 = new EventSink[] { new EventSink(OrdinateurModel.URI, SwitchOn.class) };
+		EventSource from1 = new EventSource(AspirateurUserModel.URI, SwitchOn.class);
+		EventSink[] to1 = new EventSink[] { new EventSink(AspirateurModel.URI, SwitchOn.class) };
 		connections.put(from1, to1);
-		EventSource from2 = new EventSource(OrdinateurUserModel.URI, SwitchOff.class);
-		EventSink[] to2 = new EventSink[] { new EventSink(OrdinateurModel.URI, SwitchOff.class) };
+		EventSource from2 = new EventSource(AspirateurUserModel.URI, SwitchOff.class);
+		EventSink[] to2 = new EventSink[] { new EventSink(AspirateurModel.URI, SwitchOff.class) };
 		connections.put(from2, to2);
-		EventSource from3 = new EventSource(OrdinateurUserModel.URI, SetPerformanceReduite.class);
-		EventSink[] to3 = new EventSink[] { new EventSink(OrdinateurModel.URI, SetPerformanceReduite.class) };
+		EventSource from3 = new EventSource(AspirateurUserModel.URI, SetPerformanceReduite.class);
+		EventSink[] to3 = new EventSink[] { new EventSink(AspirateurModel.URI, SetPerformanceReduite.class) };
 		connections.put(from3, to3);
-		EventSource from4 = new EventSource(OrdinateurUserModel.URI, SetPerformanceMaximale.class);
-		EventSink[] to4 = new EventSink[] { new EventSink(OrdinateurModel.URI, SetPerformanceMaximale.class) };
+		EventSource from4 = new EventSource(AspirateurUserModel.URI, SetPerformanceMaximale.class);
+		EventSink[] to4 = new EventSink[] { new EventSink(AspirateurModel.URI, SetPerformanceMaximale.class) };
 		connections.put(from4, to4);
 
-		coupledModelDescriptors.put(OrdinateurCoupledModel.URI,
-				new CoupledHIOA_Descriptor(OrdinateurCoupledModel.class, OrdinateurCoupledModel.URI, submodels, null,
+		coupledModelDescriptors.put(AspirateurCoupledModel.URI,
+				new CoupledHIOA_Descriptor(AspirateurCoupledModel.class, AspirateurCoupledModel.URI, submodels, null,
 						null, connections, null, SimulationEngineCreationMode.COORDINATION_ENGINE, null, null, null));
 
-		return new Architecture(OrdinateurCoupledModel.URI, atomicModelDescriptors, coupledModelDescriptors,
+		return new Architecture(AspirateurCoupledModel.URI, atomicModelDescriptors, coupledModelDescriptors,
 				TimeUnit.SECONDS);
 	}
 }

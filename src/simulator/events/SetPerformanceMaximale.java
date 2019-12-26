@@ -3,10 +3,10 @@ package simulator.events;
 import fr.sorbonne_u.devs_simulation.models.AtomicModel;
 import fr.sorbonne_u.devs_simulation.models.events.EventI;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
-import simulator.models.OrdinateurModel;
-import app.util.ModeOrdinateur;
+import simulator.models.AspirateurModel;
+import app.util.ModeAspirateur;
 
-public class SetPerformanceMaximale extends AbstractOrdinateurEvent {
+public class SetPerformanceMaximale extends AbstractAspirateurEvent {
 
 	private static final long serialVersionUID = 1L;
 
@@ -16,7 +16,7 @@ public class SetPerformanceMaximale extends AbstractOrdinateurEvent {
 
 	@Override
 	public String eventAsString() {
-		return "Ordinateur::SetPerformanceMaximale";
+		return "Aspirateur::SetPerformanceMaximale";
 	}
 
 	@Override
@@ -30,11 +30,11 @@ public class SetPerformanceMaximale extends AbstractOrdinateurEvent {
 
 	@Override
 	public void executeOn(AtomicModel model) {
-		assert model instanceof OrdinateurModel;
+		assert model instanceof AspirateurModel;
 
-		OrdinateurModel m = (OrdinateurModel) model;
-		if (m.getState() == ModeOrdinateur.PERFORMANCE_REDUITE) {
-			m.setState(ModeOrdinateur.PERFORMANCE_MAXIMALE);
+		AspirateurModel m = (AspirateurModel) model;
+		if (m.getState() == ModeAspirateur.PERFORMANCE_REDUITE) {
+			m.setState(ModeAspirateur.PERFORMANCE_MAXIMALE);
 		}
 	}
 }

@@ -6,7 +6,7 @@ import app.interfaces.controleur.IControleBatterie;
 import app.interfaces.controleur.IControleCompteur;
 import app.interfaces.controleur.IControleFrigo;
 import app.interfaces.controleur.IControleLaveLinge;
-import app.interfaces.controleur.IControleOrdinateur;
+import app.interfaces.controleur.IControleAspirateur;
 import app.interfaces.controleur.IControlePanneau;
 import app.interfaces.controleur.IControleur;
 import app.interfaces.generateur.IComposantDynamique;
@@ -16,12 +16,12 @@ import app.ports.controleur.ControleurCompteurOutPort;
 import app.ports.controleur.ControleurFrigoOutPort;
 import app.ports.controleur.ControleurInPort;
 import app.ports.controleur.ControleurLaveLingeOutPort;
-import app.ports.controleur.ControleurOrdinateurOutPort;
+import app.ports.controleur.ControleurAspirateurOutPort;
 import app.ports.controleur.ControleurPanneauOutPort;
 import app.util.EtatUniteProduction;
 import app.util.ModeFrigo;
 import app.util.ModeLaveLinge;
-import app.util.ModeOrdinateur;
+import app.util.ModeAspirateur;
 import app.util.TemperatureLaveLinge;
 import app.util.URI;
 import fr.sorbonne_u.components.AbstractComponent;
@@ -37,14 +37,14 @@ import fr.sorbonne_u.components.ports.PortI;
 		IControleCompteur.class, 
 		IControleFrigo.class, 
 		IControleLaveLinge.class, 
-		IControleOrdinateur.class,
+		IControleAspirateur.class,
 		IControlePanneau.class,
 		IControleBatterie.class })
 public class Controleur extends AbstractComponent {
 	
 	protected ControleurFrigoOutPort frigo_OUTPORT;
 	protected ControleurLaveLingeOutPort lavelinge_OUTPORT;
-	protected ControleurOrdinateurOutPort ordinateur_OUTPORT;
+	protected ControleurAspirateurOutPort aspirateur_OUTPORT;
 	protected ControleurPanneauOutPort panneausolaire_OUTPORT;
 	protected ControleurBatterieOutPort batterie_OUTPORT;
 	protected ControleurCompteurOutPort compteur_OUTPORT;
@@ -56,7 +56,7 @@ public class Controleur extends AbstractComponent {
 			String CONTROLEUR_URI,
 			String CONTROLEUR_OP_FRIGO_URI, 
 			String CONTROLEUR_OP_LAVELINGE_URI,
-			String CONTROLEUR_OP_ORDINATEUR_URI,
+			String CONTROLEUR_OP_ASPIRATEUR_URI,
 			String CONTROLEUR_OP_PANNEAUSOLAIRE_URI,
 			String CONTROLEUR_OP_BATTERIE_URI,
 			String CONTROLEUR_OP_COMPTEUR_URI,
@@ -65,7 +65,7 @@ public class Controleur extends AbstractComponent {
 		
 		frigo_OUTPORT = new ControleurFrigoOutPort(CONTROLEUR_OP_FRIGO_URI,this);
 		lavelinge_OUTPORT = new ControleurLaveLingeOutPort(CONTROLEUR_OP_LAVELINGE_URI,this);
-		ordinateur_OUTPORT = new ControleurOrdinateurOutPort(CONTROLEUR_OP_ORDINATEUR_URI,this);
+		aspirateur_OUTPORT = new ControleurAspirateurOutPort(CONTROLEUR_OP_ASPIRATEUR_URI,this);
 		panneausolaire_OUTPORT = new ControleurPanneauOutPort(CONTROLEUR_OP_PANNEAUSOLAIRE_URI,this);
 		batterie_OUTPORT = new ControleurBatterieOutPort(CONTROLEUR_OP_BATTERIE_URI,this);
 		compteur_OUTPORT = new ControleurCompteurOutPort(CONTROLEUR_OP_COMPTEUR_URI,this);
@@ -78,7 +78,7 @@ public class Controleur extends AbstractComponent {
 		
 		frigo_OUTPORT.publishPort();
 		lavelinge_OUTPORT.publishPort();
-		ordinateur_OUTPORT.publishPort();
+		aspirateur_OUTPORT.publishPort();
 		panneausolaire_OUTPORT.publishPort();
 		batterie_OUTPORT.publishPort();
 		compteur_OUTPORT.publishPort();
@@ -110,8 +110,8 @@ public class Controleur extends AbstractComponent {
 		this.lavelinge_OUTPORT.envoyerModeLaveLinge(etat);
 	}
 	
-	public void envoyerEtatOrdinateur(ModeOrdinateur etat) throws Exception {
-		this.ordinateur_OUTPORT.envoyerModeOrdinateur(etat);
+	public void envoyerEtatAspirateur(ModeAspirateur etat) throws Exception {
+		this.aspirateur_OUTPORT.envoyerModeAspirateur(etat);
 	}
 
 	// ******* Services requis pour allumer ou eteindre des unites de production *********
@@ -245,7 +245,7 @@ public class Controleur extends AbstractComponent {
 		this.scheduleTask(new AbstractComponent.AbstractTask() {
 			@Override
 			public void run() {
-				try { ((Controleur) this.getTaskOwner()).envoyerEtatOrdinateur(ModeOrdinateur.PERFORMANCE_REDUITE); }
+				try { ((Controleur) this.getTaskOwner()).envoyerEtatAspirateur(ModeAspirateur.PERFORMANCE_REDUITE); }
 				catch (Exception e) { throw new RuntimeException(e); }
 			}
 		}, 3000, TimeUnit.MILLISECONDS);
@@ -264,7 +264,7 @@ public class Controleur extends AbstractComponent {
 			PortI[] p1 = this.findPortsFromInterface(IControleur.class);
 			PortI[] p2 = this.findPortsFromInterface(IControleFrigo.class);
 			PortI[] p3 = this.findPortsFromInterface(IControleLaveLinge.class);
-			PortI[] p4 = this.findPortsFromInterface(IControleOrdinateur.class);
+			PortI[] p4 = this.findPortsFromInterface(IControleAspirateur.class);
 			PortI[] p5 = this.findPortsFromInterface(IControlePanneau.class);
 			PortI[] p6 = this.findPortsFromInterface(IControleBatterie.class);
 			PortI[] p7 = this.findPortsFromInterface(IControleCompteur.class);
@@ -290,7 +290,7 @@ public class Controleur extends AbstractComponent {
 			PortI[] p1 = this.findPortsFromInterface(IControleur.class);
 			PortI[] p2 = this.findPortsFromInterface(IControleFrigo.class);
 			PortI[] p3 = this.findPortsFromInterface(IControleLaveLinge.class);
-			PortI[] p4 = this.findPortsFromInterface(IControleOrdinateur.class);
+			PortI[] p4 = this.findPortsFromInterface(IControleAspirateur.class);
 			PortI[] p5 = this.findPortsFromInterface(IControlePanneau.class);
 			PortI[] p6 = this.findPortsFromInterface(IControleBatterie.class);
 			PortI[] p7 = this.findPortsFromInterface(IControleCompteur.class);

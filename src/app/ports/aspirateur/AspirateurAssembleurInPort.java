@@ -1,20 +1,20 @@
-package app.ports.ordinateur;
+package app.ports.aspirateur;
 
-import app.components.Ordinateur;
+import app.components.Aspirateur;
 import app.interfaces.generateur.IComposantDynamique;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
 
-public class OrdinateurAssembleurInPort extends AbstractInboundPort implements IComposantDynamique {
+public class AspirateurAssembleurInPort extends AbstractInboundPort implements IComposantDynamique {
 
 	private static final long serialVersionUID = 1L;
 
-	public OrdinateurAssembleurInPort(ComponentI owner) throws Exception {
+	public AspirateurAssembleurInPort(ComponentI owner) throws Exception {
 		super(IComposantDynamique.class, owner);
 	}
 
-	public OrdinateurAssembleurInPort(String uri, ComponentI owner) throws Exception {
+	public AspirateurAssembleurInPort(String uri, ComponentI owner) throws Exception {
 		super(IComposantDynamique.class, owner);
 	}
 
@@ -23,7 +23,7 @@ public class OrdinateurAssembleurInPort extends AbstractInboundPort implements I
 		this.owner.handleRequestAsync(new AbstractComponent.AbstractService<Void>() {
 			@Override
 			public Void call() throws Exception {
-				((Ordinateur) this.getServiceOwner()).demandeAjoutControleur(uri);
+				((Aspirateur) this.getServiceOwner()).demandeAjoutControleur(uri);
 				return null;
 			}
 		});
@@ -34,7 +34,7 @@ public class OrdinateurAssembleurInPort extends AbstractInboundPort implements I
 		this.owner.handleRequestAsync(new AbstractComponent.AbstractService<Void>() {
 			@Override
 			public Void call() throws Exception {
-				((Ordinateur) this.getServiceOwner()).dynamicExecute();
+				((Aspirateur) this.getServiceOwner()).dynamicExecute();
 				return null;
 			}
 		});

@@ -3,10 +3,10 @@ package simulator.events;
 import fr.sorbonne_u.devs_simulation.models.AtomicModel;
 import fr.sorbonne_u.devs_simulation.models.events.EventI;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
-import simulator.models.OrdinateurModel;
-import app.util.ModeOrdinateur;
+import simulator.models.AspirateurModel;
+import app.util.ModeAspirateur;
 
-public class SwitchOff extends AbstractOrdinateurEvent {
+public class SwitchOff extends AbstractAspirateurEvent {
 
 	private static final long serialVersionUID = 1L;
 
@@ -16,7 +16,7 @@ public class SwitchOff extends AbstractOrdinateurEvent {
 
 	@Override
 	public String eventAsString() {
-		return "Ordinateur::SwitchOff";
+		return "Aspirateur::SwitchOff";
 	}
 
 	@Override
@@ -26,7 +26,7 @@ public class SwitchOff extends AbstractOrdinateurEvent {
 
 	@Override
 	public void executeOn(AtomicModel model) {
-		assert model instanceof OrdinateurModel;
-		((OrdinateurModel) model).setState(ModeOrdinateur.OFF);
+		assert model instanceof AspirateurModel;
+		((AspirateurModel) model).setState(ModeAspirateur.OFF);
 	}
 }
