@@ -146,7 +146,7 @@ public class Aspirateur
 		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 10L ;
 
 		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
-		simParams.put("componentRef", this) ;
+		simParams.put(AspirateurModel.URI + " : " + AspirateurModel.COMPONENT_REF, this);
 		this.asp.setSimulationRunParameters(simParams) ;
 
 		this.runTask(
@@ -221,9 +221,9 @@ public class Aspirateur
 
 	@Override
 	public Object getEmbeddingComponentStateValue(String name) throws Exception {
-		if(name.equals("state")) {
+		if(name.equals(AspirateurModel.URI + " : state")) {
 			return etat;
-		} else if(name.equals("consommation")) {
+		} else if(name.equals(AspirateurModel.URI + " : consommation")) {
 			return consommation;
 		}
 		return null;

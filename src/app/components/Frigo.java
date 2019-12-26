@@ -22,6 +22,8 @@ import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
 import fr.sorbonne_u.devs_simulation.architectures.Architecture;
+import simulator.models.frigo.FrigoModel;
+import simulator.plugins.FrigoSimulatorPlugin;
 
 @OfferedInterfaces(offered = { IFrigo.class, IComposantDynamique.class })
 @RequiredInterfaces(required = { IAjoutAppareil.class, IConsommation.class })
@@ -38,9 +40,12 @@ public class Frigo
 	protected TypeAppareil type;
 	protected ModeFrigo etat;
 
-	protected Double congelateur_temperature_cible;
-	protected Double refrigerateur_temperature_cible;
-	protected Double consommation;
+	protected double  refrigerateur_current_temperature;
+	protected double  congelateur_current_temperature;
+	
+	protected double congelateur_temperature_cible;
+	protected double refrigerateur_temperature_cible;
+	protected double consommation;
 
 	protected Frigo(
 			String FRIGO_URI, 
@@ -200,22 +205,29 @@ public class Frigo
 
 	@Override
 	protected Architecture createLocalArchitecture(String architectureURI) throws Exception {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	
 
 	@Override
 	public Object getEmbeddingComponentStateValue(String name) throws Exception {
-		// TODO Auto-generated method stub
+		if(name.equals("state")) {
+			return etat;
+		} else if(name.equals(FrigoModel.URI + " : consommation")) {
+			return consommation;
+		} else if(name.equals(FrigoModel.URI + " : refrigerateur_temperature")) {
+			return refrigerateur_current_temperature;
+		} else if(name.equals(FrigoModel.URI + " : refrigerateur_temperature_cible")) {
+			return refrigerateur_temperature_cible;
+		}
 		return null;
 	}
 	
 	protected void initialise() throws Exception {
-//		Architecture localArchitecture = this.createLocalArchitecture(null) ;
-//		this.asp = new AspirateurSimulatorPlugin() ;
-//		this.asp.setPluginURI(localArchitecture.getRootModelURI()) ;
-//		this.asp.setSimulationArchitecture(localArchitecture) ;
-//		this.installPlugin(this.asp) ;
+		Architecture localArchitecture = this.createLocalArchitecture(null) ;
+		this.asp = new FrigoSimulatorPlugin() ;
+		this.asp.setPluginURI(localArchitecture.getRootModelURI()) ;
+		this.asp.setSimulationArchitecture(localArchitecture) ;
+		this.installPlugin(this.asp) ;
 	}
 }

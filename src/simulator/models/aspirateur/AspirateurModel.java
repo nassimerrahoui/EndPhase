@@ -35,6 +35,8 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 
 	private static final long serialVersionUID = 1L;
 	public static final String URI = "AspirateurModel";
+	public static final String COMPONENT_REF = "aspirateur-component-ref";
+	
 	private static final String SERIES_POWER = "power";
 	protected static final double CONSOMMATION_PERFORMANCE_REDUITE = 800.0; // Watts
 	protected static final double CONSOMMATION_PERFORMANCE_MAXIMALE = 1200.0; // Watts
@@ -72,7 +74,7 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 
 	@Override
 	public void setSimulationRunParameters(Map<String, Object> simParams) throws Exception {
-		this.componentRef = (EmbeddingComponentStateAccessI) simParams.get("componentRef");
+		this.componentRef = (EmbeddingComponentStateAccessI) simParams.get(URI + " : " + COMPONENT_REF);
 	}
 
 	@Override
@@ -116,8 +118,8 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 	public void userDefinedInternalTransition(Duration elapsedTime) {
 		if (this.componentRef != null) {
 			try {
-				this.logMessage("aspirateur state = " + componentRef.getEmbeddingComponentStateValue("state"));
-				this.logMessage("aspirateur consommation = " + componentRef.getEmbeddingComponentStateValue("consommation"));
+				this.logMessage("aspirateur state = " + componentRef.getEmbeddingComponentStateValue(URI + " : state"));
+				this.logMessage("aspirateur consommation = " + componentRef.getEmbeddingComponentStateValue(URI + " : consommation"));
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
