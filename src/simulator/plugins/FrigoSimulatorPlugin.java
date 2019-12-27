@@ -16,9 +16,12 @@ public class FrigoSimulatorPlugin extends AtomicSimulatorPlugin {
 
 		if (name.equals("state")) {
 			return ((FrigoModel) m).getState();
-		} else {
+		} else if(name.equals("consommation")){
 			assert name.equals("consommation");
 			return ((FrigoModel) m).getConsommation();
+		} else {
+			assert name.equals("temperature");
+			return ((FrigoModel) m).getCurrentTemperature();
 		}
 	}
 }

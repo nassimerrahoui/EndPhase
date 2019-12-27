@@ -8,6 +8,7 @@ import fr.sorbonne_u.devs_simulation.hioa.annotations.ImportedVariable;
 import fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOAwithEquations;
 import fr.sorbonne_u.devs_simulation.hioa.models.vars.Value;
 import fr.sorbonne_u.devs_simulation.interfaces.SimulationReportI;
+import fr.sorbonne_u.devs_simulation.models.annotations.ModelExternalEvents;
 import fr.sorbonne_u.devs_simulation.models.events.EventI;
 import fr.sorbonne_u.devs_simulation.models.time.Duration;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
@@ -18,13 +19,17 @@ import fr.sorbonne_u.utils.PlotterDescription;
 import fr.sorbonne_u.utils.XYPlotter;
 import simulator.tic.TicEvent;
 
+
+@ModelExternalEvents(imported = {TicEvent.class},
+					exported = {Temperature.class})
+
 public class TemperatureSensorModel extends AtomicHIOAwithEquations {
 
-	public static class BatterySensorReport extends AbstractSimulationReport {
+	public static class TemperatureSensorReport extends AbstractSimulationReport {
 		private static final long serialVersionUID = 1L;
 		protected final Vector<Temperature> readings;
 
-		public BatterySensorReport(String modelURI, Vector<Temperature> readings) {
+		public TemperatureSensorReport(String modelURI, Vector<Temperature> readings) {
 			super(modelURI);
 
 			this.readings = readings;
@@ -47,18 +52,18 @@ public class TemperatureSensorModel extends AtomicHIOAwithEquations {
 	
 	private static final long				serialVersionUID = 1L ;
 	/** an URI to be used when create an instance of the model.				*/
-	public static final String				URI = "BatterySensorModel" ;
+	public static final String				URI = "TemperatureSensorModel" ;
 
 	/** true when a external event triggered a reading.						*/
 	protected boolean						triggerReading ;
-	/** the last value emitted as a reading of the battery level.		 	*/
+	/** the last value emitted as a reading of the temperature level.		 	*/
 	protected double						lastReading ;
 	/** the simulation time at the last reading.							*/
 	protected double						lastReadingTime ;
 	/** history of readings, for the simulation report.						*/
 	protected final Vector<Temperature>	readings ;
 
-	/** frame used to plot the battery level readings during the
+	/** frame used to plot the temperature level readings during the
 	 *  simulation.															*/
 	protected XYPlotter						plotter ;
 	
@@ -128,7 +133,7 @@ public class TemperatureSensorModel extends AtomicHIOAwithEquations {
 			this.lastReading = this.remainingCapacity.v;
 			this.lastReadingTime = this.getCurrentStateTime().getSimulatedTime();
 
-			// Create and emit the battery level event.
+			// Create and emit the temperature level event.
 			Vector<EventI> ret = new Vector<EventI>(1);
 			Time t = this.getCurrentStateTime().add(this.getNextTimeAdvance());
 			Temperature bl = new Temperature(t, this.remainingCapacity.v);
@@ -175,7 +180,7 @@ public class TemperatureSensorModel extends AtomicHIOAwithEquations {
 
 	@Override
 	public SimulationReportI getFinalReport() throws Exception {
-		return new BatterySensorReport(this.getURI(), this.readings);
+		return new TemperatureSensorReport(this.getURI(), this.readings);
 	}
 		
 }

@@ -88,7 +88,7 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-
+		
 		super.initialiseState(initialTime);
 	}
 
