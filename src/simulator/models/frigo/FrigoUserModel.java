@@ -33,8 +33,8 @@ public class FrigoUserModel extends AtomicES_Model{
 	protected double initialDelay;
 	protected double interdayDelay;
 	protected double meanTimeBetweenUsages;
-	protected double meanTimeAtPerformanceMaximale;
-	protected double meanTimeAtPerformanceReduite;
+	protected double meanTimeAtOpenDoor;
+	protected double meanTimeAtCloseDoor;
 	protected Class<?> nextEvent;
 	protected final RandomDataGenerator rg;
 	protected ModeFrigo etat_frigo;
@@ -52,8 +52,8 @@ public class FrigoUserModel extends AtomicES_Model{
 		this.initialDelay = 10.0;
 		this.interdayDelay = 30.0;
 		this.meanTimeBetweenUsages = 1.0;
-		this.meanTimeAtPerformanceMaximale = 10.0;
-		this.meanTimeAtPerformanceReduite = 10.0;
+		this.meanTimeAtOpenDoor = 10.0;
+		this.meanTimeAtCloseDoor = 100000.0;
 		this.etat_frigo = ModeFrigo.OFF;
 
 		this.rg.reSeedSecure();
@@ -104,21 +104,22 @@ public class FrigoUserModel extends AtomicES_Model{
 		Duration d;
 		if (this.nextEvent.equals(SwitchFrigoOn.class)) {
 
-			d = new Duration(2.0 * this.rg.nextBeta(1.75, 1.75), this.getSimulatedTimeUnit());
-			Time t = this.getCurrentStateTime().add(d);
-			this.scheduleEvent(new OpenRefrigerateurDoor(t));
-
 			d = new Duration(this.interdayDelay, this.getSimulatedTimeUnit());
 			this.scheduleEvent(new SwitchFrigoOn(this.getCurrentStateTime().add(d)));
 			
+			d = new Duration(2.0 * this.rg.nextBeta(1.75, 1.75), this.getSimulatedTimeUnit());
+			Time t = this.getCurrentStateTime().add(d);
+			this.scheduleEvent(new OpenRefrigerateurDoor(t));
+			
 		} else if (this.nextEvent.equals(OpenRefrigerateurDoor.class)) {
 
-			d = new Duration(2.0 * this.meanTimeAtPerformanceMaximale * this.rg.nextBeta(1.75, 1.75), this.getSimulatedTimeUnit());
+			d = new Duration(2.0 * this.meanTimeAtOpenDoor * this.rg.nextBeta(1.75, 1.75), this.getSimulatedTimeUnit());
 			this.scheduleEvent(new CloseRefrigerateurDoor(this.getCurrentStateTime().add(d)));
+			
 		} else if (this.nextEvent.equals(CloseRefrigerateurDoor.class)) {
 
-			d = new Duration(2.0 * this.meanTimeAtPerformanceReduite * this.rg.nextBeta(1.75, 1.75), this.getSimulatedTimeUnit());
-			this.scheduleEvent(new SwitchFrigoOff(this.getCurrentStateTime().add(d)));
+			d = new Duration(2.0 * this.meanTimeAtCloseDoor * this.rg.nextBeta(1.75, 1.75), this.getSimulatedTimeUnit());
+			this.scheduleEvent(new OpenRefrigerateurDoor(this.getCurrentStateTime().add(d)));
 		}
 	}
 }

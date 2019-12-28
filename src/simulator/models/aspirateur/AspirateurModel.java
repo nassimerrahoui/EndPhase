@@ -84,7 +84,7 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 		this.powerPlotter.showPlotter();
 
 		try {
-			this.setDebugLevel(1);
+			//this.setDebugLevel(1);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

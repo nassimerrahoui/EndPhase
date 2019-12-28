@@ -28,7 +28,6 @@ import fr.sorbonne_u.components.ports.PortI;
 import fr.sorbonne_u.devs_simulation.architectures.Architecture;
 import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
 import fr.sorbonne_u.utils.PlotterDescription;
-import simulator.AREUTILISER.TemperatureSensorModel;
 import simulator.models.frigo.FrigoCoupledModel;
 import simulator.models.frigo.FrigoModel;
 import simulator.plugins.FrigoSimulatorPlugin;
@@ -162,7 +161,7 @@ public class Frigo
 				try { ((Frigo) this.getTaskOwner()).envoyerConsommation(URI.FRIGO_URI.getURI(), consommation); } 
 				catch (Exception e) { throw new RuntimeException(e); }
 			}
-		}, 2500, 10, TimeUnit.MILLISECONDS);
+		}, 2500, 1000, TimeUnit.MILLISECONDS);
 		
 		execute();
 	}
@@ -198,14 +197,6 @@ public class Frigo
 		  		ORIGIN_Y,
 		  		getPlotterWidth(),
 		  		getPlotterHeight())) ;
-		simParams.put(TemperatureSensorModel.URI + " : " + PlotterDescription.PLOTTING_PARAM_NAME, new PlotterDescription(
-				"Temperature Sensor Model",
-				"Time (sec)",
-				"Temperature (°C)",
-				ORIGIN_X + getPlotterWidth(),
-				ORIGIN_Y + getPlotterHeight(),
-				getPlotterWidth(),
-				getPlotterHeight())) ;
 		this.asp.setSimulationRunParameters(simParams) ;
 		
 		this.runTask(
@@ -213,24 +204,27 @@ public class Frigo
 					@Override
 					public void run() {
 						try {
-							asp.doStandAloneSimulation(0.0, 500.0) ;
+							asp.doStandAloneSimulation(0.0, 60000.0) ;
 						} catch (Exception e) {
 							throw new RuntimeException(e) ;
 						}
 					}
-				}) ;
-		Thread.sleep(10L) ;
-		for (int i = 0 ; i < 1000000 ; i++) {
-			this.logMessage("Frigo " +
-				this.asp.getModelStateValue(FrigoModel.URI, "state") + " " +
-				this.asp.getModelStateValue(FrigoModel.URI, "consommation") + " " +
-				this.asp.getModelStateValue(FrigoModel.URI, "temperature")) ;
-			this.etat = (ModeFrigo) this.asp.getModelStateValue(FrigoModel.URI, "state");
-			this.consommation = (double) this.asp.getModelStateValue(FrigoModel.URI, "consommation");
-			this.refrigerateur_current_temperature = (double) this.asp.getModelStateValue(FrigoModel.URI, "consommation");
-			this.logMessage("CONSO : " + consommation);
-			Thread.sleep(10L);
-		}
+				});
+		
+		Thread.sleep(10L);
+		
+		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
+			@Override
+			public void run() {
+				try {
+					((Frigo) this.getTaskOwner()).etat = (ModeFrigo) ((Frigo) this.getTaskOwner()).asp.getModelStateValue(FrigoModel.URI, "state");
+					((Frigo) this.getTaskOwner()).consommation = (double) ((Frigo) this.getTaskOwner()).asp.getModelStateValue(FrigoModel.URI, "consommation");
+					((Frigo) this.getTaskOwner()).refrigerateur_current_temperature = (double) ((Frigo) this.getTaskOwner()).asp.getModelStateValue(FrigoModel.URI, "consommation");
+					((Frigo) this.getTaskOwner()).logMessage("Consommation : " + consommation);
+					Thread.sleep(10L);
+				} catch (Exception e) { e.printStackTrace(); }
+			}
+		}, 2500, 1000, TimeUnit.MILLISECONDS);
 	}
 	
 	@Override
@@ -303,7 +297,7 @@ public class Frigo
 		this.installPlugin(this.asp);
 	}
 	
-	public static int	getPlotterWidth() {
+	public static int getPlotterWidth() {
 		int ret = Integer.MAX_VALUE ;
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment() ;
 		GraphicsDevice[] gs = ge.getScreenDevices() ;
@@ -317,7 +311,7 @@ public class Frigo
 		return (int) (0.25 * ret) ;
 	}
 
-	public static int	getPlotterHeight() {
+	public static int getPlotterHeight() {
 		int ret = Integer.MAX_VALUE ;
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment() ;
 		GraphicsDevice[] gs = ge.getScreenDevices() ;

@@ -136,7 +136,7 @@ public class Aspirateur
 				try { ((Aspirateur) this.getTaskOwner()).envoyerConsommation(URI.ASPIRATEUR_URI.getURI(), consommation); } 
 				catch (Exception e) { throw new RuntimeException(e); }
 			}
-		}, 4000, 10, TimeUnit.MILLISECONDS);
+		}, 4000, 1000, TimeUnit.MILLISECONDS);
 		
 		execute();
 	}
@@ -154,22 +154,25 @@ public class Aspirateur
 					@Override
 					public void run() {
 						try {
-							asp.doStandAloneSimulation(0.0, 500.0) ;
+							asp.doStandAloneSimulation(0.0, 60000.0) ;
 						} catch (Exception e) {
 							throw new RuntimeException(e) ;
 						}
 					}
-				}) ;
-		Thread.sleep(10L) ;
-		for (int i = 0 ; i < 1000000 ; i++) {
-			this.logMessage("Aspirateur " +
-				this.asp.getModelStateValue(AspirateurModel.URI, "state") + " " +
-				this.asp.getModelStateValue(AspirateurModel.URI, "consommation")) ;
-			this.etat = (ModeAspirateur) this.asp.getModelStateValue(AspirateurModel.URI, "state");
-			this.consommation = (Double) this.asp.getModelStateValue(AspirateurModel.URI, "consommation");
-			this.logMessage("CONSO : " + consommation);
-			Thread.sleep(10L);
-		}
+				});
+		
+		Thread.sleep(10L);
+		
+		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
+			@Override
+			public void run() {
+				try {
+					((Aspirateur) this.getTaskOwner()).etat = (ModeAspirateur) ((Aspirateur) this.getTaskOwner()).asp.getModelStateValue(AspirateurModel.URI, "state");
+					((Aspirateur) this.getTaskOwner()).consommation = (Double) ((Aspirateur) this.getTaskOwner()).asp.getModelStateValue(AspirateurModel.URI, "consommation");
+					((Aspirateur) this.getTaskOwner()).logMessage("Consommation : " + consommation);
+				} catch (Exception e) { e.printStackTrace(); }
+			}
+		}, 4000, 1000, TimeUnit.MILLISECONDS);
 	}
 	
 	@Override

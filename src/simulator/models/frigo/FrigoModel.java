@@ -57,8 +57,9 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 	private static final String SERIES_MODE= "frigo_state";
 	
 	// Temperature initiale du refrigerateur eteint 
-	public static final double AMBIENT_TEMPERATURE = 20.0; // degres celsius
-	protected static double CONSOMMATION_LUMIERE_ALLUMEE = 30; // Watts
+	protected static final double AMBIENT_TEMPERATURE = 20.0; // degres celsius
+	protected static final double CONSOMMAION_INITIALE = 300; // Watss
+	protected static final double CONSOMMATION_LUMIERE_ALLUMEE = 30; // Watts
 	
 	protected double currentPower; // Watts
 	protected double currentTemperature; // degres celsius
@@ -96,7 +97,7 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 	@Override
 	public void initialiseState(Time initialTime) {
 		
-		this.currentPower = 0.0;
+		this.currentPower = CONSOMMAION_INITIALE;
 		this.currentState = ModeFrigo.LIGHT_OFF;	
 		this.currentTemperature = AMBIENT_TEMPERATURE;
 		
@@ -113,6 +114,12 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 		if(this.statePlotter != null) {
 			this.statePlotter.initialise();
 			this.statePlotter.showPlotter();
+		}
+		
+		try {
+			this.setDebugLevel(1);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
 		
 		super.initialiseState(initialTime);
@@ -157,28 +164,32 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 		
 	}
 	
-	public double getConsommationFromTemperature(double temperature) {
-		if(temperature < AMBIENT_TEMPERATURE)
-			return (AMBIENT_TEMPERATURE - temperature) * 4;
+	public double getConsommationFromTemperature(double temperature, double old_temperature) {
+		if(temperature < old_temperature)
+			return currentPower + currentPower * 0.005;
+		else if(temperature > old_temperature)
+			return currentPower - currentPower * 0.005;
+		else if(temperature == old_temperature)
+			return currentPower;
 		else
 			return 0;
 	}
 	
 	protected void computeNewLevel(Time current, double delta_t) {
-		ModeFrigo oldState = this.currentState;
+		double old_temperature = currentTemperature;
 		double variation_temperature = 0.1;
 		
-		if(oldState == ModeFrigo.OFF) {
+		if(currentState == ModeFrigo.OFF) {
 			if(currentTemperature < AMBIENT_TEMPERATURE && delta_t >= 1.0) {
 				currentTemperature += variation_temperature;
 				delta_t--;
 			}
-			currentPower = getConsommationFromTemperature(currentTemperature);
+			currentPower = getConsommationFromTemperature(currentTemperature, old_temperature);
 			return;
 		}
 		
 		try {
-			double temperature_cible = (double) componentRef.getEmbeddingComponentStateValue(URI + " : refrigerateur_temperature");
+			double temperature_cible = (double) componentRef.getEmbeddingComponentStateValue(URI + " : refrigerateur_temperature_cible");
 			
 			if(temperature_cible < currentTemperature) {
 				while(delta_t >= 1.0) {
@@ -196,10 +207,11 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 				}
 			}
 			
-			if(oldState == ModeFrigo.LIGHT_OFF) {
-				this.currentPower = getConsommationFromTemperature(currentTemperature);
-			}else if(oldState == ModeFrigo.LIGHT_ON) {
-				this.currentPower = getConsommationFromTemperature(currentTemperature) + CONSOMMATION_LUMIERE_ALLUMEE;
+			if(currentState == ModeFrigo.LIGHT_OFF) {
+				currentPower = getConsommationFromTemperature(currentTemperature, old_temperature);
+				System.out.println("RRR" + currentPower);
+			}else if(currentState == ModeFrigo.LIGHT_ON) {
+				currentPower = getConsommationFromTemperature(currentTemperature, old_temperature) + CONSOMMATION_LUMIERE_ALLUMEE;
 			}
 			
 		} catch (Exception e) {
@@ -210,7 +222,6 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 	@Override
 	public void userDefinedExternalTransition(Duration elapsedTime) {
 		
-		System.out.println("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL");
 		if (this.hasDebugLevel(2)) {
 			this.logMessage("FrigoModel::userDefinedExternalTransition 1");
 		}
