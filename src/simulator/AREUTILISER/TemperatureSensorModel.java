@@ -1,4 +1,4 @@
-package simulator.models.frigo;
+package simulator.AREUTILISER;
 
 import java.util.Map;
 import java.util.Vector;
@@ -17,6 +17,7 @@ import fr.sorbonne_u.devs_simulation.utils.AbstractSimulationReport;
 import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
 import fr.sorbonne_u.utils.PlotterDescription;
 import fr.sorbonne_u.utils.XYPlotter;
+import simulator.models.frigo.FrigoModel;
 import simulator.tic.TicEvent;
 
 
@@ -105,7 +106,7 @@ public class TemperatureSensorModel extends AtomicHIOAwithEquations {
 
 	@Override
 	protected void initialiseVariables(Time startTime) {
-		this.remainingCapacity.v = FrigoModel.INITIAL_TEMPERATURE;
+		this.remainingCapacity.v = FrigoModel.AMBIENT_TEMPERATURE;
 
 		super.initialiseVariables(startTime);
 	}

@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-
 import fr.sorbonne_u.devs_simulation.architectures.Architecture;
 import fr.sorbonne_u.devs_simulation.architectures.SimulationEngineCreationMode;
 import fr.sorbonne_u.devs_simulation.hioa.architectures.AtomicHIOA_Descriptor;
@@ -30,12 +29,12 @@ import simulator.events.frigo.OpenRefrigerateurDoor;
 import simulator.events.frigo.SwitchFrigoOff;
 import simulator.events.frigo.SwitchFrigoOn;
 
-public class FrigoCoupledModel extends CoupledModel{
+public class FrigoCoupledModel extends CoupledModel {
 
 	private static final long serialVersionUID = 1L;
 	/** URI of the unique instance of this class (in this example). */
 	public static final String URI = "FrigoCoupledModel";
-	
+
 	public FrigoCoupledModel(String uri, TimeUnit simulatedTimeUnit, SimulatorI simulationEngine,
 			ModelDescriptionI[] submodels, Map<Class<? extends EventI>, EventSink[]> imported,
 			Map<Class<? extends EventI>, ReexportedEvent> reexported, Map<EventSource, EventSink[]> connections,
@@ -54,21 +53,20 @@ public class FrigoCoupledModel extends CoupledModel{
 		}
 		return ret;
 	}
-	
+
 	public static Architecture build() throws Exception {
 		Map<String, AbstractAtomicModelDescriptor> atomicModelDescriptors = new HashMap<>();
 
-		atomicModelDescriptors.put(FrigoModel.URI, AtomicHIOA_Descriptor.create(FrigoModel.class,
+		atomicModelDescriptors.put(FrigoModel.URI, AtomicHIOA_Descriptor.create(FrigoModel.class, 
 				FrigoModel.URI, TimeUnit.SECONDS, null, SimulationEngineCreationMode.ATOMIC_ENGINE));
 		atomicModelDescriptors.put(FrigoUserModel.URI, AtomicModelDescriptor.create(FrigoUserModel.class,
 				FrigoUserModel.URI, TimeUnit.SECONDS, null, SimulationEngineCreationMode.ATOMIC_ENGINE));
-
+		
 		Map<String, CoupledModelDescriptor> coupledModelDescriptors = new HashMap<String, CoupledModelDescriptor>();
 
 		Set<String> submodels = new HashSet<String>();
 		submodels.add(FrigoModel.URI);
 		submodels.add(FrigoUserModel.URI);
-		submodels.add(TemperatureSensorModel.URI);
 
 		Map<EventSource, EventSink[]> connections = new HashMap<EventSource, EventSink[]>();
 		EventSource from1 = new EventSource(FrigoUserModel.URI, SwitchFrigoOn.class);
@@ -84,11 +82,25 @@ public class FrigoCoupledModel extends CoupledModel{
 		EventSink[] to4 = new EventSink[] { new EventSink(FrigoModel.URI, OpenRefrigerateurDoor.class) };
 		connections.put(from4, to4);
 
-		coupledModelDescriptors.put(FrigoCoupledModel.URI,
-				new CoupledHIOA_Descriptor(FrigoCoupledModel.class, FrigoCoupledModel.URI, submodels, null,
-						null, connections, null, SimulationEngineCreationMode.COORDINATION_ENGINE, null, null, null));
+		coupledModelDescriptors.put(
+				FrigoCoupledModel.URI,
+				new CoupledHIOA_Descriptor(
+						FrigoCoupledModel.class, 
+						FrigoCoupledModel.URI, 
+						submodels, 
+						null, 
+						null,
+						connections, 
+						null, 
+						SimulationEngineCreationMode.COORDINATION_ENGINE, 
+						null, 
+						null, 
+						null));
 
-		return new Architecture(FrigoCoupledModel.URI, atomicModelDescriptors, coupledModelDescriptors,
+		return new Architecture(
+				FrigoCoupledModel.URI, 
+				atomicModelDescriptors, 
+				coupledModelDescriptors,
 				TimeUnit.SECONDS);
 	}
 }

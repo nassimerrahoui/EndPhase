@@ -1,10 +1,10 @@
-package simulator.models.frigo;
+package simulator.AREUTILISER;
 
 import fr.sorbonne_u.devs_simulation.models.events.Event;
 import fr.sorbonne_u.devs_simulation.models.events.EventInformationI;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
 
-public class Temperature extends Event{
+public class Temperature extends Event {
 
 	private static final long serialVersionUID = 1L;
 

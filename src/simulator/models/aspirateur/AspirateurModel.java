@@ -186,8 +186,9 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 			break;
 		case PERFORMANCE_MAXIMALE:
 			this.currentPower.v = CONSOMMATION_PERFORMANCE_MAXIMALE;
+			break;
 		default:
-			// cannot happening
+			// cannot happen
 			break;
 		}
 	}

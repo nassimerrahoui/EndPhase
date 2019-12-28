@@ -28,6 +28,7 @@ import fr.sorbonne_u.components.ports.PortI;
 import fr.sorbonne_u.devs_simulation.architectures.Architecture;
 import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
 import fr.sorbonne_u.utils.PlotterDescription;
+import simulator.AREUTILISER.TemperatureSensorModel;
 import simulator.models.frigo.FrigoCoupledModel;
 import simulator.models.frigo.FrigoModel;
 import simulator.plugins.FrigoSimulatorPlugin;
@@ -176,8 +177,7 @@ public class Frigo
 				"Frigo Model - Consommation",
 				"Time (sec)",
 				"Consommation (W)",
-				ORIGIN_X +
-		  		getPlotterWidth(),
+				ORIGIN_X + getPlotterWidth(),
 		  		ORIGIN_Y,
 		  		getPlotterWidth(),
 		  		getPlotterHeight())) ;
@@ -187,19 +187,25 @@ public class Frigo
 				"Etat",
 				ORIGIN_X +
 		  		getPlotterWidth(),
-		  		ORIGIN_Y +
-				2 * getPlotterHeight(),
+		  		ORIGIN_Y + 2 * getPlotterHeight(),
 				getPlotterWidth(),
 				getPlotterHeight())) ;
 		simParams.put(FrigoModel.URI + " : " + FrigoModel.TEMPERATURE_PLOTTING_PARAM_NAME, new PlotterDescription(
 				"Frigo Model - Temperature",
 				"Time (sec)",
 				"Temperature (°C)",
-				ORIGIN_X +
-		  		getPlotterWidth(),
+				ORIGIN_X + getPlotterWidth(),
 		  		ORIGIN_Y,
 		  		getPlotterWidth(),
 		  		getPlotterHeight())) ;
+		simParams.put(TemperatureSensorModel.URI + " : " + PlotterDescription.PLOTTING_PARAM_NAME, new PlotterDescription(
+				"Temperature Sensor Model",
+				"Time (sec)",
+				"Temperature (°C)",
+				ORIGIN_X + getPlotterWidth(),
+				ORIGIN_Y + getPlotterHeight(),
+				getPlotterWidth(),
+				getPlotterHeight())) ;
 		this.asp.setSimulationRunParameters(simParams) ;
 		
 		this.runTask(
@@ -220,8 +226,8 @@ public class Frigo
 				this.asp.getModelStateValue(FrigoModel.URI, "consommation") + " " +
 				this.asp.getModelStateValue(FrigoModel.URI, "temperature")) ;
 			this.etat = (ModeFrigo) this.asp.getModelStateValue(FrigoModel.URI, "state");
-			this.consommation = (Double) this.asp.getModelStateValue(FrigoModel.URI, "consommation");
-			this.refrigerateur_current_temperature = (Double) this.asp.getModelStateValue(FrigoModel.URI, "consommation");
+			this.consommation = (double) this.asp.getModelStateValue(FrigoModel.URI, "consommation");
+			this.refrigerateur_current_temperature = (double) this.asp.getModelStateValue(FrigoModel.URI, "consommation");
 			this.logMessage("CONSO : " + consommation);
 			Thread.sleep(10L);
 		}
@@ -273,7 +279,6 @@ public class Frigo
 	protected Architecture createLocalArchitecture(String architectureURI) throws Exception {
 		return FrigoCoupledModel.build();
 	}
-	
 
 	@Override
 	public Object getEmbeddingComponentStateValue(String name) throws Exception {
@@ -290,18 +295,17 @@ public class Frigo
 	}
 	
 	protected void initialise() throws Exception {
+		
 		Architecture localArchitecture = this.createLocalArchitecture(null) ;
-		this.asp = new FrigoSimulatorPlugin() ;
-		this.asp.setPluginURI(localArchitecture.getRootModelURI()) ;
-		this.asp.setSimulationArchitecture(localArchitecture) ;
+		this.asp = new FrigoSimulatorPlugin();
+		this.asp.setPluginURI(localArchitecture.getRootModelURI());
+		this.asp.setSimulationArchitecture(localArchitecture);
 		this.installPlugin(this.asp);
 	}
 	
-	public static int	getPlotterWidth()
-	{
+	public static int	getPlotterWidth() {
 		int ret = Integer.MAX_VALUE ;
-		GraphicsEnvironment ge =
-						GraphicsEnvironment.getLocalGraphicsEnvironment() ;
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment() ;
 		GraphicsDevice[] gs = ge.getScreenDevices() ;
 		for (int i = 0; i < gs.length; i++) {
 			DisplayMode dm = gs[i].getDisplayMode() ;
@@ -313,11 +317,9 @@ public class Frigo
 		return (int) (0.25 * ret) ;
 	}
 
-	public static int	getPlotterHeight()
-	{
+	public static int	getPlotterHeight() {
 		int ret = Integer.MAX_VALUE ;
-		GraphicsEnvironment ge =
-						GraphicsEnvironment.getLocalGraphicsEnvironment() ;
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment() ;
 		GraphicsDevice[] gs = ge.getScreenDevices() ;
 		for (int i = 0; i < gs.length; i++) {
 			DisplayMode dm = gs[i].getDisplayMode() ;
