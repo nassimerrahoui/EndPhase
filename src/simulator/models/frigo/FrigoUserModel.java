@@ -50,10 +50,10 @@ public class FrigoUserModel extends AtomicES_Model{
 	@Override
 	public void initialiseState(Time initialTime) {
 		this.initialDelay = 10.0;
-		this.interdayDelay = 30.0;
-		this.meanTimeBetweenUsages = 1.0;
-		this.meanTimeAtOpenDoor = 10.0;
-		this.meanTimeAtCloseDoor = 100000.0;
+		this.interdayDelay = 100.0;
+		this.meanTimeBetweenUsages = 10.0;
+		this.meanTimeAtOpenDoor = 0.05;
+		this.meanTimeAtCloseDoor = 5.0;
 		this.etat_frigo = ModeFrigo.OFF;
 
 		this.rg.reSeedSecure();

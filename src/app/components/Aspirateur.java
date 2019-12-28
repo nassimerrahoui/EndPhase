@@ -154,7 +154,7 @@ public class Aspirateur
 					@Override
 					public void run() {
 						try {
-							asp.doStandAloneSimulation(0.0, 60000.0) ;
+							asp.doStandAloneSimulation(0.0, 30000.0) ;
 						} catch (Exception e) {
 							throw new RuntimeException(e) ;
 						}
