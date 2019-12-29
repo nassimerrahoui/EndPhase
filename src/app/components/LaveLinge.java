@@ -126,19 +126,6 @@ public class LaveLinge extends AbstractComponent {
 		this.logMessage("Mode actuel : " + etat.name());
 		
 		/** TODO code pour gerer ce qui se passe pendant un mode */
-		if(etat == ModeLaveLinge.VEILLE) {
-			consommation = 0.0;
-		} else if(etat == ModeLaveLinge.LAVAGE) {
-			consommation = 2.0;
-		} else if (etat == ModeLaveLinge.RINCAGE) {
-			consommation = 2.0;
-		} else if (etat == ModeLaveLinge.ESSORAGE) {
-			consommation = 4.0;
-		} else if (etat == ModeLaveLinge.SECHAGE) {
-			consommation = 6.0;
-		} else if (etat == ModeLaveLinge.VIDANGE) {
-			consommation = 1.0;
-		}
 		
 		/** TODO lancer cycle en fonction de l'horloge du lave linge */
 		

@@ -12,6 +12,5 @@ public enum ModeLaveLinge {
 	LAVAGE,
 	RINCAGE,
 	ESSORAGE,
-	SECHAGE,
-	VIDANGE
+	SECHAGE
 }
