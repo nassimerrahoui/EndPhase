@@ -8,7 +8,7 @@ java -ea -cp 'jars/*':'bin/' -Djava.security.manager -Djava.security.policy=dcvm
 
 java -ea -cp 'jars/*':'bin/' -Djava.security.manager -Djava.security.policy=dcvm.policy app.DistributedCVM JVM_LAVELINGE_URI config.xml &
 
-java -ea -cp 'jars/*':'bin/' -Djava.security.manager -Djava.security.policy=dcvm.policy app.DistributedCVM JVM_ORDINATEUR_URI config.xml &
+java -ea -cp 'jars/*':'bin/' -Djava.security.manager -Djava.security.policy=dcvm.policy app.DistributedCVM JVM_ASPIRATEUR_URI config.xml &
 
 java -ea -cp 'jars/*':'bin/' -Djava.security.manager -Djava.security.policy=dcvm.policy app.DistributedCVM JVM_PANNEAUSOLAIRE_URI config.xml &
 

@@ -24,7 +24,7 @@ public class DistributedCVM extends AbstractDistributedCVM {
 					URI.JVM_CONTROLEUR_URI.getURI(),
 					URI.JVM_FRIGO_URI.getURI(),
 					URI.JVM_LAVELINGE_URI.getURI(),
-					URI.JVM_ORDINATEUR_URI.getURI(),
+					URI.JVM_ASPIRATEUR_URI.getURI(),
 					URI.JVM_PANNEAUSOLAIRE_URI.getURI(),
 					URI.JVM_BATTERIE_URI.getURI(),
 					URI.JVM_COMPTEUR_URI.getURI()

@@ -1,7 +1,8 @@
 package app.components;
 
 import java.util.concurrent.TimeUnit;
-import app.interfaces.generateur.IComposantDynamique;
+
+import app.interfaces.assembleur.IComposantDynamique;
 import app.interfaces.production.IAjoutUniteProduction;
 import app.interfaces.production.IBatterie;
 import app.interfaces.production.IProduction;

@@ -8,7 +8,17 @@ package app.util;
  */
 public enum ModeFrigo {
 	
-	OFF,
-	LIGHT_OFF,
-	LIGHT_ON
+	OFF(0),
+	LIGHT_OFF(1),
+	LIGHT_ON(2);
+	
+	protected final int mode;
+	 
+    ModeFrigo(int m) {
+        this.mode = m;
+    }
+ 
+    public int getMode() {
+        return mode;
+    }
 }

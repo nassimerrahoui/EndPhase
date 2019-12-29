@@ -23,7 +23,7 @@
         rmiRegistryCreator="false"
         hostname="localhost"
         mainclass="app.DistributedCVM"/>
-    <jvm2hostname jvmuri="JVM_ORDINATEUR_URI"
+    <jvm2hostname jvmuri="JVM_ASPIRATEUR_URI"
         rmiRegistryCreator="false"
         hostname="localhost"
         mainclass="app.DistributedCVM"/>

@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit;
 import app.interfaces.appareil.IAjoutAppareil;
 import app.interfaces.appareil.IConsommation;
 import app.interfaces.appareil.ILaveLinge;
-import app.interfaces.generateur.IComposantDynamique;
+import app.interfaces.assembleur.IComposantDynamique;
 import app.ports.lavelinge.LaveLingeAssembleurInPort;
 import app.ports.lavelinge.LaveLingeCompteurOutPort;
 import app.ports.lavelinge.LaveLingeControleurOutPort;
