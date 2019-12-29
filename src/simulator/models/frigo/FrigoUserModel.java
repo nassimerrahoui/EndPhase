@@ -50,16 +50,16 @@ public class FrigoUserModel extends AtomicES_Model{
 	@Override
 	public void initialiseState(Time initialTime) {
 		this.initialDelay = 10.0;
-		this.interdayDelay = 100.0;
+		this.interdayDelay = 3600 * 8;
 		this.meanTimeBetweenUsages = 10.0;
-		this.meanTimeAtOpenDoor = 0.05;
-		this.meanTimeAtCloseDoor = 5.0;
-		this.etat_frigo = ModeFrigo.OFF;
+		this.meanTimeAtOpenDoor = 20.0;
+		this.meanTimeAtCloseDoor = 5000.0;
 
 		this.rg.reSeedSecure();
 
 		super.initialiseState(initialTime);
-
+		
+		this.etat_frigo = ModeFrigo.OFF;
 		Duration d1 = new Duration(this.initialDelay, this.getSimulatedTimeUnit());
 		Duration d2 = new Duration(2.0 * this.meanTimeBetweenUsages * this.rg.nextBeta(1.75, 1.75),
 				this.getSimulatedTimeUnit());
@@ -104,12 +104,13 @@ public class FrigoUserModel extends AtomicES_Model{
 		Duration d;
 		if (this.nextEvent.equals(SwitchFrigoOn.class)) {
 
-			d = new Duration(this.interdayDelay, this.getSimulatedTimeUnit());
-			this.scheduleEvent(new SwitchFrigoOn(this.getCurrentStateTime().add(d)));
-			
 			d = new Duration(2.0 * this.rg.nextBeta(1.75, 1.75), this.getSimulatedTimeUnit());
 			Time t = this.getCurrentStateTime().add(d);
 			this.scheduleEvent(new OpenRefrigerateurDoor(t));
+			
+			d = new Duration(this.interdayDelay, this.getSimulatedTimeUnit());
+			this.scheduleEvent(new SwitchFrigoOn(this.getCurrentStateTime().add(d)));
+			
 			
 		} else if (this.nextEvent.equals(OpenRefrigerateurDoor.class)) {
 

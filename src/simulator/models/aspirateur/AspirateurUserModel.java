@@ -48,10 +48,10 @@ public class AspirateurUserModel extends AtomicES_Model {
 	@Override
 	public void initialiseState(Time initialTime) {
 		this.initialDelay = 10.0;
-		this.interdayDelay = 100.0;
+		this.interdayDelay = 3600 * 8;
 		this.meanTimeBetweenUsages = 10.0;
-		this.meanTimeAtPerformanceMaximale = 4.0;
-		this.meanTimeAtPerformanceReduite = 3.0;
+		this.meanTimeAtPerformanceMaximale = 60.0;
+		this.meanTimeAtPerformanceReduite = 120.0;
 		this.etat_aspirateur = ModeAspirateur.OFF;
 
 		this.rg.reSeedSecure();
@@ -118,6 +118,6 @@ public class AspirateurUserModel extends AtomicES_Model {
 
 			d = new Duration(2.0 * this.meanTimeAtPerformanceReduite * this.rg.nextBeta(1.75, 1.75), this.getSimulatedTimeUnit());
 			this.scheduleEvent(new SwitchAspirateurOff(this.getCurrentStateTime().add(d)));
-		}
+		} 
 	}
 }

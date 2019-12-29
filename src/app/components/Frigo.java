@@ -99,7 +99,7 @@ public class Frigo
 		this.refrigerateur_temperature_cible = 3.0;
 		this.congelateur_temperature_cible = -10.0;
 		this.consommation = 55.0;
-		this.refrigerateur_current_temperature = 20.0;
+		this.refrigerateur_current_temperature = FrigoModel.AMBIENT_TEMPERATURE;
 		
 		this.initialise();
 	}
@@ -219,7 +219,7 @@ public class Frigo
 				try {
 					((Frigo) this.getTaskOwner()).etat = (ModeFrigo) ((Frigo) this.getTaskOwner()).asp.getModelStateValue(FrigoModel.URI, "state");
 					((Frigo) this.getTaskOwner()).consommation = (double) ((Frigo) this.getTaskOwner()).asp.getModelStateValue(FrigoModel.URI, "consommation");
-					((Frigo) this.getTaskOwner()).refrigerateur_current_temperature = (double) ((Frigo) this.getTaskOwner()).asp.getModelStateValue(FrigoModel.URI, "consommation");
+					((Frigo) this.getTaskOwner()).refrigerateur_current_temperature = (double) ((Frigo) this.getTaskOwner()).asp.getModelStateValue(FrigoModel.URI, "temperature");
 					((Frigo) this.getTaskOwner()).logMessage("Consommation : " + consommation);
 					Thread.sleep(10L);
 				} catch (Exception e) { e.printStackTrace(); }

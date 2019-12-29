@@ -184,7 +184,7 @@ public class Controleur extends AbstractComponent {
 		// TEST
 		int i = 0;
 		if(i == 0) {
-			envoyerTemperature_Refrigerateur(4.0);
+			envoyerTemperature_Refrigerateur(15.0);
 			i++;
 		}
 		
