@@ -1,5 +1,10 @@
 package app.components;
 
+import java.awt.DisplayMode;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 import app.interfaces.appareil.IAjoutAppareil;
 import app.interfaces.appareil.IConsommation;
@@ -17,13 +22,23 @@ import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
+import fr.sorbonne_u.components.cyphy.AbstractCyPhyComponent;
+import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentStateAccessI;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
+import fr.sorbonne_u.devs_simulation.architectures.Architecture;
+import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
+import fr.sorbonne_u.utils.PlotterDescription;
+import simulator.models.lavelinge.LaveLingeCoupledModel;
+import simulator.models.lavelinge.LaveLingeModel;
+import simulator.plugins.LaveLingeSimulatorPlugin;
 
 @OfferedInterfaces(offered = { ILaveLinge.class, IComposantDynamique.class })
 @RequiredInterfaces(required = { IAjoutAppareil.class, IConsommation.class })
-public class LaveLinge extends AbstractComponent {
+public class LaveLinge 
+	extends AbstractCyPhyComponent 
+	implements EmbeddingComponentStateAccessI {
 
 	/** port sortant permettant a l'appareil de s'inscrire sur la liste des appareil du controleur */
 	protected LaveLingeControleurOutPort controleur_OUTPORT;
@@ -34,10 +49,18 @@ public class LaveLinge extends AbstractComponent {
 	protected TypeAppareil type;
 	protected ModeLaveLinge etat;
 	
+	protected ArrayList<ModeLaveLinge> planification_etats;
+	
 	protected int heure;
 	protected int minutes;
 	protected Double consommation;
 	protected TemperatureLaveLinge temperature;
+	
+	protected LaveLingeSimulatorPlugin asp;
+	
+	/** TODO */
+	public static int ORIGIN_X = 0;
+	public static int ORIGIN_Y = 20;
 
 	protected LaveLinge(
 			String LAVELIGNE_URI, 
@@ -77,9 +100,12 @@ public class LaveLinge extends AbstractComponent {
 		this.heure = 0;
 		this.minutes = 0;
 		this.etat = ModeLaveLinge.OFF;
+		this.planification_etats = new ArrayList<ModeLaveLinge>();
 		this.consommation = 0.0;
 		this.type = type;
 		this.temperature = TemperatureLaveLinge.QUARANTE_DEGRES;
+		
+		this.initialise();
 	}
 	
 	public void demandeAjoutControleur(String uri) throws Exception {
@@ -91,26 +117,18 @@ public class LaveLinge extends AbstractComponent {
 	}
 
 	public void setModeLaveLinge(ModeLaveLinge etat) throws Exception {
-		this.etat = etat;
+		if(etat == ModeLaveLinge.OFF || etat == ModeLaveLinge.VEILLE)
+			this.etat = etat;
 	}
 
-	public void planifierCycle(int heure, int min) throws Exception {
+	public void planifierCycle(ArrayList<ModeLaveLinge> planification, int heure, int min) throws Exception {
 		/** TODO */
-		if(heure > 0 && heure <= 23 && min >= 0 && min < 59) {
-			planifierMode(ModeLaveLinge.VEILLE, heure, min);
-			planifierMode(ModeLaveLinge.LAVAGE, heure, min+10);
-			planifierMode(ModeLaveLinge.RINCAGE, heure, min+20);
-			planifierMode(ModeLaveLinge.ESSORAGE, heure, min+30);
-			planifierMode(ModeLaveLinge.VEILLE, heure, min+40);
-			
-			this.logMessage("Cycle planifier a : " + heure + "h" + min);
-		}
-	}
-
-	public void planifierMode(ModeLaveLinge ml, int heure, int min) throws Exception {
-		if(etat == ModeLaveLinge.VEILLE) {
+		if(heure >= 0 && heure <= 23 && min >= 0 && min <= 59) {
+			this.planification_etats = planification;
+			System.out.println("MDR CEST MOI QI CODE : " + planification_etats.size());
 			this.heure = heure;
 			this.minutes = min;
+			this.logMessage("Cycle planifier a : " + heure + "h" + min);
 		}
 	}
 
@@ -162,18 +180,52 @@ public class LaveLinge extends AbstractComponent {
 			}
 		}, 2500, 1000, TimeUnit.MILLISECONDS);
 		
-		this.logMessage("Planification du lave-linge.");
+		execute();
+	}
+	
+	@Override
+	public void execute() throws Exception {
+		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 10L ;
+
+		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
+		simParams.put(LaveLingeModel.URI + " : " + LaveLingeModel.COMPONENT_REF, this);
 		
-		this.scheduleTask(new AbstractComponent.AbstractTask() {
+		simParams.put(LaveLingeModel.URI + " : " + LaveLingeModel.POWER_PLOTTING_PARAM_NAME, new PlotterDescription(
+				"Consommation Lave-Linge", 
+				"Temps (sec)", 
+				"Consommation (Watt)", 
+				ORIGIN_X + getPlotterWidth(),
+		  		ORIGIN_Y,
+		  		getPlotterWidth(),
+		  		getPlotterHeight())) ;
+		
+		this.asp.setSimulationRunParameters(simParams) ;
+
+		this.runTask(
+				new AbstractComponent.AbstractTask() {
+					@Override
+					public void run() {
+						try {
+							asp.doStandAloneSimulation(0.0, 60000.0) ;
+						} catch (Exception e) {
+							throw new RuntimeException(e) ;
+						}
+					}
+				});
+		
+		Thread.sleep(10L);
+		
+		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
 			@Override
 			public void run() {
-				/** TODO remplacer heure et minutes pas constante */
-				int heure = 7;
-				int minutes = 30;
-				try { ((LaveLinge) this.getTaskOwner()).planifierCycle(heure, minutes); } 
-				catch (Exception e) { throw new RuntimeException(e); }
+				try {
+					((LaveLinge) this.getTaskOwner()).etat = (ModeLaveLinge) ((LaveLinge) this.getTaskOwner()).asp.getModelStateValue(LaveLingeModel.URI, "state");
+					((LaveLinge) this.getTaskOwner()).consommation = (Double) ((LaveLinge) this.getTaskOwner()).asp.getModelStateValue(LaveLingeModel.URI, "consommation");
+					((LaveLinge) this.getTaskOwner()).logMessage("Mode : " + etat);
+					((LaveLinge) this.getTaskOwner()).logMessage("Consommation : " + consommation);
+				} catch (Exception e) { e.printStackTrace(); }
 			}
-		}, 4000, TimeUnit.MILLISECONDS);
+		}, 2500, 1000, TimeUnit.MILLISECONDS);
 	}
 	
 	@Override
@@ -215,4 +267,69 @@ public class LaveLinge extends AbstractComponent {
 		} catch (Exception e) { throw new ComponentShutdownException(e); }
 		super.shutdownNow();
 	}
+	
+	// ******************* Simulation *************************
+
+	@Override
+	protected Architecture createLocalArchitecture(String architectureURI) throws Exception {
+		return LaveLingeCoupledModel.build();
+	}
+
+	@Override
+	public Object getEmbeddingComponentStateValue(String name) throws Exception {
+		if(name.equals(LaveLingeModel.URI + " : state")) {
+			return etat;
+		} else if(name.equals(LaveLingeModel.URI + " : consommation")) {
+			return consommation; 
+		} else if(name.equals(LaveLingeModel.URI + " : delai") ) {
+			return (double) heure * 3600 + minutes * 60;
+		} else if(name.equals(LaveLingeModel.URI + " : temperature")) {
+			return temperature;
+		} else if(name.equals(LaveLingeModel.URI + " : planification")) {
+			ArrayList<ModeLaveLinge> temp = planification_etats;
+			planification_etats = null;
+			return temp;
+		}
+		return null;
+	}
+	
+	protected void initialise() throws Exception {
+		
+		Architecture localArchitecture = this.createLocalArchitecture(null) ;
+		this.asp = new LaveLingeSimulatorPlugin();
+		this.asp.setPluginURI(localArchitecture.getRootModelURI());
+		this.asp.setSimulationArchitecture(localArchitecture);
+		this.installPlugin(this.asp);
+	}
+	
+	// ************** Plotter ******************************
+	
+	public static int getPlotterWidth() {
+		int ret = Integer.MAX_VALUE ;
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment() ;
+		GraphicsDevice[] gs = ge.getScreenDevices() ;
+		for (int i = 0; i < gs.length; i++) {
+			DisplayMode dm = gs[i].getDisplayMode() ;
+			int width = dm.getWidth() ;
+			if (width < ret) {
+				ret = width ;
+			}
+		}
+		return (int) (0.25 * ret) ;
+	}
+
+	public static int getPlotterHeight() {
+		int ret = Integer.MAX_VALUE ;
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment() ;
+		GraphicsDevice[] gs = ge.getScreenDevices() ;
+		for (int i = 0; i < gs.length; i++) {
+			DisplayMode dm = gs[i].getDisplayMode() ;
+			int height = dm.getHeight() ;
+			if (height < ret) {
+				ret = height ;
+			}
+		}
+		return (int) (0.2 * ret) ;
+	}
+
 }

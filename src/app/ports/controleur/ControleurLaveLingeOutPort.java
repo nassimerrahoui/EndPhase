@@ -1,5 +1,7 @@
 package app.ports.controleur;
 
+import java.util.ArrayList;
+
 import app.interfaces.controleur.IControleLaveLinge;
 import app.util.ModeLaveLinge;
 import app.util.TemperatureLaveLinge;
@@ -24,13 +26,8 @@ public class ControleurLaveLingeOutPort extends AbstractOutboundPort implements 
 	}
 	
 	@Override
-	public void envoyerPlanificationCycle(int heure, int minutes) throws Exception {
-		((IControleLaveLinge)this.connector).envoyerPlanificationCycle(heure, minutes);
-	}
-
-	@Override
-	public void envoyerPlanificationMode(ModeLaveLinge ml, int heure, int minutes) throws Exception {
-		((IControleLaveLinge)this.connector).envoyerPlanificationMode(ml, heure, minutes);
+	public void envoyerPlanificationCycle(ArrayList<ModeLaveLinge> planification, int heure, int minutes) throws Exception {
+		((IControleLaveLinge)this.connector).envoyerPlanificationCycle(planification, heure, minutes);
 	}
 
 	@Override

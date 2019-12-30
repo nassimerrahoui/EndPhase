@@ -39,8 +39,8 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 	public static final String POWER_PLOTTING_PARAM_NAME = "consommation";
 	
 	private static final String SERIES_POWER = "power";
-	protected static final double CONSOMMATION_PERFORMANCE_REDUITE = 800.0; // Watts
-	protected static final double CONSOMMATION_PERFORMANCE_MAXIMALE = 1200.0; // Watts
+	protected static final double CONSOMMATION_PERFORMANCE_REDUITE = 800.0/3.6; // Watts
+	protected static final double CONSOMMATION_PERFORMANCE_MAXIMALE = 1200.0/3.6; // Watts
 	protected static final double TENSION = 220.0; // Volts
 	@ExportedVariable(type = Double.class)
 	protected final Value<Double> currentPower = new Value<Double>(this, 0.0, 0); // Watts
@@ -123,6 +123,8 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 				throw new RuntimeException(e);
 			}
 		}
+		
+		super.userDefinedInternalTransition(elapsedTime) ;
 	}
 
 	@Override

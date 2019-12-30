@@ -50,7 +50,7 @@ public class Aspirateur
 	
 	protected AspirateurSimulatorPlugin asp;
 	
-	public static int ORIGIN_X = 340;
+	public static int ORIGIN_X = -340;
 	public static int ORIGIN_Y = 20;
 
 	protected Aspirateur(
@@ -85,7 +85,7 @@ public class Aspirateur
 		
 		// affichage
 		this.tracer.setTitle("Aspirateur");
-		this.tracer.setRelativePosition(2, 1);
+		this.tracer.setRelativePosition(0, 1);
 		
 		// attributs
 		this.etat = ModeAspirateur.OFF;

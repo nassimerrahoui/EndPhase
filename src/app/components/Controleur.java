@@ -1,5 +1,6 @@
 package app.components;
 
+import java.util.ArrayList;
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 import app.interfaces.controleur.IControleBatterie;
@@ -126,12 +127,8 @@ public class Controleur extends AbstractComponent {
 
 	// ******* Services requis pour effectuer des actions sur lave-linge *********
 	
-	public void envoyerPlanificationCycle(int heure, int minutes) throws Exception {
-		this.lavelinge_OUTPORT.envoyerPlanificationCycle(heure, minutes);		
-	}
-
-	public void envoyerPlanificationMode(ModeLaveLinge ml, int heure, int minutes) throws Exception {
-		this.lavelinge_OUTPORT.envoyerPlanificationMode(ml, heure, minutes);
+	public void envoyerPlanificationCycle(ArrayList<ModeLaveLinge> planification, int heure, int minutes) throws Exception {
+		this.lavelinge_OUTPORT.envoyerPlanificationCycle(planification, heure, minutes);		
 	}
 
 	public void envoyerTemperature(TemperatureLaveLinge tl) throws Exception {
@@ -180,13 +177,6 @@ public class Controleur extends AbstractComponent {
 		this.logMessage("Decisions controleur...");
 		
 		/** TODO code pour gerer les decisions reactives du controleur */
-		
-		// TEST
-		int i = 0;
-		if(i == 0) {
-			envoyerTemperature_Refrigerateur(3.5);
-			i++;
-		}
 		
 		this.logMessage("...");
 	}
@@ -246,6 +236,23 @@ public class Controleur extends AbstractComponent {
 			@Override
 			public void run() {
 				try { ((Controleur) this.getTaskOwner()).envoyerEtatAspirateur(ModeAspirateur.PERFORMANCE_REDUITE); }
+				catch (Exception e) { throw new RuntimeException(e); }
+			}
+		}, 3000, TimeUnit.MILLISECONDS);
+		
+		this.scheduleTask(new AbstractComponent.AbstractTask() {
+			@Override
+			public void run() {
+				try {
+					((Controleur) this.getTaskOwner()).envoyerTemperature_Refrigerateur(3.5);
+					ArrayList<ModeLaveLinge> p = new ArrayList<>();
+					p.add(ModeLaveLinge.LAVAGE);
+					p.add(ModeLaveLinge.RINCAGE);
+					p.add(ModeLaveLinge.ESSORAGE);
+					p.add(ModeLaveLinge.SECHAGE);
+					p.add(ModeLaveLinge.VEILLE);
+					((Controleur) this.getTaskOwner()).envoyerPlanificationCycle(p, 0, 30);
+				}
 				catch (Exception e) { throw new RuntimeException(e); }
 			}
 		}, 3000, TimeUnit.MILLISECONDS);

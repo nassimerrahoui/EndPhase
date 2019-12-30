@@ -8,10 +8,21 @@ package app.util;
  */
 public enum TemperatureLaveLinge {
 
-	VINGT_DEGRES,
-	TRENTE_DEGRES,
-	QUARANTE_DEGRES,
-	SOIXANTE_DEGRES,
-	QUATRE_VINGT_DIX_DEGRES
+	VINGT_DEGRES(55),
+	TRENTE_DEGRES(60),
+	QUARANTE_DEGRES(70),
+	SOIXANTE_DEGRES(80),
+	QUATRE_VINGT_DIX_DEGRES(85);
 	
+	protected final double consommation;
+	 
+    private TemperatureLaveLinge (double consommation) {
+        this.consommation = consommation;
+    }
+ 
+    public double getConsommation() {
+        return consommation;
+    }
+    
+    
 }

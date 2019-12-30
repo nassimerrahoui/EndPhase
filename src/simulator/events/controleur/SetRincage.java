@@ -1,4 +1,4 @@
-package simulator.events.lavelinge;
+package simulator.events.controleur;
 
 import app.util.ModeLaveLinge;
 import fr.sorbonne_u.devs_simulation.models.AtomicModel;

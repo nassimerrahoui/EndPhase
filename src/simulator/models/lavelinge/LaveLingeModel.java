@@ -3,13 +3,14 @@ package simulator.models.lavelinge;
 import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
-
 import app.util.ModeLaveLinge;
+import app.util.TemperatureLaveLinge;
 import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentStateAccessI;
 import fr.sorbonne_u.devs_simulation.hioa.annotations.ExportedVariable;
 import fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOAwithEquations;
 import fr.sorbonne_u.devs_simulation.hioa.models.vars.Value;
 import fr.sorbonne_u.devs_simulation.interfaces.SimulationReportI;
+import fr.sorbonne_u.devs_simulation.models.annotations.ModelExternalEvents;
 import fr.sorbonne_u.devs_simulation.models.events.Event;
 import fr.sorbonne_u.devs_simulation.models.events.EventI;
 import fr.sorbonne_u.devs_simulation.models.time.Duration;
@@ -19,24 +20,37 @@ import fr.sorbonne_u.devs_simulation.utils.AbstractSimulationReport;
 import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
 import fr.sorbonne_u.utils.PlotterDescription;
 import fr.sorbonne_u.utils.XYPlotter;
-import simulator.events.lavelinge.AbstractLaveLingeEvent;
+import simulator.events.controleur.AbstractLaveLingeEvent;
+import simulator.events.controleur.SetEssorage;
+import simulator.events.controleur.SetLavage;
+import simulator.events.controleur.SetLaveLingeVeille;
+import simulator.events.controleur.SetRincage;
+import simulator.events.controleur.SetSechage;
+import simulator.events.controleur.SwitchLaveLingeOff;
 
-// TODO Mettre les imports
+@ModelExternalEvents(imported = {
+		SetEssorage.class,
+		SetLavage.class,
+		SetLaveLingeVeille.class,
+		SetRincage.class,
+		SetSechage.class,
+		SwitchLaveLingeOff.class
+})
 
 public class LaveLingeModel extends AtomicHIOAwithEquations{
 
 	private static final long serialVersionUID = 1L;
-	public static final String URI = "LavelingeModel";
+	public static final String URI = "LaveLingeModel";
 	public static final String COMPONENT_REF = "lavelinge-component-ref";
-	
+	public static final String POWER_PLOTTING_PARAM_NAME = "consommation";
 	private static final String SERIES_POWER = "power";
-	protected static final double CONSOMMATION_VINGT_DEGRES = 800.0; // Watts
-	protected static final double CONSOMMATION_QUATRE_VINGT_DIX_DEGRES = 1500.0; // Watts
 
 	@ExportedVariable(type = Double.class)
 	protected final Value<Double> currentPower = new Value<Double>(this, 0.0, 0); // Watts
 	protected ModeLaveLinge currentState;
+	protected TemperatureLaveLinge currentTemperature;
 	protected XYPlotter powerPlotter;
+	
 	protected EmbeddingComponentStateAccessI componentRef;
 	
 	public static class LaveLingeReport extends AbstractSimulationReport {
@@ -54,23 +68,23 @@ public class LaveLingeModel extends AtomicHIOAwithEquations{
 	
 	public LaveLingeModel(String uri, TimeUnit simulatedTimeUnit, SimulatorI simulationEngine) throws Exception {
 		
-		// affichage de la consommation electrique sur le graphique
 		super(uri, simulatedTimeUnit, simulationEngine);
-		PlotterDescription pd = new PlotterDescription("Consommation Lave-Linge", "Temps (sec)", "Consommation (Watt)", 100, 0,
-				600, 400);
-		this.powerPlotter = new XYPlotter(pd);
-		this.powerPlotter.createSeries(SERIES_POWER);
-
 		this.setLogger(new StandardLogger());
 	}
 	
 	@Override
 	public void setSimulationRunParameters(Map<String, Object> simParams) throws Exception {
+		
 		this.componentRef = (EmbeddingComponentStateAccessI) simParams.get(URI + " : " + COMPONENT_REF);
+		
+		PlotterDescription pd = (PlotterDescription) simParams.get(URI + " : " + POWER_PLOTTING_PARAM_NAME);
+		this.powerPlotter = new XYPlotter(pd);
+		this.powerPlotter.createSeries(SERIES_POWER);
 	}
 
 	@Override
 	public void initialiseState(Time initialTime) {
+		
 		this.currentState = ModeLaveLinge.OFF;	
 		this.powerPlotter.initialise();
 		this.powerPlotter.showPlotter();
@@ -112,10 +126,12 @@ public class LaveLingeModel extends AtomicHIOAwithEquations{
 			try {
 				this.logMessage("lave-linge state = " + componentRef.getEmbeddingComponentStateValue(URI + " : state"));
 				this.logMessage("lave-linge consommation = " + componentRef.getEmbeddingComponentStateValue(URI + " : consommation"));
+				currentTemperature = (TemperatureLaveLinge) componentRef.getEmbeddingComponentStateValue(URI + " : temperature");
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
 		}
+		
 	}
 	
 	@Override
@@ -174,19 +190,19 @@ public class LaveLingeModel extends AtomicHIOAwithEquations{
 			this.currentPower.v = 0.0;
 			break;
 		case VEILLE:
-			this.currentPower.v = 0.0;
+			this.currentPower.v = 5.0;
 			break;
 		case LAVAGE:
-			this.currentPower.v = 0.0;
+			this.currentPower.v = currentTemperature.getConsommation();
 			break;
 		case RINCAGE:
-			this.currentPower.v = 0.0;
+			this.currentPower.v = currentTemperature.getConsommation();
 			break;
 		case ESSORAGE:
-			this.currentPower.v = 0.0;
+			this.currentPower.v = 20.0;
 			break;
 		case SECHAGE:
-			this.currentPower.v = 0.0;
+			this.currentPower.v = 30.0;
 			break;
 		default:
 			// cannot happen

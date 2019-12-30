@@ -1,4 +1,4 @@
-package simulator.events.lavelinge;
+package simulator.events.controleur;
 
 import app.util.ModeLaveLinge;
 import fr.sorbonne_u.devs_simulation.models.AtomicModel;
@@ -6,17 +6,17 @@ import fr.sorbonne_u.devs_simulation.models.events.EventI;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
 import simulator.models.lavelinge.LaveLingeModel;
 
-public class SetLaveLingeVeille extends AbstractLaveLingeEvent {
+public class SetSechage extends AbstractLaveLingeEvent {
 
 	private static final long serialVersionUID = 1L;
 
-	public SetLaveLingeVeille(Time timeOfOccurrence) {
+	public SetSechage(Time timeOfOccurrence) {
 		super(timeOfOccurrence, null);
 	}
 	
 	@Override
 	public String eventAsString() {
-		return "LaveLinge::SwitchLaveLingeVeille";
+		return "LaveLinge::SwitchSetSechage";
 	}
 
 	@Override
@@ -27,7 +27,7 @@ public class SetLaveLingeVeille extends AbstractLaveLingeEvent {
 	@Override
 	public void executeOn(AtomicModel model) {
 		assert model instanceof LaveLingeModel;
-		((LaveLingeModel) model).setState(ModeLaveLinge.VEILLE);
+		((LaveLingeModel) model).setState(ModeLaveLinge.SECHAGE);
 	}
 
 }

@@ -56,7 +56,7 @@ public class Frigo
 	
 	protected FrigoSimulatorPlugin asp;
 	
-	public static int ORIGIN_X = -340 ;
+	public static int ORIGIN_X = 340 ;
 	public static int ORIGIN_Y = 20 ;
 
 	protected Frigo(
@@ -91,7 +91,7 @@ public class Frigo
 		
 		// affichage
 		this.tracer.setTitle("Frigo");
-		this.tracer.setRelativePosition(0, 1);
+		this.tracer.setRelativePosition(2, 1);
 
 		// attributs
 		this.type = type;
@@ -184,16 +184,16 @@ public class Frigo
 				"Frigo Model - Etat",
 				"Time (sec)",
 				"Etat",
-				ORIGIN_X + getPlotterWidth(),
-		  		ORIGIN_Y + 3 * getPlotterHeight(),
+				ORIGIN_X + 2 * getPlotterWidth(),
+		  		ORIGIN_Y,
 				getPlotterWidth(),
 				getPlotterHeight())) ;
 		simParams.put(FrigoModel.URI + " : " + FrigoModel.TEMPERATURE_PLOTTING_PARAM_NAME, new PlotterDescription(
 				"Frigo Model - Temperature",
 				"Time (sec)",
 				"Temperature (°C)",
-				ORIGIN_X + getPlotterWidth(),
-		  		ORIGIN_Y + 3 * getPlotterHeight(),
+				ORIGIN_X + 2 * getPlotterWidth(),
+		  		ORIGIN_Y + getPlotterHeight(),
 		  		getPlotterWidth(),
 		  		getPlotterHeight())) ;
 		

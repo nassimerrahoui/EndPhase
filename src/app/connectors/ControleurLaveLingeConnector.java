@@ -1,5 +1,7 @@
 package app.connectors;
 
+import java.util.ArrayList;
+
 import app.interfaces.appareil.ILaveLinge;
 import app.interfaces.controleur.IControleLaveLinge;
 import app.util.ModeLaveLinge;
@@ -14,13 +16,8 @@ public class ControleurLaveLingeConnector extends AbstractConnector implements I
 	}
 
 	@Override
-	public void envoyerPlanificationCycle(int heure, int minutes) throws Exception {
-		((ILaveLinge) this.offering).planifierCycle(heure, minutes);
-	}
-
-	@Override
-	public void envoyerPlanificationMode(ModeLaveLinge ml, int heure, int minutes) throws Exception {
-		((ILaveLinge) this.offering).planifierMode(ml, heure, minutes);
+	public void envoyerPlanificationCycle(ArrayList<ModeLaveLinge> planification, int heure, int minutes) throws Exception {
+		((ILaveLinge) this.offering).planifierCycle(planification, heure, minutes);
 	}
 
 	@Override
