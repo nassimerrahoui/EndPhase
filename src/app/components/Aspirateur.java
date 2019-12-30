@@ -1,5 +1,8 @@
 package app.components;
 
+import java.awt.DisplayMode;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 import app.interfaces.appareil.IAjoutAppareil;
@@ -24,6 +27,7 @@ import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
 import fr.sorbonne_u.devs_simulation.architectures.Architecture;
 import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
+import fr.sorbonne_u.utils.PlotterDescription;
 import simulator.models.aspirateur.AspirateurCoupledModel;
 import simulator.models.aspirateur.AspirateurModel;
 import simulator.plugins.AspirateurSimulatorPlugin;
@@ -45,6 +49,9 @@ public class Aspirateur
 	protected Double consommation;
 	
 	protected AspirateurSimulatorPlugin asp;
+	
+	public static int ORIGIN_X = 340;
+	public static int ORIGIN_Y = 20;
 
 	protected Aspirateur(
 			String ASPIRATEUR_URI, 
@@ -104,8 +111,7 @@ public class Aspirateur
 	 * Gerer et afficher ce qui se passe pendant un mode
 	 */
 	public void runningAndPrint() {
-		/** TODO Redefinir toString a la place de name */
-		this.logMessage("Mode actuel : " + etat.name());
+		/** TODO */
 	}
 	
 	// ************* Cycle de vie du composant ************* 
@@ -147,6 +153,16 @@ public class Aspirateur
 
 		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
 		simParams.put(AspirateurModel.URI + " : " + AspirateurModel.COMPONENT_REF, this);
+		
+		simParams.put(AspirateurModel.URI + " : " + AspirateurModel.POWER_PLOTTING_PARAM_NAME, new PlotterDescription(
+				"Consommation Aspirateur", 
+				"Temps (sec)", 
+				"Consommation (Watt)", 
+				ORIGIN_X + getPlotterWidth(),
+		  		ORIGIN_Y,
+		  		getPlotterWidth(),
+		  		getPlotterHeight())) ;
+		
 		this.asp.setSimulationRunParameters(simParams) ;
 
 		this.runTask(
@@ -169,6 +185,7 @@ public class Aspirateur
 				try {
 					((Aspirateur) this.getTaskOwner()).etat = (ModeAspirateur) ((Aspirateur) this.getTaskOwner()).asp.getModelStateValue(AspirateurModel.URI, "state");
 					((Aspirateur) this.getTaskOwner()).consommation = (Double) ((Aspirateur) this.getTaskOwner()).asp.getModelStateValue(AspirateurModel.URI, "consommation");
+					((Aspirateur) this.getTaskOwner()).logMessage("Mode : " + etat);
 					((Aspirateur) this.getTaskOwner()).logMessage("Consommation : " + consommation);
 				} catch (Exception e) { e.printStackTrace(); }
 			}
@@ -239,4 +256,35 @@ public class Aspirateur
 		this.asp.setSimulationArchitecture(localArchitecture) ;
 		this.installPlugin(this.asp) ;
 	}
+	
+	// ************** Plotter ******************************
+	
+	public static int getPlotterWidth() {
+		int ret = Integer.MAX_VALUE ;
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment() ;
+		GraphicsDevice[] gs = ge.getScreenDevices() ;
+		for (int i = 0; i < gs.length; i++) {
+			DisplayMode dm = gs[i].getDisplayMode() ;
+			int width = dm.getWidth() ;
+			if (width < ret) {
+				ret = width ;
+			}
+		}
+		return (int) (0.25 * ret) ;
+	}
+
+	public static int getPlotterHeight() {
+		int ret = Integer.MAX_VALUE ;
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment() ;
+		GraphicsDevice[] gs = ge.getScreenDevices() ;
+		for (int i = 0; i < gs.length; i++) {
+			DisplayMode dm = gs[i].getDisplayMode() ;
+			int height = dm.getHeight() ;
+			if (height < ret) {
+				ret = height ;
+			}
+		}
+		return (int) (0.2 * ret) ;
+	}
+
 }

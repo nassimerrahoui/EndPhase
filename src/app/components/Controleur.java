@@ -97,7 +97,7 @@ public class Controleur extends AbstractComponent {
 		
 		// affichage
 		this.tracer.setTitle("Controleur");
-		this.tracer.setRelativePosition(1, 0);
+		this.tracer.setRelativePosition(2, 3);
 	}
 	
 	// ******* Services requis pour changer le mode des appareils *********
@@ -184,7 +184,7 @@ public class Controleur extends AbstractComponent {
 		// TEST
 		int i = 0;
 		if(i == 0) {
-			envoyerTemperature_Refrigerateur(15.0);
+			envoyerTemperature_Refrigerateur(3.5);
 			i++;
 		}
 		

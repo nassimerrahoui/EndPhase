@@ -79,17 +79,19 @@ public class Compteur extends AbstractComponent {
 	}
 	
 	public void setAppareilConsommation(String uri, double consommation) throws Exception {
+		double c = (double) Math.round(consommation);
 		if(appareil_consommation.containsKey(uri)) {
-			appareil_consommation.put(uri, consommation);
-			this.logMessage(uri + " consomme " + consommation + " Watt.");
+			appareil_consommation.put(uri, c);
+			this.logMessage(uri + " consomme " + c + " Watt.");
 			this.logMessage("...");
 		}
 	}
 
 	public void setUniteProduction(String uri, double production) throws Exception {
+		double p = (double) Math.round(production);
 		if(unite_production.containsKey(uri)) {
-			unite_production.put(uri, production);
-			this.logMessage(uri + " produit " + production + " Watt.");
+			unite_production.put(uri, p);
+			this.logMessage(uri + " produit " + p + " Watt.");
 			this.logMessage("...");
 		}
 	}
