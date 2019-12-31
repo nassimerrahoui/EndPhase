@@ -1,5 +1,7 @@
 package app.interfaces.appareil;
 
+import java.util.ArrayList;
+
 import app.util.ModeLaveLinge;
 import app.util.TemperatureLaveLinge;
 import fr.sorbonne_u.components.interfaces.OfferedI;
@@ -24,16 +26,7 @@ public interface ILaveLinge extends OfferedI {
 	 * @param minutes
 	 * @throws Exception
 	 */
-	public void planifierCycle(int heure, int minutes) throws Exception;
-	
-	/**
-	 * Enclenche un seul mode du lave-linge a une heure et minutes donnee
-	 * @param ml
-	 * @param heure
-	 * @param minutes
-	 * @throws Exception
-	 */
-	public void planifierMode(ModeLaveLinge ml, int heure, int minutes) throws Exception;
+	public void planifierCycle(ArrayList<ModeLaveLinge> planification, int heure, int minutes) throws Exception;
 	
 	/**
 	 * Permet de definir la temperature des prochains lavages

@@ -36,10 +36,11 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 	private static final long serialVersionUID = 1L;
 	public static final String URI = "AspirateurModel";
 	public static final String COMPONENT_REF = "aspirateur-component-ref";
+	public static final String POWER_PLOTTING_PARAM_NAME = "consommation";
 	
 	private static final String SERIES_POWER = "power";
-	protected static final double CONSOMMATION_PERFORMANCE_REDUITE = 800.0; // Watts
-	protected static final double CONSOMMATION_PERFORMANCE_MAXIMALE = 1200.0; // Watts
+	protected static final double CONSOMMATION_PERFORMANCE_REDUITE = 800.0/3.6; // Watts
+	protected static final double CONSOMMATION_PERFORMANCE_MAXIMALE = 1200.0/3.6; // Watts
 	protected static final double TENSION = 220.0; // Volts
 	@ExportedVariable(type = Double.class)
 	protected final Value<Double> currentPower = new Value<Double>(this, 0.0, 0); // Watts
@@ -62,19 +63,17 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 
 	public AspirateurModel(String uri, TimeUnit simulatedTimeUnit, SimulatorI simulationEngine) throws Exception {
 		
-		// affichage de la consommation electrique sur le graphique
 		super(uri, simulatedTimeUnit, simulationEngine);
-		PlotterDescription pd = new PlotterDescription("Consommation Aspirateur", "Temps (sec)", "Consommation (Watt)", 100, 0,
-				600, 400);
-		this.powerPlotter = new XYPlotter(pd);
-		this.powerPlotter.createSeries(SERIES_POWER);
-
 		this.setLogger(new StandardLogger());
 	}
 
 	@Override
 	public void setSimulationRunParameters(Map<String, Object> simParams) throws Exception {
 		this.componentRef = (EmbeddingComponentStateAccessI) simParams.get(URI + " : " + COMPONENT_REF);
+	
+		PlotterDescription pd = (PlotterDescription) simParams.get(URI + " : " + POWER_PLOTTING_PARAM_NAME);
+		this.powerPlotter = new XYPlotter(pd);
+		this.powerPlotter.createSeries(SERIES_POWER);
 	}
 
 	@Override
@@ -124,6 +123,8 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 				throw new RuntimeException(e);
 			}
 		}
+		
+		super.userDefinedInternalTransition(elapsedTime) ;
 	}
 
 	@Override

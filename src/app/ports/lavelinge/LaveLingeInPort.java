@@ -1,5 +1,7 @@
 package app.ports.lavelinge;
 
+import java.util.ArrayList;
+
 import app.components.LaveLinge;
 import app.interfaces.appareil.ILaveLinge;
 import app.util.ModeLaveLinge;
@@ -35,23 +37,10 @@ public class LaveLingeInPort extends AbstractInboundPort implements ILaveLinge {
 	}
 
 	@Override
-	public void planifierCycle(int heure, int minutes) throws Exception {
+	public void planifierCycle(ArrayList<ModeLaveLinge> planification, int heure, int minutes) throws Exception {
 		AbstractComponent.AbstractService<Void> task = new AbstractComponent.AbstractService<Void>() {
 			public Void call() throws Exception {
-				((LaveLinge) owner).planifierCycle(heure, minutes);
-				return null;
-			}
-		};
-
-		this.owner.handleRequestAsync(URI.POOL_ACTION_LAVELINGE_URI.getURI(), task);
-
-	}
-
-	@Override
-	public void planifierMode(ModeLaveLinge ml, int heure, int minutes) throws Exception {
-		AbstractComponent.AbstractService<Void> task = new AbstractComponent.AbstractService<Void>() {
-			public Void call() throws Exception {
-				((LaveLinge) owner).planifierMode(ml, heure, minutes);
+				((LaveLinge) owner).planifierCycle(planification, heure, minutes);
 				return null;
 			}
 		};

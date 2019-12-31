@@ -58,8 +58,8 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 	
 	// Temperature initiale du refrigerateur eteint 
 	public static final double AMBIENT_TEMPERATURE = 20.0; // degres celsius
-	protected static final double CONSOMMAION_INITIALE = 300; // Watts
-	protected static final double CONSOMMATION_LUMIERE_ALLUMEE = 30; // Watts
+	protected static final double CONSOMMAION_INITIALE = 300/3.6; // Watts
+	protected static final double CONSOMMATION_LUMIERE_ALLUMEE = 3./3.6; // Watts
 	
 	protected double currentPower; // Watts
 	protected double currentTemperature; // degres celsius

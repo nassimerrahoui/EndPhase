@@ -56,8 +56,8 @@ public class Frigo
 	
 	protected FrigoSimulatorPlugin asp;
 	
-	public static int	ORIGIN_X = 100 ;
-	public static int	ORIGIN_Y = 0 ;
+	public static int ORIGIN_X = 340 ;
+	public static int ORIGIN_Y = 20 ;
 
 	protected Frigo(
 			String FRIGO_URI, 
@@ -91,7 +91,7 @@ public class Frigo
 		
 		// affichage
 		this.tracer.setTitle("Frigo");
-		this.tracer.setRelativePosition(0, 1);
+		this.tracer.setRelativePosition(2, 1);
 
 		// attributs
 		this.type = type;
@@ -184,19 +184,19 @@ public class Frigo
 				"Frigo Model - Etat",
 				"Time (sec)",
 				"Etat",
-				ORIGIN_X +
-		  		getPlotterWidth(),
-		  		ORIGIN_Y + 2 * getPlotterHeight(),
+				ORIGIN_X + 2 * getPlotterWidth(),
+		  		ORIGIN_Y,
 				getPlotterWidth(),
 				getPlotterHeight())) ;
 		simParams.put(FrigoModel.URI + " : " + FrigoModel.TEMPERATURE_PLOTTING_PARAM_NAME, new PlotterDescription(
 				"Frigo Model - Temperature",
 				"Time (sec)",
 				"Temperature (°C)",
-				ORIGIN_X + getPlotterWidth(),
-		  		ORIGIN_Y,
+				ORIGIN_X + 2 * getPlotterWidth(),
+		  		ORIGIN_Y + getPlotterHeight(),
 		  		getPlotterWidth(),
 		  		getPlotterHeight())) ;
+		
 		this.asp.setSimulationRunParameters(simParams) ;
 		
 		this.runTask(
@@ -220,7 +220,8 @@ public class Frigo
 					((Frigo) this.getTaskOwner()).etat = (ModeFrigo) ((Frigo) this.getTaskOwner()).asp.getModelStateValue(FrigoModel.URI, "state");
 					((Frigo) this.getTaskOwner()).consommation = (double) ((Frigo) this.getTaskOwner()).asp.getModelStateValue(FrigoModel.URI, "consommation");
 					((Frigo) this.getTaskOwner()).refrigerateur_current_temperature = (double) ((Frigo) this.getTaskOwner()).asp.getModelStateValue(FrigoModel.URI, "temperature");
-					((Frigo) this.getTaskOwner()).logMessage("Consommation : " + consommation);
+					((Frigo) this.getTaskOwner()).logMessage("Mode : " + etat);
+					((Frigo) this.getTaskOwner()).logMessage("Consommation : " + Math.round(consommation));
 					Thread.sleep(10L);
 				} catch (Exception e) { e.printStackTrace(); }
 			}
@@ -296,6 +297,8 @@ public class Frigo
 		this.asp.setSimulationArchitecture(localArchitecture);
 		this.installPlugin(this.asp);
 	}
+	
+	// ************** Plotter ******************************
 	
 	public static int getPlotterWidth() {
 		int ret = Integer.MAX_VALUE ;
