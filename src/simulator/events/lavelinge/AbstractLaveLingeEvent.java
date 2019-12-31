@@ -1,4 +1,4 @@
-package simulator.events.controleur;
+package simulator.events.lavelinge;
 
 import fr.sorbonne_u.devs_simulation.es.events.ES_Event;
 import fr.sorbonne_u.devs_simulation.models.events.EventInformationI;

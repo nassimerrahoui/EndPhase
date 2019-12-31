@@ -24,12 +24,13 @@ import fr.sorbonne_u.devs_simulation.models.events.EventSource;
 import fr.sorbonne_u.devs_simulation.models.events.ReexportedEvent;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import fr.sorbonne_u.devs_simulation.utils.StandardCoupledModelReport;
-import simulator.events.controleur.SetEssorage;
-import simulator.events.controleur.SetLavage;
-import simulator.events.controleur.SetLaveLingeVeille;
-import simulator.events.controleur.SetRincage;
-import simulator.events.controleur.SetSechage;
-import simulator.events.controleur.SwitchLaveLingeOff;
+import simulator.events.lavelinge.SetEssorage;
+import simulator.events.lavelinge.SetInternalTransition;
+import simulator.events.lavelinge.SetLavage;
+import simulator.events.lavelinge.SetLaveLingeVeille;
+import simulator.events.lavelinge.SetRincage;
+import simulator.events.lavelinge.SetSechage;
+import simulator.events.lavelinge.SwitchLaveLingeOff;
 import simulator.models.lavelinge.LaveLingeModel;
 import simulator.models.lavelinge.LaveLingePlanificationModel;
 
@@ -90,6 +91,9 @@ public class LaveLingeCoupledModel extends CoupledModel{
 		EventSource from6 = new EventSource(LaveLingePlanificationModel.URI, SetSechage.class);
 		EventSink[] to6 = new EventSink[] { new EventSink(LaveLingeModel.URI, SetSechage.class) };
 		connections.put(from6, to6);
+		EventSource from7 = new EventSource(LaveLingePlanificationModel.URI, SetInternalTransition.class);
+		EventSink[] to7 = new EventSink[] { new EventSink(LaveLingeModel.URI, SetInternalTransition.class) };
+		connections.put(from7, to7);
 
 		coupledModelDescriptors.put(LaveLingeCoupledModel.URI,
 				new CoupledHIOA_Descriptor(LaveLingeCoupledModel.class, LaveLingeCoupledModel.URI, submodels, null,

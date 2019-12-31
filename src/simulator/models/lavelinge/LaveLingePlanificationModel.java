@@ -14,12 +14,13 @@ import fr.sorbonne_u.devs_simulation.models.time.Duration;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
-import simulator.events.controleur.SetEssorage;
-import simulator.events.controleur.SetLavage;
-import simulator.events.controleur.SetLaveLingeVeille;
-import simulator.events.controleur.SetRincage;
-import simulator.events.controleur.SetSechage;
-import simulator.events.controleur.SwitchLaveLingeOff;
+import simulator.events.lavelinge.SetEssorage;
+import simulator.events.lavelinge.SetInternalTransition;
+import simulator.events.lavelinge.SetLavage;
+import simulator.events.lavelinge.SetLaveLingeVeille;
+import simulator.events.lavelinge.SetRincage;
+import simulator.events.lavelinge.SetSechage;
+import simulator.events.lavelinge.SwitchLaveLingeOff;
 
 @ModelExternalEvents(exported = { 
 		SetEssorage.class,
@@ -27,7 +28,8 @@ import simulator.events.controleur.SwitchLaveLingeOff;
 		SetLaveLingeVeille.class,
 		SetRincage.class,
 		SetSechage.class,
-		SwitchLaveLingeOff.class
+		SwitchLaveLingeOff.class,
+		SetInternalTransition.class
 })
 
 public class LaveLingePlanificationModel extends AtomicES_Model{
@@ -133,6 +135,7 @@ public class LaveLingePlanificationModel extends AtomicES_Model{
 		int i = 1;
 		for (ModeLaveLinge mode : planification_etats) {
 			d = new Duration(2.0 * (this.delai + this.meanTimeExecuteTask * i) * this.rg.nextBeta(1.75, 1.75), this.getSimulatedTimeUnit());
+			
 			if(mode == ModeLaveLinge.LAVAGE)
 				this.scheduleEvent(new SetLavage(this.getCurrentStateTime().add(d)));
 			else if (mode == ModeLaveLinge.RINCAGE)
@@ -149,29 +152,8 @@ public class LaveLingePlanificationModel extends AtomicES_Model{
 			i++;
 		}
 		
-		if(planification_etats.isEmpty()) {
-			ModeLaveLinge mode;
-			try {
-				
-				mode = (ModeLaveLinge) componentRef.getEmbeddingComponentStateValue(LaveLingeModel.URI + " : state");
-				System.out.println(mode);
-				d = new Duration(2.0 * this.rg.nextBeta(1.75, 1.75), this.getSimulatedTimeUnit());
-				
-				if(mode == ModeLaveLinge.LAVAGE)
-					this.scheduleEvent(new SetLavage(this.getCurrentStateTime().add(d)));
-				else if (mode == ModeLaveLinge.RINCAGE)
-					this.scheduleEvent(new SetRincage(this.getCurrentStateTime().add(d)));
-				else if (mode == ModeLaveLinge.ESSORAGE)
-					this.scheduleEvent(new SetEssorage(this.getCurrentStateTime().add(d)));
-				else if (mode == ModeLaveLinge.SECHAGE)
-					this.scheduleEvent(new SetSechage(this.getCurrentStateTime().add(d)));
-				else if (mode == ModeLaveLinge.VEILLE)
-					this.scheduleEvent(new SetLaveLingeVeille(this.getCurrentStateTime().add(d)));
-				else if (mode == ModeLaveLinge.OFF)
-					this.scheduleEvent(new SwitchLaveLingeOff(this.getCurrentStateTime().add(d)));
-				
-			} catch (Exception e) { e.printStackTrace(); }
-		}
+		d = new Duration(2.0 * (this.delai + this.meanTimeExecuteTask * i) * this.rg.nextBeta(1.75, 1.75), this.getSimulatedTimeUnit());
+		this.scheduleEvent(new SetInternalTransition(this.getCurrentStateTime().add(d)));
 		
 		planification_etats = new ArrayList<>();
 	}

@@ -125,7 +125,6 @@ public class LaveLinge
 		/** TODO */
 		if(heure >= 0 && heure <= 23 && min >= 0 && min <= 59) {
 			this.planification_etats = planification;
-			System.out.println("MDR CEST MOI QI CODE : " + planification_etats.size());
 			this.heure = heure;
 			this.minutes = min;
 			this.logMessage("Cycle planifier a : " + heure + "h" + min);

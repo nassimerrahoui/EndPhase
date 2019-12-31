@@ -20,13 +20,14 @@ import fr.sorbonne_u.devs_simulation.utils.AbstractSimulationReport;
 import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
 import fr.sorbonne_u.utils.PlotterDescription;
 import fr.sorbonne_u.utils.XYPlotter;
-import simulator.events.controleur.AbstractLaveLingeEvent;
-import simulator.events.controleur.SetEssorage;
-import simulator.events.controleur.SetLavage;
-import simulator.events.controleur.SetLaveLingeVeille;
-import simulator.events.controleur.SetRincage;
-import simulator.events.controleur.SetSechage;
-import simulator.events.controleur.SwitchLaveLingeOff;
+import simulator.events.lavelinge.AbstractLaveLingeEvent;
+import simulator.events.lavelinge.SetEssorage;
+import simulator.events.lavelinge.SetInternalTransition;
+import simulator.events.lavelinge.SetLavage;
+import simulator.events.lavelinge.SetLaveLingeVeille;
+import simulator.events.lavelinge.SetRincage;
+import simulator.events.lavelinge.SetSechage;
+import simulator.events.lavelinge.SwitchLaveLingeOff;
 
 @ModelExternalEvents(imported = {
 		SetEssorage.class,
@@ -34,7 +35,8 @@ import simulator.events.controleur.SwitchLaveLingeOff;
 		SetLaveLingeVeille.class,
 		SetRincage.class,
 		SetSechage.class,
-		SwitchLaveLingeOff.class
+		SwitchLaveLingeOff.class,
+		SetInternalTransition.class
 })
 
 public class LaveLingeModel extends AtomicHIOAwithEquations{
@@ -199,10 +201,10 @@ public class LaveLingeModel extends AtomicHIOAwithEquations{
 			this.currentPower.v = currentTemperature.getConsommation();
 			break;
 		case ESSORAGE:
-			this.currentPower.v = 20.0;
+			this.currentPower.v = 50.0;
 			break;
 		case SECHAGE:
-			this.currentPower.v = 30.0;
+			this.currentPower.v = 60.0;
 			break;
 		default:
 			// cannot happen
