@@ -37,7 +37,6 @@ public class LaveLingePlanificationModel extends AtomicES_Model{
 	public static final String URI = "LaveLingePlanificationModel";
 
 	protected double initialDelay;
-	protected double interdayDelay;
 	protected double meanTimeBetweenUsages;
 	protected double meanTimeExecuteTask;
 	protected Class<?> nextEvent;
@@ -62,9 +61,8 @@ public class LaveLingePlanificationModel extends AtomicES_Model{
 	@Override
 	public void initialiseState(Time initialTime) {
 		this.initialDelay = 10.0;
-		this.interdayDelay = 3600 * 8; // NON UTILISE POUR LE MOMENT...
 		this.meanTimeBetweenUsages = 10.0;
-		this.meanTimeExecuteTask = 600.0;
+		this.meanTimeExecuteTask = 300.0;
 		
 		this.delai = 0.0;
 
@@ -134,8 +132,8 @@ public class LaveLingePlanificationModel extends AtomicES_Model{
 		Duration d;
 		int i = 1;
 		for (ModeLaveLinge mode : planification_etats) {
-			d = new Duration(2.0 * (this.delai + this.meanTimeExecuteTask * i) * this.rg.nextBeta(1.75, 1.75), this.getSimulatedTimeUnit());
-			
+			d = new Duration(2.0 * (this.delai + this.meanTimeExecuteTask * i), this.getSimulatedTimeUnit());
+
 			if(mode == ModeLaveLinge.LAVAGE)
 				this.scheduleEvent(new SetLavage(this.getCurrentStateTime().add(d)));
 			else if (mode == ModeLaveLinge.RINCAGE)
@@ -152,7 +150,16 @@ public class LaveLingePlanificationModel extends AtomicES_Model{
 			i++;
 		}
 		
-		d = new Duration(2.0 * (this.delai + this.meanTimeExecuteTask * i) * this.rg.nextBeta(1.75, 1.75), this.getSimulatedTimeUnit());
+		// event de mise en veille au cas ou le controleur n'aurait pas planifie la veille
+		if(i > 1) {
+			System.out.println("i : " + i);
+			d = new Duration(2.0 * (this.delai + this.meanTimeExecuteTask * (i+1) ), this.getSimulatedTimeUnit());
+			System.out.println(d);
+			this.scheduleEvent(new SetLaveLingeVeille(this.getCurrentStateTime().add(d)));
+		}
+		
+		// event de
+		d = new Duration(2.0 * (this.delai + this.meanTimeExecuteTask * i), this.getSimulatedTimeUnit());
 		this.scheduleEvent(new SetInternalTransition(this.getCurrentStateTime().add(d)));
 		
 		planification_etats = new ArrayList<>();
