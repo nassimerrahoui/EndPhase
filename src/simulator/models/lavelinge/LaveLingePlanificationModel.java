@@ -152,9 +152,7 @@ public class LaveLingePlanificationModel extends AtomicES_Model{
 		
 		// event de mise en veille au cas ou le controleur n'aurait pas planifie la veille
 		if(i > 1) {
-			System.out.println("i : " + i);
 			d = new Duration(2.0 * (this.delai + this.meanTimeExecuteTask * (i+1) ), this.getSimulatedTimeUnit());
-			System.out.println(d);
 			this.scheduleEvent(new SetLaveLingeVeille(this.getCurrentStateTime().add(d)));
 		}
 		

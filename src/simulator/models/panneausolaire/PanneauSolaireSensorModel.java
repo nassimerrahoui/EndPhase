@@ -3,7 +3,7 @@ package simulator.models.panneausolaire;
 import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
-import fr.sorbonne_u.devs_simulation.hioa.annotations.ImportedVariable;
+import fr.sorbonne_u.devs_simulation.hioa.annotations.ExportedVariable;
 import fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOAwithEquations;
 import fr.sorbonne_u.devs_simulation.hioa.models.vars.Value;
 import fr.sorbonne_u.devs_simulation.interfaces.SimulationReportI;
@@ -65,7 +65,7 @@ public class PanneauSolaireSensorModel extends AtomicHIOAwithEquations {
 	 */
 	protected XYPlotter plotter;
 
-	@ImportedVariable(type = Double.class)
+	@ExportedVariable(type = Double.class)
 	protected Value<Double> energy;
 
 	public PanneauSolaireSensorModel(String uri, TimeUnit simulatedTimeUnit, SimulatorI simulationEngine)
