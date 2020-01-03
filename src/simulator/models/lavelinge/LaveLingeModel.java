@@ -147,6 +147,9 @@ public class LaveLingeModel extends AtomicHIOAwithEquations{
 
 		Event ce = (Event) currentEvents.get(0);
 		assert ce instanceof AbstractLaveLingeEvent;
+		
+		System.out.println(ce);
+		
 		if (this.hasDebugLevel(2)) {
 			this.logMessage("LaveLingeModel::userDefinedExternalTransition 2 " + ce.getClass().getCanonicalName());
 		}
