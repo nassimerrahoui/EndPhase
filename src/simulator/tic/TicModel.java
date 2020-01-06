@@ -65,7 +65,6 @@ extends		AtomicModel
 		) throws Exception
 	{
 		super(uri, simulatedTimeUnit, simulationEngine) ;
-
 		this.delay = TicModel.STANDARD_DURATION ;
 		this.setLogger(new StandardLogger()) ;
 		this.toggleDebugMode() ;
