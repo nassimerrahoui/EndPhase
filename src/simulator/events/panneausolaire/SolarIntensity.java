@@ -4,13 +4,13 @@ import fr.sorbonne_u.devs_simulation.models.events.Event;
 import fr.sorbonne_u.devs_simulation.models.events.EventInformationI;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
 
-public class Energie extends Event {
+public class SolarIntensity extends Event {
 
 	private static final long serialVersionUID = 1L;
 
-	public Energie(Time timeOfOccurrence, double temperature){
-		super(timeOfOccurrence, new Reading(temperature)) ;
-		assert	timeOfOccurrence != null && temperature >= 0.0 ;
+	public SolarIntensity(Time timeOfOccurrence, double intensity){
+		super(timeOfOccurrence, new Reading(intensity)) ;
+		assert	timeOfOccurrence != null && intensity >= 0.0 ;
 	}
 	
 	public static class Reading implements EventInformationI {
@@ -25,13 +25,14 @@ public class Energie extends Event {
 	
 	@Override
 	public String eventAsString() {
-		return "Energie(" + this.eventContentAsString() + ")";
+		return "SolarIntensity(" + this.eventContentAsString() + ")";
 	}
 
 	@Override
 	public String eventContentAsString() {
-		return "temps = " + this.getTimeOfOccurrence() + ", " + "energie = " + ((Reading) this.getEventInformation()).value
-				+ " Watt";
+		return "temps = " + this.getTimeOfOccurrence() + ", " 
+				+ "solarIntensity = " + ((Reading) this.getEventInformation()).value
+				+ " KWC";
 	}
 
 }

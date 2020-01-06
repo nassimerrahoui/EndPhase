@@ -8,6 +8,16 @@ package app.util;
  *
  */
 public enum EtatUniteProduction {
-	ON,
-	OFF
+	OFF(0),
+	ON(1);
+	
+	protected final int valeur;
+
+	private EtatUniteProduction(int valeur) {
+		this.valeur = valeur;
+	}
+	
+	public int getValeur() {
+		return valeur;
+	}
 }
