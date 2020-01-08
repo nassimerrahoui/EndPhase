@@ -60,31 +60,23 @@ public class LaveLingePlanificationModel extends AtomicES_Model{
 	
 	@Override
 	public void initialiseState(Time initialTime) {
-		this.initialDelay = 10.0;
-		this.meanTimeBetweenUsages = 10.0;
-		this.meanTimeExecuteTask = 300.0;
-		
+		this.initialDelay = 1.0;
+		this.meanTimeBetweenUsages = 1.0;
+		this.meanTimeExecuteTask = 30.0;
 		this.delai = 0.0;
-
 		this.rg.reSeedSecure();
 
 		super.initialiseState(initialTime);
 		
 		this.etat_lavelinge = ModeLaveLinge.OFF;
 		Duration d1 = new Duration(this.initialDelay, this.getSimulatedTimeUnit());
-		Duration d2 = new Duration(2.0 * this.meanTimeBetweenUsages * this.rg.nextBeta(1.75, 1.75),
+		Duration d2 = new Duration(this.meanTimeBetweenUsages * this.rg.nextBeta(1.75, 1.75),
 				this.getSimulatedTimeUnit());
 		Time t = this.getCurrentStateTime().add(d1).add(d2);
 		this.scheduleEvent(new SetLaveLingeVeille(t));
 
 		this.nextTimeAdvance = this.timeAdvance();
 		this.timeOfNextEvent = this.getCurrentStateTime().add(this.nextTimeAdvance);
-
-		try {
-			// this.setDebugLevel(1) ;
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
 	}
 	
 	
@@ -97,7 +89,6 @@ public class LaveLingePlanificationModel extends AtomicES_Model{
 	public Duration timeAdvance() {
 
 		Duration d = super.timeAdvance();
-		this.logMessage("LaveLingePlanificationModel::timeAdvance() 1 " + d + " " + this.eventListAsString());
 		return d;
 	}
 
@@ -111,7 +102,6 @@ public class LaveLingePlanificationModel extends AtomicES_Model{
 		assert ret.size() == 1;
 		this.nextEvent = ret.get(0).getClass();
 
-		this.logMessage("LaveLingePlanificationModel::output() " + this.nextEvent.getCanonicalName());
 		return ret;
 	}
 	
@@ -132,7 +122,7 @@ public class LaveLingePlanificationModel extends AtomicES_Model{
 		Duration d;
 		int i = 1;
 		for (ModeLaveLinge mode : planification_etats) {
-			d = new Duration(2.0 * (this.delai + this.meanTimeExecuteTask * i), this.getSimulatedTimeUnit());
+			d = new Duration((this.delai + this.meanTimeExecuteTask * i), this.getSimulatedTimeUnit());
 
 			if(mode == ModeLaveLinge.LAVAGE)
 				this.scheduleEvent(new SetLavage(this.getCurrentStateTime().add(d)));
@@ -152,12 +142,12 @@ public class LaveLingePlanificationModel extends AtomicES_Model{
 		
 		// event de mise en veille au cas ou le controleur n'aurait pas planifie la veille
 		if(i > 1) {
-			d = new Duration(2.0 * (this.delai + this.meanTimeExecuteTask * (i+1) ), this.getSimulatedTimeUnit());
+			d = new Duration((this.delai + this.meanTimeExecuteTask * (i+1) ), this.getSimulatedTimeUnit());
 			this.scheduleEvent(new SetLaveLingeVeille(this.getCurrentStateTime().add(d)));
 		}
 		
-		// event de
-		d = new Duration(2.0 * (this.delai + this.meanTimeExecuteTask * i), this.getSimulatedTimeUnit());
+		// event de transition si aucun etat est planifie
+		d = new Duration((this.delai + this.meanTimeExecuteTask * i), this.getSimulatedTimeUnit());
 		this.scheduleEvent(new SetInternalTransition(this.getCurrentStateTime().add(d)));
 		
 		planification_etats = new ArrayList<>();

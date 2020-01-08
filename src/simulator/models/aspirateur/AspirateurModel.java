@@ -92,7 +92,7 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 	@Override
 	protected void initialiseVariables(Time startTime) {
 		this.currentConsommation = 0.0;
-		/** TODO a enlever*/
+		/** TODO a remplacer */
 		this.currentEnergy = 10000;
 		this.powerPlotter.addData(SERIES_POWER, this.getCurrentStateTime().getSimulatedTime(), this.getConsommation());
 		super.initialiseVariables(startTime);
@@ -115,15 +115,6 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 
 	@Override
 	public void userDefinedInternalTransition(Duration elapsedTime) {
-		if (this.componentRef != null) {
-			try {
-				this.logMessage("aspirateur state = " + componentRef.getEmbeddingComponentStateValue(URI + " : state"));
-				this.logMessage("aspirateur consommation = " + componentRef.getEmbeddingComponentStateValue(URI + " : consommation"));
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		}
-		
 		this.powerPlotter.addData(SERIES_POWER, this.getCurrentStateTime().getSimulatedTime(), this.getConsommation());
 		super.userDefinedInternalTransition(elapsedTime) ;
 	}
