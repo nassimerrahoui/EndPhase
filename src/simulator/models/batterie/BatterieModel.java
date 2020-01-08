@@ -26,7 +26,7 @@ public class BatterieModel extends AtomicHIOAwithEquations {
 	public static final String COMPONENT_REF = "batterie-component-ref";
 	public static final String PRODUCTION_PLOTTING_PARAM_NAME = "energy production";
 	
-	private static final String SERIES_PRODUCTION = "prdouction";
+	private static final String SERIES_PRODUCTION = "production";
 	protected double currentProduction;
 	protected EtatUniteProduction currentState;
 	
