@@ -69,7 +69,7 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 	protected static final double CONSOMMATION_INITIALE_COMPRESSEUR = 1200; // Watt
 	protected static final double CONSOMMATION_EXECUTE_COMPRESSEUR = 70; // Watt
 	
-	/** Permet de generer des valeurs aléatoires */
+	/** Permet de generer des valeurs alï¿½atoires */
 	protected final RandomDataGenerator	rgNewVariationTemperature;
 	
 	/** Consommation actuelle du frigo */

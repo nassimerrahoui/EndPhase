@@ -33,6 +33,7 @@ public class AspirateurUserModel extends AtomicES_Model {
 	protected double meanTimeBetweenUsages;
 	protected double meanTimeAtPerformanceMaximale;
 	protected double meanTimeAtPerformanceReduite;
+	protected double meanTimeOff;
 	protected Class<?> nextEvent;
 	protected final RandomDataGenerator rg;
 	protected ModeAspirateur etat_aspirateur;
@@ -48,10 +49,11 @@ public class AspirateurUserModel extends AtomicES_Model {
 	@Override
 	public void initialiseState(Time initialTime) {
 		this.initialDelay = 10.0;
-		this.interdayDelay = 3600 * 8;
+		this.interdayDelay = 360 * 8;
 		this.meanTimeBetweenUsages = 10.0;
-		this.meanTimeAtPerformanceMaximale = 60.0;
-		this.meanTimeAtPerformanceReduite = 120.0;
+		this.meanTimeAtPerformanceMaximale = 120.0;
+		this.meanTimeAtPerformanceReduite = 30.0;
+		this.meanTimeOff = 300.0;
 		this.etat_aspirateur = ModeAspirateur.OFF;
 
 		this.rg.reSeedSecure();
@@ -101,23 +103,25 @@ public class AspirateurUserModel extends AtomicES_Model {
 
 		Duration d;
 		if (this.nextEvent.equals(SwitchAspirateurOn.class)) {
-
 			d = new Duration(2.0 * this.rg.nextBeta(1.75, 1.75), this.getSimulatedTimeUnit());
 			Time t = this.getCurrentStateTime().add(d);
-			this.scheduleEvent(new SetPerformanceMaximale(t));
+			this.scheduleEvent(new SetPerformanceReduite(t));
 
-			d = new Duration(this.interdayDelay, this.getSimulatedTimeUnit());
-			this.scheduleEvent(new SwitchAspirateurOn(this.getCurrentStateTime().add(d)));
+//			d = new Duration(this.interdayDelay, this.getSimulatedTimeUnit());
+//			this.scheduleEvent(new SwitchAspirateurOn(this.getCurrentStateTime().add(d)));
 			
 		} else if (this.nextEvent.equals(SetPerformanceMaximale.class)) {
-
 			d = new Duration(2.0 * this.meanTimeAtPerformanceMaximale * this.rg.nextBeta(1.75, 1.75), this.getSimulatedTimeUnit());
-			this.scheduleEvent(new SetPerformanceReduite(this.getCurrentStateTime().add(d)));
+			this.scheduleEvent(new SwitchAspirateurOff(this.getCurrentStateTime().add(d)));
 			
 		} else if (this.nextEvent.equals(SetPerformanceReduite.class)) {
-
 			d = new Duration(2.0 * this.meanTimeAtPerformanceReduite * this.rg.nextBeta(1.75, 1.75), this.getSimulatedTimeUnit());
-			this.scheduleEvent(new SwitchAspirateurOff(this.getCurrentStateTime().add(d)));
-		} 
+			this.scheduleEvent(new SetPerformanceMaximale(this.getCurrentStateTime().add(d)));
+		
+		} else if (this.nextEvent.equals(SwitchAspirateurOff.class)) {
+			d = new Duration(2.0 * this.meanTimeOff * this.rg.nextBeta(1.75, 1.75), this.getSimulatedTimeUnit());
+			this.scheduleEvent(new SwitchAspirateurOn(this.getCurrentStateTime().add(d)));
+		}
+		
 	}
 }
