@@ -109,7 +109,7 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 		if (this.componentRef == null) {
 			return Duration.INFINITY;
 		} else {
-			return new Duration(10.0, TimeUnit.SECONDS);
+			return new Duration(1.0, TimeUnit.SECONDS);
 		}
 	}
 
@@ -124,6 +124,7 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 			}
 		}
 		
+		this.powerPlotter.addData(SERIES_POWER, this.getCurrentStateTime().getSimulatedTime(), this.getConsommation());
 		super.userDefinedInternalTransition(elapsedTime) ;
 	}
 

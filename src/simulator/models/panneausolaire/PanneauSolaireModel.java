@@ -100,7 +100,7 @@ public class PanneauSolaireModel extends AtomicHIOAwithEquations {
 		if (this.componentRef == null) {
 			return Duration.INFINITY;
 		} else {
-			return new Duration(10.0, TimeUnit.SECONDS);
+			return new Duration(1.0, TimeUnit.SECONDS);
 		}
 	}
 
@@ -128,7 +128,6 @@ public class PanneauSolaireModel extends AtomicHIOAwithEquations {
 				this.currentSolarIntensity.v = ((SolarIntensity.Reading) 
 											((SolarIntensity) current.get(i)).
 											getEventInformation()).value;
-				System.out.println(this.currentSolarIntensity.v);
 			}
 		}
 		
