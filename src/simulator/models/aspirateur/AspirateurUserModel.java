@@ -53,7 +53,7 @@ public class AspirateurUserModel extends AtomicES_Model {
 		this.meanTimeBetweenUsages = 10.0;
 		this.meanTimeAtPerformanceMaximale = 120.0;
 		this.meanTimeAtPerformanceReduite = 30.0;
-		this.meanTimeOff = 300.0;
+		this.meanTimeOff = 600.0;
 		this.etat_aspirateur = ModeAspirateur.OFF;
 
 		this.rg.reSeedSecure();

@@ -72,7 +72,7 @@ public class PanneauSolaireSensorModel extends AtomicHIOAwithEquations {
 		this.readings = new Vector<SolarIntensity>();
 		this.lastReading = -1.0;
 		this.rgNewSolarIntensity = new RandomDataGenerator();
-		this.nb_tic = 45;
+		this.nb_tic = 8;
 	}
 
 	@Override
@@ -125,9 +125,9 @@ public class PanneauSolaireSensorModel extends AtomicHIOAwithEquations {
 	protected double generateSolarIntensity() {
 		// Generate a random solar intensity using the Beta distribution 
 		double newSolarIntensity = solarIntensity.v;
-		if(nb_tic < 45 || nb_tic >= 180 - 45) {
+		if(nb_tic < 8 || nb_tic >= 40) {
 			newSolarIntensity = 0.0;
-		} else if(nb_tic >= 45 && nb_tic < 90) {
+		} else if(nb_tic >= 8 && nb_tic < 24) {
 			newSolarIntensity += this.rgNewSolarIntensity.nextBeta(1.75, 1.75);
 		} else {
 			newSolarIntensity -= this.rgNewSolarIntensity.nextBeta(1.75, 1.75);
@@ -155,7 +155,7 @@ public class PanneauSolaireSensorModel extends AtomicHIOAwithEquations {
 			}
 		}
 		if (ticReceived) {
-			nb_tic = (nb_tic + 1) % 180;
+			nb_tic = (nb_tic + 1) % 48;
 			this.solarIntensity.v = generateSolarIntensity();
 			this.triggerReading = true;
 		}

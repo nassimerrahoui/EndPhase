@@ -162,7 +162,6 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 		this.currentState = s;
 		switch (s) {
 		case OFF:
-			System.out.println("tEST");
 			this.currentConsommation = 0.0;
 			break;
 		case PERFORMANCE_REDUITE:

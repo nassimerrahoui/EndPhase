@@ -72,12 +72,6 @@ public class PanneauSolaireModel extends AtomicHIOAwithEquations {
 		this.currentState = EtatUniteProduction.ON;	
 		this.intensityPlotter.initialise();
 		this.intensityPlotter.showPlotter();
-
-		try {
-			//this.setDebugLevel(1);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
 		
 		super.initialiseState(initialTime);
 	}
@@ -106,15 +100,9 @@ public class PanneauSolaireModel extends AtomicHIOAwithEquations {
 
 	@Override
 	public void userDefinedInternalTransition(Duration elapsedTime) {
-		if (this.componentRef != null) {
-			try {
-				this.logMessage("panneau solaire energy = " + componentRef.getEmbeddingComponentStateValue(URI + " : energy"));
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		}
 		
-		super.userDefinedInternalTransition(elapsedTime) ;
+		super.userDefinedInternalTransition(elapsedTime);
+		this.intensityPlotter.addData(SERIES_INTENSITY, this.getCurrentStateTime().getSimulatedTime(), this.getEnergy());
 	}
 
 	@Override
