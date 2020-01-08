@@ -62,6 +62,7 @@ public class PanneauSolaireSensorModel extends AtomicHIOAwithEquations {
 	protected Value<Double> solarIntensity = new Value<Double>(this, 0.0, 0);
 	protected static final double KILO_WATT_CRETE = 2.0;
 	protected final RandomDataGenerator	rgNewSolarIntensity;
+	protected int nb_tic;
 	
 	public PanneauSolaireSensorModel(String uri, TimeUnit simulatedTimeUnit, SimulatorI simulationEngine)
 			throws Exception {
@@ -71,6 +72,7 @@ public class PanneauSolaireSensorModel extends AtomicHIOAwithEquations {
 		this.readings = new Vector<SolarIntensity>();
 		this.lastReading = -1.0;
 		this.rgNewSolarIntensity = new RandomDataGenerator();
+		this.nb_tic = 45;
 	}
 
 	@Override
@@ -122,15 +124,23 @@ public class PanneauSolaireSensorModel extends AtomicHIOAwithEquations {
 	
 	protected double generateSolarIntensity() {
 		// Generate a random solar intensity using the Beta distribution 
-		double newSolarIntensity = PanneauSolaireSensorModel.KILO_WATT_CRETE *
-						this.rgNewSolarIntensity.nextBeta(1.75,1.75) ;
+		double newSolarIntensity = solarIntensity.v;
+		if(nb_tic < 45 || nb_tic >= 180 - 45) {
+			newSolarIntensity = 0.0;
+		} else if(nb_tic >= 45 && nb_tic < 90) {
+			newSolarIntensity += this.rgNewSolarIntensity.nextBeta(1.75, 1.75);
+		} else {
+			newSolarIntensity -= this.rgNewSolarIntensity.nextBeta(1.75, 1.75);
+			if(newSolarIntensity < 0.0) {
+				newSolarIntensity = 0.0;
+			}
+		}
 		return newSolarIntensity;
 	}
 
 	@Override
 	public void userDefinedInternalTransition(Duration elapsedTime) {
 		super.userDefinedInternalTransition(elapsedTime);
-		this.solarIntensity.v = generateSolarIntensity();
 	}
 
 	@Override
@@ -145,6 +155,8 @@ public class PanneauSolaireSensorModel extends AtomicHIOAwithEquations {
 			}
 		}
 		if (ticReceived) {
+			nb_tic = (nb_tic + 1) % 180;
+			this.solarIntensity.v = generateSolarIntensity();
 			this.triggerReading = true;
 		}
 	}

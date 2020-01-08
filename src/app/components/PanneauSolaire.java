@@ -48,7 +48,7 @@ public class PanneauSolaire
 	
 	protected PanneauSolaireSimulatorPlugin asp;
 	
-	public static int ORIGIN_X = -340;
+	public static int ORIGIN_X = 340;
 	public static int ORIGIN_Y = 20;
 
 	protected PanneauSolaire(
@@ -140,8 +140,8 @@ public class PanneauSolaire
 				"Ensoleilement Panneau Solaire", 
 				"Temps (sec)", 
 				"Rayonnement (KWC)", 
-				ORIGIN_X + getPlotterWidth(),
-		  		ORIGIN_Y,
+				ORIGIN_X + 2 * getPlotterWidth(),
+		  		ORIGIN_Y + 2 * getPlotterHeight(),
 		  		getPlotterWidth(),
 		  		getPlotterHeight())) ;
 		

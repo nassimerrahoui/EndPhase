@@ -118,7 +118,7 @@ public class LaveLingeModel extends AtomicHIOAwithEquations{
 		if (this.componentRef == null) {
 			return Duration.INFINITY;
 		} else {
-			return new Duration(10.0, TimeUnit.SECONDS);
+			return new Duration(1.0, TimeUnit.SECONDS);
 		}
 	}
 	
