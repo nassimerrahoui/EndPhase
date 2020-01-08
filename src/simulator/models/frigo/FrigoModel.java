@@ -69,7 +69,7 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 	protected static final double CONSOMMATION_INITIALE_COMPRESSEUR = 1200; // Watt
 	protected static final double CONSOMMATION_EXECUTE_COMPRESSEUR = 70; // Watt
 	
-	/** Permet de generer des valeurs aléatoires */
+	/** Permet de generer des valeurs alï¿½atoires */
 	protected final RandomDataGenerator	rgNewVariationTemperature;
 	
 	/** Consommation actuelle du frigo */
@@ -177,7 +177,7 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 	/** Calcule la consommation en fonction de la temperature courante */
 	protected void computeNewLevel(Time current, double delta_t) {
 		double variation_temperature = this.rgNewVariationTemperature.nextBeta(2, 2);
-		System.out.println(variation_temperature);
+		//System.out.println(variation_temperature);
 		
 		if(currentState == ModeFrigo.OFF) {
 			if(currentTemperature < AMBIENT_TEMPERATURE && delta_t >= 1.0) {

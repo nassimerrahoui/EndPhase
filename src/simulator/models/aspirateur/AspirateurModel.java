@@ -145,6 +145,8 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 		} else if(ce instanceof SetPerformanceMaximale) {
 			if(CONSOMMATION_PERFORMANCE_MAXIMALE <= this.currentEnergy)
 				ce.executeOn(this);
+		} else if(ce instanceof SwitchAspirateurOff) {
+			ce.executeOn(this);
 		}
 		
 		this.powerPlotter.addData(SERIES_POWER, this.getCurrentStateTime().getSimulatedTime(), this.getConsommation());

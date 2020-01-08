@@ -31,10 +31,6 @@ public class SetPerformanceMaximale extends AbstractAspirateurEvent {
 	@Override
 	public void executeOn(AtomicModel model) {
 		assert model instanceof AspirateurModel;
-
-		AspirateurModel m = (AspirateurModel) model;
-		if (m.getState() == ModeAspirateur.PERFORMANCE_REDUITE) {
-			m.setState(ModeAspirateur.PERFORMANCE_MAXIMALE);
-		}
+		((AspirateurModel) model).setState(ModeAspirateur.PERFORMANCE_MAXIMALE);
 	}
 }
