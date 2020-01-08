@@ -177,7 +177,6 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 	/** Calcule la consommation en fonction de la temperature courante */
 	protected void computeNewLevel(Time current, double delta_t) {
 		double variation_temperature = this.rgNewVariationTemperature.nextBeta(2, 2);
-		System.out.println(variation_temperature);
 		
 		if(currentState == ModeFrigo.OFF) {
 			if(currentTemperature < AMBIENT_TEMPERATURE && delta_t >= 1.0) {

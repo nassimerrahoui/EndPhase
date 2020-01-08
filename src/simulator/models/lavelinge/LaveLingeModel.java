@@ -124,52 +124,28 @@ public class LaveLingeModel extends AtomicHIOAwithEquations{
 	
 	@Override
 	public void userDefinedInternalTransition(Duration elapsedTime) {
-		if (this.componentRef != null) {
-			try {
-				this.logMessage("lave-linge state = " + componentRef.getEmbeddingComponentStateValue(URI + " : state"));
-				this.logMessage("lave-linge consommation = " + componentRef.getEmbeddingComponentStateValue(URI + " : consommation"));
-				currentTemperature = (TemperatureLaveLinge) componentRef.getEmbeddingComponentStateValue(URI + " : temperature");
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		}
 		
+		super.userDefinedInternalTransition(elapsedTime);
+		
+		this.powerPlotter.addData(SERIES_POWER, this.getCurrentStateTime().getSimulatedTime(), this.getConsommation());
 	}
 	
 	@Override
 	public void userDefinedExternalTransition(Duration elapsedTime) {
-		if (this.hasDebugLevel(2)) {
-			this.logMessage("LaveLingeModel::userDefinedExternalTransition 1");
-		}
 
 		Vector<EventI> currentEvents = this.getStoredEventAndReset();
 		assert currentEvents != null && currentEvents.size() == 1;
 
 		Event ce = (Event) currentEvents.get(0);
 		assert ce instanceof AbstractLaveLingeEvent;
-		
-		if (this.hasDebugLevel(2)) {
-			this.logMessage("LaveLingeModel::userDefinedExternalTransition 2 " + ce.getClass().getCanonicalName());
-		}
 
 		this.powerPlotter.addData(SERIES_POWER, this.getCurrentStateTime().getSimulatedTime(), this.getConsommation());
 
-		if (this.hasDebugLevel(2)) {
-			this.logMessage("LaveLingeModel::userDefinedExternalTransition 3 " + this.getState());
-		}
-
 		ce.executeOn(this);
-
-		if (this.hasDebugLevel(1)) {
-			this.logMessage("LaveLingeModel::userDefinedExternalTransition 4 " + this.getState());
-		}
 
 		this.powerPlotter.addData(SERIES_POWER, this.getCurrentStateTime().getSimulatedTime(), this.getConsommation());
 
 		super.userDefinedExternalTransition(elapsedTime);
-		if (this.hasDebugLevel(2)) {
-			this.logMessage("LaveLingeModel::userDefinedExternalTransition 5");
-		}
 	}
 	
 	@Override
