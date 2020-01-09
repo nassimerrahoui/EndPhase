@@ -90,7 +90,7 @@ public class PanneauSolaireSensorModel extends AtomicHIOAwithEquations {
 			// immediate internal event when a reading is triggered.
 			return Duration.zero(this.getSimulatedTimeUnit());
 		} else {
-			return Duration.INFINITY;
+			return Duration.one(this.getSimulatedTimeUnit());
 		}
 	}
 
@@ -98,23 +98,19 @@ public class PanneauSolaireSensorModel extends AtomicHIOAwithEquations {
 	public Vector<EventI> output() {
 		if (this.triggerReading) {
 
-			// Memorise a new last reading
 			this.lastReading = this.solarIntensity.v;
 			this.lastReadingTime = this.getCurrentStateTime().getSimulatedTime();
 
-			// Create and emit the solar solarIntensity event.
 			Vector<EventI> ret = new Vector<EventI>(1);
 			Time t = this.getCurrentStateTime().add(this.getNextTimeAdvance());
 			SolarIntensity bl = new SolarIntensity(t, this.solarIntensity.v);
 			ret.add(bl);
 
-			// Memorise the reading for the simulation report.
 			this.readings.add(bl);
 			// Trace the execution
 			this.logMessage(this.getCurrentStateTime() + "|output|solarIntensity reading " + this.readings.size()
 					+ " with value = " + this.solarIntensity.v);
 
-			// The reading that was triggered has now been processed.
 			this.triggerReading = false;
 			return ret;
 		} else {

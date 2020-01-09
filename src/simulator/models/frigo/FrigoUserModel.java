@@ -53,7 +53,7 @@ public class FrigoUserModel extends AtomicES_Model{
 		this.interdayDelay = 360 * 8;
 		this.meanTimeBetweenUsages = 10.0;
 		this.meanTimeAtOpenDoor = 2.0;
-		this.meanTimeAtCloseDoor = 700.0;
+		this.meanTimeAtCloseDoor = 300.0;
 
 		this.rg.reSeedSecure();
 

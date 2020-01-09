@@ -39,9 +39,9 @@ public class LaveLingePlanificationModel extends AtomicES_Model{
 	protected double initialDelay;
 	protected double meanTimeBetweenUsages;
 	protected double meanTimeExecuteTask;
-	protected Class<?> nextEvent;
 	protected final RandomDataGenerator rg;
 	protected ModeLaveLinge etat_lavelinge;
+	protected static final double NB_STOP_BETWEEN_ROTATIONS = 10;
 	
 	// delai dans lequel la planification d'un mode va se declencher
 	protected double delai;
@@ -60,9 +60,9 @@ public class LaveLingePlanificationModel extends AtomicES_Model{
 	
 	@Override
 	public void initialiseState(Time initialTime) {
-		this.initialDelay = 1.0;
-		this.meanTimeBetweenUsages = 1.0;
-		this.meanTimeExecuteTask = 30.0;
+		this.initialDelay = 10.0;
+		this.meanTimeBetweenUsages = 500.0;
+		this.meanTimeExecuteTask = 200.0;
 		this.delai = 0.0;
 		this.rg.reSeedSecure();
 
@@ -70,9 +70,7 @@ public class LaveLingePlanificationModel extends AtomicES_Model{
 		
 		this.etat_lavelinge = ModeLaveLinge.OFF;
 		Duration d1 = new Duration(this.initialDelay, this.getSimulatedTimeUnit());
-		Duration d2 = new Duration(this.meanTimeBetweenUsages * this.rg.nextBeta(1.75, 1.75),
-				this.getSimulatedTimeUnit());
-		Time t = this.getCurrentStateTime().add(d1).add(d2);
+		Time t = this.getCurrentStateTime().add(d1);
 		this.scheduleEvent(new SetLaveLingeVeille(t));
 
 		this.nextTimeAdvance = this.timeAdvance();
@@ -98,9 +96,10 @@ public class LaveLingePlanificationModel extends AtomicES_Model{
 		assert !this.eventList.isEmpty();
 
 		Vector<EventI> ret = super.output();
-
-		assert ret.size() == 1;
-		this.nextEvent = ret.get(0).getClass();
+		
+		for (EventI eventI : ret) {
+			System.out.println("O : " + eventI);
+		}
 
 		return ret;
 	}
@@ -119,26 +118,46 @@ public class LaveLingePlanificationModel extends AtomicES_Model{
 			e.printStackTrace();
 		}
 		
-		Duration d;
+		Duration d, dt;
 		int i = 1;
 		for (ModeLaveLinge mode : planification_etats) {
-			d = new Duration((this.delai + this.meanTimeExecuteTask * i), this.getSimulatedTimeUnit());
+			Duration d2 = new Duration(this.meanTimeExecuteTask * i, this.getSimulatedTimeUnit());
+			Time t = this.getCurrentStateTime().add(d2);
 
-			if(mode == ModeLaveLinge.LAVAGE)
-				this.scheduleEvent(new SetLavage(this.getCurrentStateTime().add(d)));
+			if(mode == ModeLaveLinge.LAVAGE) {
+				for (int j = 1; j < NB_STOP_BETWEEN_ROTATIONS; j++) {
+					/** TODO GERER LA DURATION DES EVENTS */
+					
+					//*********** TEST EN COURS ****************
+					dt = new Duration( (this.meanTimeExecuteTask / 6)*j, this.getSimulatedTimeUnit());
+					this.scheduleEvent(new SetLavage(t));
+					t.add(d2).add(dt);
+					this.scheduleEvent(new SetLaveLingeVeille(t));
+					dt = new Duration( (this.meanTimeExecuteTask / 8)*j, this.getSimulatedTimeUnit());
+					t.add(d2).add(dt);
+					//*********** TEST EN COURS ****************
+				}
+			}
+			
 			else if (mode == ModeLaveLinge.RINCAGE)
-				this.scheduleEvent(new SetRincage(this.getCurrentStateTime().add(d)));
+				this.scheduleEvent(new SetRincage(t));
 			else if (mode == ModeLaveLinge.ESSORAGE)
-				this.scheduleEvent(new SetEssorage(this.getCurrentStateTime().add(d)));
+				this.scheduleEvent(new SetEssorage(t));
 			else if (mode == ModeLaveLinge.SECHAGE)
-				this.scheduleEvent(new SetSechage(this.getCurrentStateTime().add(d)));
+				this.scheduleEvent(new SetSechage(t));
 			else if (mode == ModeLaveLinge.VEILLE)
-				this.scheduleEvent(new SetLaveLingeVeille(this.getCurrentStateTime().add(d)));
+				this.scheduleEvent(new SetLaveLingeVeille(t));
 			else if (mode == ModeLaveLinge.OFF)
-				this.scheduleEvent(new SwitchLaveLingeOff(this.getCurrentStateTime().add(d)));
+				this.scheduleEvent(new SwitchLaveLingeOff(t));
 		
 			i++;
 		}
+		
+		for (EventI e : eventList) {
+			System.out.println(e + " : " + e.getTimeOfOccurrence());
+		}
+		
+		System.out.println("*************************");
 		
 		// event de mise en veille au cas ou le controleur n'aurait pas planifie la veille
 		if(i > 1) {
@@ -147,7 +166,7 @@ public class LaveLingePlanificationModel extends AtomicES_Model{
 		}
 		
 		// event de transition si aucun etat est planifie
-		d = new Duration((this.delai + this.meanTimeExecuteTask * i), this.getSimulatedTimeUnit());
+		d = new Duration((this.delai + this.meanTimeBetweenUsages * i), this.getSimulatedTimeUnit());
 		this.scheduleEvent(new SetInternalTransition(this.getCurrentStateTime().add(d)));
 		
 		planification_etats = new ArrayList<>();

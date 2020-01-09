@@ -9,6 +9,7 @@ public enum ModeLaveLinge {
 	
 	OFF,
 	VEILLE,
+	CHAUFFER_EAU,
 	LAVAGE,
 	RINCAGE,
 	ESSORAGE,
