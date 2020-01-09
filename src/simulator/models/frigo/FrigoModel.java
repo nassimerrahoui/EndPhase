@@ -66,10 +66,10 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 	/** Temperature initiale du refrigerateur eteint */
 	public static final double AMBIENT_TEMPERATURE = 20.0; // Degres celsius
 	protected static final double CONSOMMAION_REPOS = 10; // Watt
-	protected static final double CONSOMMATION_INITIALE_COMPRESSEUR = 1200; // Watt
+	protected static final double CONSOMMATION_INITIALE_COMPRESSEUR = 600; // Watt
 	protected static final double CONSOMMATION_EXECUTE_COMPRESSEUR = 70; // Watt
 	
-	/** Permet de generer des valeurs al�atoires */
+	/** Permet de generer des valeurs aleatoires */
 	protected final RandomDataGenerator	rgNewVariationTemperature;
 	
 	/** Consommation actuelle du frigo */
@@ -86,7 +86,7 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 	
 	/** Difference maximale entre la temperature reele - la temperature cible 
 	 * Si la limite est depasse, il faut allumer le compresseur */
-	protected final double LIMIT = 2; // degres celsius
+	protected final double LIMIT = 0.5; // degres celsius
 	
 	/** Reference du composant associe au modele */
 	protected EmbeddingComponentStateAccessI componentRef;
@@ -176,7 +176,7 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 	
 	/** Calcule la consommation en fonction de la temperature courante */
 	protected void computeNewLevel(Time current, double delta_t) {
-		double variation_temperature = this.rgNewVariationTemperature.nextBeta(2, 2);
+		double variation_temperature = 0.1;
 		
 		if(currentState == ModeFrigo.OFF) {
 			if(currentTemperature < AMBIENT_TEMPERATURE && delta_t >= 1.0) {
@@ -190,19 +190,25 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 		try {
 			double temperature_cible = (double) componentRef.getEmbeddingComponentStateValue(URI + " : refrigerateur_temperature_cible");
 			
-			if(temperature_cible < currentTemperature) {
-				while(delta_t >= 1.0) {
-					if(temperature_cible > currentTemperature - variation_temperature)
-						break;
-					currentTemperature -= variation_temperature;
-					delta_t--;
-				}
-			} else if(temperature_cible > currentTemperature) {
-				while(delta_t >= 1.0) {
-					if(temperature_cible < currentTemperature + variation_temperature/4)
-						break;
-					currentTemperature += variation_temperature;
-					delta_t--;
+			if(currentState == ModeFrigo.LIGHT_ON) {
+				// porte ouverte equivalent a une augmentation de la temperature du frigo
+				currentTemperature += this.rgNewVariationTemperature.nextBeta(2, 2) * 2;
+			} else {
+				
+				if(temperature_cible < currentTemperature) {
+					while(delta_t >= 1.0) {
+						if(temperature_cible > currentTemperature - variation_temperature)
+							break;
+						currentTemperature -= variation_temperature;
+						delta_t--;
+					}
+				} else if(temperature_cible > currentTemperature) {
+					while(delta_t >= 1.0) {
+						if(temperature_cible < currentTemperature + variation_temperature/4)
+							break;
+						currentTemperature += variation_temperature;
+						delta_t--;
+					}
 				}
 			}
 			
@@ -265,7 +271,7 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 	public void setState(ModeFrigo s) {
 		if(currentState != ModeFrigo.LIGHT_ON && s == ModeFrigo.LIGHT_ON) {
 			// ouverture de porte equivalent a une augmentation de la temperature du frigo
-			currentTemperature += this.rgNewVariationTemperature.nextBeta(2, 2) * Math.pow(LIMIT, 3);
+			currentTemperature += this.rgNewVariationTemperature.nextBeta(2, 2) * 2;
 		}
 		this.currentState = s;
 	}

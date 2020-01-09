@@ -6,12 +6,9 @@ import java.util.concurrent.TimeUnit;
 import app.util.ModeLaveLinge;
 import app.util.TemperatureLaveLinge;
 import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentStateAccessI;
-import fr.sorbonne_u.devs_simulation.hioa.annotations.ExportedVariable;
 import fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOAwithEquations;
-import fr.sorbonne_u.devs_simulation.hioa.models.vars.Value;
 import fr.sorbonne_u.devs_simulation.interfaces.SimulationReportI;
 import fr.sorbonne_u.devs_simulation.models.annotations.ModelExternalEvents;
-import fr.sorbonne_u.devs_simulation.models.events.Event;
 import fr.sorbonne_u.devs_simulation.models.events.EventI;
 import fr.sorbonne_u.devs_simulation.models.time.Duration;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
@@ -46,11 +43,15 @@ public class LaveLingeModel extends AtomicHIOAwithEquations{
 	public static final String COMPONENT_REF = "lavelinge-component-ref";
 	public static final String POWER_PLOTTING_PARAM_NAME = "consommation";
 	private static final String SERIES_POWER = "power";
+	
+	protected static final double CONSOMMATION_ROTATION = 180; // Watts
+	protected static final double CONSOMMATION_ESSORAGE = 260; // Watts
+	protected static final double CONSOMMATION_REPOS = 10; // Watts
+	protected static final double CONSOMMATION_SECHAGE = 280; // Watss
 
-	@ExportedVariable(type = Double.class)
-	protected final Value<Double> currentPower = new Value<Double>(this, 0.0, 0); // Watts
+	protected double currentPower; // Watts
 	protected ModeLaveLinge currentState;
-	protected TemperatureLaveLinge currentTemperature;
+	protected TemperatureLaveLinge currentTemperature; // degres celsius
 	protected XYPlotter powerPlotter;
 	
 	protected EmbeddingComponentStateAccessI componentRef;
@@ -87,22 +88,17 @@ public class LaveLingeModel extends AtomicHIOAwithEquations{
 	@Override
 	public void initialiseState(Time initialTime) {
 		
+		this.currentPower = 0.0;
 		this.currentState = ModeLaveLinge.OFF;	
 		this.powerPlotter.initialise();
 		this.powerPlotter.showPlotter();
-
-		try {
-			//this.setDebugLevel(1);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
 		
 		super.initialiseState(initialTime);
 	}
 	
 	@Override
 	protected void initialiseVariables(Time startTime) {
-		this.currentPower.v = 0.0;
+		this.currentPower = 0.0;
 		this.powerPlotter.addData(SERIES_POWER, this.getCurrentStateTime().getSimulatedTime(), this.getConsommation());
 		super.initialiseVariables(startTime);
 	}
@@ -124,27 +120,57 @@ public class LaveLingeModel extends AtomicHIOAwithEquations{
 	
 	@Override
 	public void userDefinedInternalTransition(Duration elapsedTime) {
-		
 		super.userDefinedInternalTransition(elapsedTime);
-		
+		computeNewConsommation();
 		this.powerPlotter.addData(SERIES_POWER, this.getCurrentStateTime().getSimulatedTime(), this.getConsommation());
+	}
+	
+	/** Calcul de la consommation courante */
+	protected void computeNewConsommation() {
+		switch (currentState) {
+		case OFF:
+			this.currentPower = 0.0;
+			break;
+		case VEILLE:
+			this.currentPower = CONSOMMATION_REPOS;
+			break;
+		case CHAUFFER_EAU:
+			this.currentPower = CONSOMMATION_ROTATION + currentTemperature.getConsommation();
+			break;
+		case LAVAGE:
+			this.currentPower = CONSOMMATION_ROTATION;
+			break;
+		case RINCAGE:
+			this.currentPower = CONSOMMATION_ROTATION;
+			break;
+		case ESSORAGE:
+			this.currentPower = CONSOMMATION_ESSORAGE;
+			break;
+		case SECHAGE:
+			this.currentPower = CONSOMMATION_SECHAGE;
+			break;
+		default:
+			// cannot happen
+			break;
+		}
 	}
 	
 	@Override
 	public void userDefinedExternalTransition(Duration elapsedTime) {
 
 		Vector<EventI> currentEvents = this.getStoredEventAndReset();
-		assert currentEvents != null && currentEvents.size() == 1;
+		assert currentEvents != null;
 
-		Event ce = (Event) currentEvents.get(0);
-		assert ce instanceof AbstractLaveLingeEvent;
+		for (EventI ce : currentEvents) {
+			assert ce instanceof AbstractLaveLingeEvent;
+			
+			this.powerPlotter.addData(SERIES_POWER, this.getCurrentStateTime().getSimulatedTime(), this.getConsommation());
 
-		this.powerPlotter.addData(SERIES_POWER, this.getCurrentStateTime().getSimulatedTime(), this.getConsommation());
+			if(!(ce instanceof SetInternalTransition))
+				ce.executeOn(this);
 
-		ce.executeOn(this);
-
-		this.powerPlotter.addData(SERIES_POWER, this.getCurrentStateTime().getSimulatedTime(), this.getConsommation());
-
+			this.powerPlotter.addData(SERIES_POWER, this.getCurrentStateTime().getSimulatedTime(), this.getConsommation());
+		}
 		super.userDefinedExternalTransition(elapsedTime);
 	}
 	
@@ -164,29 +190,6 @@ public class LaveLingeModel extends AtomicHIOAwithEquations{
 	
 	public void setState(ModeLaveLinge s) {
 		this.currentState = s;
-		switch (s) {
-		case OFF:
-			this.currentPower.v = 0.0;
-			break;
-		case VEILLE:
-			this.currentPower.v = 5.0;
-			break;
-		case LAVAGE:
-			this.currentPower.v = currentTemperature.getConsommation();
-			break;
-		case RINCAGE:
-			this.currentPower.v = currentTemperature.getConsommation();
-			break;
-		case ESSORAGE:
-			this.currentPower.v = 50.0;
-			break;
-		case SECHAGE:
-			this.currentPower.v = 60.0;
-			break;
-		default:
-			// cannot happen
-			break;
-		}
 	}
 	
 	public ModeLaveLinge getState() {
@@ -194,6 +197,6 @@ public class LaveLingeModel extends AtomicHIOAwithEquations{
 	}
 
 	public double getConsommation() {
-		return this.currentPower.v;
+		return this.currentPower;
 	}
 }

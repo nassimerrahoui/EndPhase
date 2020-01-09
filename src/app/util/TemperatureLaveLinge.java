@@ -8,11 +8,11 @@ package app.util;
  */
 public enum TemperatureLaveLinge {
 
-	VINGT_DEGRES(55),
-	TRENTE_DEGRES(60),
-	QUARANTE_DEGRES(70),
-	SOIXANTE_DEGRES(80),
-	QUATRE_VINGT_DIX_DEGRES(85);
+	VINGT_DEGRES(500),
+	TRENTE_DEGRES(600),
+	QUARANTE_DEGRES(700),
+	SOIXANTE_DEGRES(800),
+	QUATRE_VINGT_DIX_DEGRES(900);
 	
 	protected final double consommation;
 	 

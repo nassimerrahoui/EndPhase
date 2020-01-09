@@ -42,7 +42,6 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 	protected static final double CONSOMMATION_PERFORMANCE_MAXIMALE = 1200.0/3.6; // Watts
 	protected static final double TENSION = 220.0; // Volts
 	protected double currentConsommation; // Watts
-	protected double currentEnergy; // Watts
 	protected ModeAspirateur currentState;
 	protected XYPlotter powerPlotter;
 	protected EmbeddingComponentStateAccessI componentRef;
@@ -92,8 +91,6 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 	@Override
 	protected void initialiseVariables(Time startTime) {
 		this.currentConsommation = 0.0;
-		/** TODO a remplacer */
-		this.currentEnergy = 10000;
 		this.powerPlotter.addData(SERIES_POWER, this.getCurrentStateTime().getSimulatedTime(), this.getConsommation());
 		super.initialiseVariables(startTime);
 	}
@@ -130,15 +127,7 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 		
 		this.powerPlotter.addData(SERIES_POWER, this.getCurrentStateTime().getSimulatedTime(), this.getConsommation());
 		
-		if(ce instanceof SwitchAspirateurOn || ce instanceof SetPerformanceReduite) {
-			if(CONSOMMATION_PERFORMANCE_REDUITE <= this.currentEnergy)
-				ce.executeOn(this);
-		} else if(ce instanceof SetPerformanceMaximale) {
-			if(CONSOMMATION_PERFORMANCE_MAXIMALE <= this.currentEnergy)
-				ce.executeOn(this);
-		} else if(ce instanceof SwitchAspirateurOff) {
-			ce.executeOn(this);
-		}
+		ce.executeOn(this);
 		
 		this.powerPlotter.addData(SERIES_POWER, this.getCurrentStateTime().getSimulatedTime(), this.getConsommation());
 		super.userDefinedExternalTransition(elapsedTime);

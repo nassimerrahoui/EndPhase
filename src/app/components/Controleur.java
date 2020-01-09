@@ -147,12 +147,12 @@ public class Controleur extends AbstractComponent {
 	
 	// ******* Services requis pour recuperer les informations du compteur *********
 	
-	public void getConsommationGlobale() throws Exception {
-		this.compteur_OUTPORT.getConsommationGlobale();
+	public double getConsommationGlobale() throws Exception {
+		return this.compteur_OUTPORT.getConsommationGlobale();
 	}
 
-	public void getProductionGlobale() throws Exception {
-		this.compteur_OUTPORT.getProductionGlobale();
+	public double getProductionGlobale() throws Exception {
+		return this.compteur_OUTPORT.getProductionGlobale();
 	}
 	
 	// ******* Service offert pour les appareils *********
@@ -177,6 +177,13 @@ public class Controleur extends AbstractComponent {
 		this.logMessage("Decisions controleur...");
 		
 		/** TODO code pour gerer les decisions reactives du controleur */
+		
+		double consommation = getConsommationGlobale();
+		double production = getProductionGlobale();
+		
+		if(consommation > production) {
+			/** actions */
+		}
 		
 		this.logMessage("...");
 	}
@@ -251,7 +258,7 @@ public class Controleur extends AbstractComponent {
 					p.add(ModeLaveLinge.ESSORAGE);
 					p.add(ModeLaveLinge.SECHAGE);
 					p.add(ModeLaveLinge.VEILLE);
-					((Controleur) this.getTaskOwner()).envoyerPlanificationCycle(p, 0, 30);
+					((Controleur) this.getTaskOwner()).envoyerPlanificationCycle(p, 0, 3);
 				}
 				catch (Exception e) { throw new RuntimeException(e); }
 			}
