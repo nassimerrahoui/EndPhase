@@ -5,10 +5,11 @@ import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 import app.util.ModeAspirateur;
 import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentStateAccessI;
+import fr.sorbonne_u.devs_simulation.hioa.annotations.ExportedVariable;
 import fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOAwithEquations;
+import fr.sorbonne_u.devs_simulation.hioa.models.vars.Value;
 import fr.sorbonne_u.devs_simulation.interfaces.SimulationReportI;
 import fr.sorbonne_u.devs_simulation.models.annotations.ModelExternalEvents;
-import fr.sorbonne_u.devs_simulation.models.events.Event;
 import fr.sorbonne_u.devs_simulation.models.events.EventI;
 import fr.sorbonne_u.devs_simulation.models.time.Duration;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
@@ -18,19 +19,40 @@ import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
 import fr.sorbonne_u.utils.PlotterDescription;
 import fr.sorbonne_u.utils.XYPlotter;
 import simulator.events.aspirateur.AbstractAspirateurEvent;
+import simulator.events.aspirateur.SendAspirateurConsommation;
 import simulator.events.aspirateur.SetPerformanceMaximale;
 import simulator.events.aspirateur.SetPerformanceReduite;
 import simulator.events.aspirateur.SwitchAspirateurOff;
 import simulator.events.aspirateur.SwitchAspirateurOn;
+import simulator.tic.TicEvent;
 
-@ModelExternalEvents(imported = { 
-		SwitchAspirateurOn.class, 
-		SwitchAspirateurOff.class, 
-		SetPerformanceReduite.class,
-		SetPerformanceMaximale.class
+@ModelExternalEvents(
+		imported = { 
+			SwitchAspirateurOn.class, 
+			SwitchAspirateurOff.class, 
+			SetPerformanceReduite.class,
+			SetPerformanceMaximale.class
+		},
+		exported = {
+			SendAspirateurConsommation.class
 		})
 
 public class AspirateurModel extends AtomicHIOAwithEquations {
+	
+	public static class AspirateurReport extends AbstractSimulationReport {
+		private static final long serialVersionUID = 1L;
+		protected final Vector<SendAspirateurConsommation> readings;
+		
+		public AspirateurReport(String modelURI, Vector<SendAspirateurConsommation> readings) {
+			super(modelURI);
+			this.readings = readings;
+		}
+
+		@Override
+		public String toString() {
+			return "AspirateurReport(" + this.getModelURI() + ")";
+		}
+	}
 
 	private static final long serialVersionUID = 1L;
 	public static final String URI = "AspirateurModel";
@@ -41,27 +63,29 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 	protected static final double CONSOMMATION_PERFORMANCE_REDUITE = 800.0/3.6; // Watts
 	protected static final double CONSOMMATION_PERFORMANCE_MAXIMALE = 1200.0/3.6; // Watts
 	protected static final double TENSION = 220.0; // Volts
-	protected double currentConsommation; // Watts
+	
+	@ExportedVariable(type = Double.class)
+	protected Value<Double> currentConsommation = new Value<Double>(this, 0.0, 0); // Watts
 	protected ModeAspirateur currentState;
 	protected XYPlotter powerPlotter;
 	protected EmbeddingComponentStateAccessI componentRef;
 	
-	public static class AspirateurReport extends AbstractSimulationReport {
-		private static final long serialVersionUID = 1L;
-
-		public AspirateurReport(String modelURI) {
-			super(modelURI);
-		}
-
-		@Override
-		public String toString() {
-			return "AspirateurReport(" + this.getModelURI() + ")";
-		}
-	}
+	/** true when a external event triggered a reading. */
+	protected boolean triggerReading;
+	/** the last value emitted as a reading of the solar solarIntensity. */
+	protected double lastReading;
+	/** the simulation time at the last reading. */
+	protected double lastReadingTime;
+	/** history of readings, for the simulation report. */
+	protected final Vector<SendAspirateurConsommation> readings;
+	
+	
 
 	public AspirateurModel(String uri, TimeUnit simulatedTimeUnit, SimulatorI simulationEngine) throws Exception {
 		super(uri, simulatedTimeUnit, simulationEngine);
 		this.setLogger(new StandardLogger());
+		readings = new Vector<SendAspirateurConsommation>();
+		lastReading = -1.0;
 	}
 
 	@Override
@@ -78,6 +102,10 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 		this.currentState = ModeAspirateur.OFF;	
 		this.powerPlotter.initialise();
 		this.powerPlotter.showPlotter();
+		
+		this.triggerReading = false;
+		this.lastReadingTime = initialTime.getSimulatedTime();
+		this.readings.clear();
 
 		try {
 			//this.setDebugLevel(1);
@@ -90,15 +118,32 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 
 	@Override
 	protected void initialiseVariables(Time startTime) {
-		this.currentConsommation = 0.0;
 		this.powerPlotter.addData(SERIES_POWER, this.getCurrentStateTime().getSimulatedTime(), this.getConsommation());
 		super.initialiseVariables(startTime);
 	}
 
 	@Override
 	public Vector<EventI> output() {
-		// the model does not export any event.
-		return null;
+		if (this.triggerReading) {
+
+			this.lastReading = this.currentConsommation.v;
+			this.lastReadingTime = this.getCurrentStateTime().getSimulatedTime();
+
+			Vector<EventI> ret = new Vector<EventI>(1);
+			Time t = this.getCurrentStateTime().add(this.getNextTimeAdvance());
+			SendAspirateurConsommation bl = new SendAspirateurConsommation(t, currentConsommation.v);
+			ret.add(bl);
+
+			this.readings.add(bl);
+			// Trace the execution
+			this.logMessage(this.getCurrentStateTime() + "|output|Aspirateur Consommation reading " + this.readings.size()
+					+ " with value = " + this.currentConsommation.v);
+
+			this.triggerReading = false;
+			return ret;
+		} else {
+			return null;
+		}
 	}
 
 	@Override
@@ -120,16 +165,19 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 	public void userDefinedExternalTransition(Duration elapsedTime) {
 		
 		Vector<EventI> currentEvents = this.getStoredEventAndReset();
-		assert currentEvents != null && currentEvents.size() == 1;
+		assert currentEvents != null;
 
-		Event ce = (Event) currentEvents.get(0);
-		assert ce instanceof AbstractAspirateurEvent;
+		for (EventI ce : currentEvents) {
+			if(ce instanceof AbstractAspirateurEvent) {
+				this.powerPlotter.addData(SERIES_POWER, this.getCurrentStateTime().getSimulatedTime(), this.getConsommation());
+				ce.executeOn(this);
+				this.powerPlotter.addData(SERIES_POWER, this.getCurrentStateTime().getSimulatedTime(), this.getConsommation());
 		
-		this.powerPlotter.addData(SERIES_POWER, this.getCurrentStateTime().getSimulatedTime(), this.getConsommation());
-		
-		ce.executeOn(this);
-		
-		this.powerPlotter.addData(SERIES_POWER, this.getCurrentStateTime().getSimulatedTime(), this.getConsommation());
+			} else if(ce instanceof TicEvent) {
+
+				this.triggerReading = true;
+			}
+		}
 		super.userDefinedExternalTransition(elapsedTime);
 	}
 
@@ -144,20 +192,20 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 
 	@Override
 	public SimulationReportI getFinalReport() throws Exception {
-		return new AspirateurReport(this.getURI());
+		return new AspirateurReport(this.getURI(), this.readings);
 	}
 
 	public void setState(ModeAspirateur s) {
 		this.currentState = s;
 		switch (s) {
 		case OFF:
-			this.currentConsommation = 0.0;
+			this.currentConsommation.v = 0.0;
 			break;
 		case PERFORMANCE_REDUITE:
-			this.currentConsommation = CONSOMMATION_PERFORMANCE_REDUITE;
+			this.currentConsommation.v = CONSOMMATION_PERFORMANCE_REDUITE;
 			break;
 		case PERFORMANCE_MAXIMALE:
-			this.currentConsommation = CONSOMMATION_PERFORMANCE_MAXIMALE;
+			this.currentConsommation.v = CONSOMMATION_PERFORMANCE_MAXIMALE;
 			break;
 		default:
 			// cannot happen
@@ -170,6 +218,6 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 	}
 
 	public double getConsommation() {
-		return this.currentConsommation;
+		return this.currentConsommation.v;
 	}
 }
