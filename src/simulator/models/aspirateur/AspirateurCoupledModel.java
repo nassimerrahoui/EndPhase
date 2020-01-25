@@ -22,6 +22,7 @@ import fr.sorbonne_u.devs_simulation.models.events.EventSource;
 import fr.sorbonne_u.devs_simulation.models.events.ReexportedEvent;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import fr.sorbonne_u.devs_simulation.utils.StandardCoupledModelReport;
+import simulator.events.aspirateur.SendAspirateurConsommation;
 import simulator.events.aspirateur.SetPerformanceMaximale;
 import simulator.events.aspirateur.SetPerformanceReduite;
 import simulator.events.aspirateur.SwitchAspirateurOff;
@@ -69,6 +70,10 @@ public class AspirateurCoupledModel extends CoupledModel {
 		submodels.add(AspirateurModel.URI);
 		submodels.add(AspirateurUserModel.URI);
 
+		Map<Class<? extends EventI>,ReexportedEvent> reexported =
+				new HashMap<Class<? extends EventI>,ReexportedEvent>() ;
+		reexported.put(SendAspirateurConsommation.class, new ReexportedEvent(AspirateurModel.URI, SendAspirateurConsommation.class)) ;
+		
 		Map<EventSource, EventSink[]> connections = new HashMap<EventSource, EventSink[]>();
 		EventSource from1 = new EventSource(AspirateurUserModel.URI, SwitchAspirateurOn.class);
 		EventSink[] to1 = new EventSink[] { new EventSink(AspirateurModel.URI, SwitchAspirateurOn.class) };
@@ -84,8 +89,15 @@ public class AspirateurCoupledModel extends CoupledModel {
 		connections.put(from4, to4);
 
 		coupledModelDescriptors.put(AspirateurCoupledModel.URI,
-				new CoupledHIOA_Descriptor(AspirateurCoupledModel.class, AspirateurCoupledModel.URI, submodels, null,
-						null, connections, null, SimulationEngineCreationMode.COORDINATION_ENGINE, null, null, null));
+				new CoupledHIOA_Descriptor(
+						AspirateurCoupledModel.class,
+						AspirateurCoupledModel.URI, 
+						submodels, 
+						null,
+						reexported, 
+						connections, 
+						null, 
+						SimulationEngineCreationMode.COORDINATION_ENGINE, null, null, null));
 
 		return new Architecture(AspirateurCoupledModel.URI, atomicModelDescriptors, coupledModelDescriptors,
 				TimeUnit.SECONDS);
