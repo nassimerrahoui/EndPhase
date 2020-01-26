@@ -27,12 +27,6 @@ import simulator.models.aspirateur.AspirateurCoupledModel;
 import simulator.models.compteur.CompteurModel;
 import simulator.models.supervisor.SupervisorCoupledModel;
 
-
-
-/** TODO supervisor in progress... */
-
-
-
 /** Supervise l'architecture globale des modeles et les echanges d'evenements */
 @OfferedInterfaces(offered = { IComposantDynamique.class })
 public class Supervisor extends AbstractComponent {
@@ -52,7 +46,6 @@ public class Supervisor extends AbstractComponent {
 
 		// port entrant permettant a l'assembleur de deployer le composant
 		SupervisorAssembleurInPort launch_INPORT = new SupervisorAssembleurInPort(this);
-		
 		launch_INPORT.publishPort();
 		
 		assert modelURIs2componentURIs != null;
@@ -63,6 +56,10 @@ public class Supervisor extends AbstractComponent {
 
 	protected Supervisor(String reflectionInboundPortURI, Map<String, String> modelURIs2componentURIs) throws Exception {
 		super(reflectionInboundPortURI, 2, 0);
+		
+		// port entrant permettant a l'assembleur de deployer le composant
+		SupervisorAssembleurInPort launch_INPORT = new SupervisorAssembleurInPort(this);
+		launch_INPORT.publishPort();
 
 		assert modelURIs2componentURIs != null;
 		assert modelURIs2componentURIs.size() >= 1;

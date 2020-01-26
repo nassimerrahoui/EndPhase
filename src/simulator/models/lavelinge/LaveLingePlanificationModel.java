@@ -96,10 +96,6 @@ public class LaveLingePlanificationModel extends AtomicES_Model{
 		assert !this.eventList.isEmpty();
 
 		Vector<EventI> ret = super.output();
-		
-		for (EventI eventI : ret) {
-			System.out.println("O : " + eventI);
-		}
 
 		return ret;
 	}
@@ -152,12 +148,6 @@ public class LaveLingePlanificationModel extends AtomicES_Model{
 		
 			i++;
 		}
-		
-		for (EventI e : eventList) {
-			System.out.println(e + " : " + e.getTimeOfOccurrence());
-		}
-		
-		System.out.println("*************************");
 		
 		// event de mise en veille au cas ou le controleur n'aurait pas planifie la veille
 		if(i > 1) {

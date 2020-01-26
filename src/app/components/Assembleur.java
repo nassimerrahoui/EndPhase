@@ -276,7 +276,6 @@ public class Assembleur extends AbstractComponent {
 		launch_uri_inport[7] = rop.findInboundPortURIsFromInterface(IComposantDynamique.class)[0];
 		rop.doDisconnection();
 		
-		
 		// Connexion du controleur vers les entites
 		
 		rop.doConnection(LISTE_REFLECTION_INPORT[0], ReflectionConnector.class.getCanonicalName());
