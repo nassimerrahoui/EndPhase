@@ -73,7 +73,7 @@ public class Frigo
 		// port entrant permettant au controleur d'effectuer des actions sur le frigo
 		FrigoInPort action_INPORT = new FrigoInPort(this);
 		
-		// port entrant permettant a l'assembleur d'effectuer d'integrer l'entite au logement
+		// port entrant permettant a l'assembleur de deployer le composant
 		FrigoAssembleurInPort launch_INPORT = new FrigoAssembleurInPort(this);
 		
 		controleur_OUTPORT.publishPort();

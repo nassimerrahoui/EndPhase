@@ -10,6 +10,9 @@ public enum URI {
 	/** URI de l'assembleur */
 	DYNAMIC_ASSEMBLEUR_URI("DYNAMIC_ASSEMBLEUR_URI"),
 	
+	/** URI du supervisor */
+	SUPERVISOR_URI("SUPERVISOR_URI"),
+	
 	/** URI des composants */
 	CONTROLEUR_URI("CONTROLEUR_URI"),
 	FRIGO_URI("FRIGO_URI"),

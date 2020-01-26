@@ -5,11 +5,17 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import app.interfaces.assembleur.IComposantDynamique;
+import app.ports.supervisor.SupervisorAssembleurInPort;
+import app.util.URI;
 import fr.sorbonne_u.components.AbstractComponent;
+import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.cyphy.plugins.devs.SupervisorPlugin;
 import fr.sorbonne_u.components.cyphy.plugins.devs.architectures.ComponentAtomicModelDescriptor;
 import fr.sorbonne_u.components.cyphy.plugins.devs.architectures.ComponentCoupledModelDescriptor;
 import fr.sorbonne_u.components.cyphy.plugins.devs.architectures.ComponentModelArchitecture;
+import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
+import fr.sorbonne_u.components.ports.PortI;
 import fr.sorbonne_u.devs_simulation.architectures.SimulationEngineCreationMode;
 import fr.sorbonne_u.devs_simulation.models.architectures.AbstractAtomicModelDescriptor;
 import fr.sorbonne_u.devs_simulation.models.architectures.CoupledModelDescriptor;
@@ -28,6 +34,7 @@ import simulator.models.supervisor.SupervisorCoupledModel;
 
 
 /** Supervise l'architecture globale des modeles et les echanges d'evenements */
+@OfferedInterfaces(offered = { IComposantDynamique.class })
 public class Supervisor extends AbstractComponent {
 
 	/** the supervisor plug-in attached to this component. */
@@ -43,6 +50,11 @@ public class Supervisor extends AbstractComponent {
 			throws Exception {
 		super(2, 0);
 
+		// port entrant permettant a l'assembleur de deployer le composant
+		SupervisorAssembleurInPort launch_INPORT = new SupervisorAssembleurInPort(this);
+		
+		launch_INPORT.publishPort();
+		
 		assert modelURIs2componentURIs != null;
 		assert modelURIs2componentURIs.size() >= 1;
 
@@ -56,6 +68,27 @@ public class Supervisor extends AbstractComponent {
 		assert modelURIs2componentURIs.size() >= 1;
 
 		this.initialise(modelURIs2componentURIs);
+	}
+	
+	@Override
+	public void	shutdown() throws ComponentShutdownException
+	{
+		try {
+			PortI[] port_assembleur = this.findPortsFromInterface(IComposantDynamique.class);
+			port_assembleur[0].unpublishPort();
+		} catch (Exception e) { throw new ComponentShutdownException(e); }
+		
+		super.shutdown();
+	}
+
+	@Override
+	public void shutdownNow() throws ComponentShutdownException
+	{
+		try {
+			PortI[] port_assembleur = this.findPortsFromInterface(IComposantDynamique.class);
+			port_assembleur[0].unpublishPort();
+		} catch (Exception e) { throw new ComponentShutdownException(e); }
+		super.shutdownNow();
 	}
 
 	protected void initialise(Map<String, String> modelURIs2componentURIs) throws Exception {
@@ -88,7 +121,7 @@ public class Supervisor extends AbstractComponent {
 				ComponentAtomicModelDescriptor.create(CompteurModel.URI,
 						(Class<? extends EventI>[]) new Class<?>[] { SendAspirateurConsommation.class }, null,
 						TimeUnit.SECONDS, this.modelURIs2componentURIs.get(CompteurModel.URI)));
-
+		
 		Map<String, CoupledModelDescriptor> coupledModelDescriptors = new HashMap<>();
 
 		Set<String> submodels = new HashSet<String>();
@@ -102,7 +135,7 @@ public class Supervisor extends AbstractComponent {
 		coupledModelDescriptors.put(SupervisorCoupledModel.URI,
 				ComponentCoupledModelDescriptor.create(SupervisorCoupledModel.class, SupervisorCoupledModel.URI, submodels, null, null,
 						connections, null, SimulationEngineCreationMode.COORDINATION_ENGINE,
-						this.modelURIs2componentURIs.get(SupervisorCoupledModel.URI)));
+						URI.SUPERVISOR_URI.getURI()));
 
 		ComponentModelArchitecture arch = new ComponentModelArchitecture(
 				SupervisorCoupledModel.URI, atomicModelDescriptors, coupledModelDescriptors, TimeUnit.SECONDS);
@@ -110,8 +143,7 @@ public class Supervisor extends AbstractComponent {
 		return arch;
 	}
 
-	@Override
-	public void execute() throws Exception {
+	public void dynamicExecute() throws Exception {
 		super.execute();
 
 		this.logMessage("supervisor component begins execution.");
@@ -120,10 +152,9 @@ public class Supervisor extends AbstractComponent {
 		this.logMessage("supervisor component begins simulation.");
 		long start = System.currentTimeMillis();
 		this.sp.setSimulationRunParameters(new HashMap<String, Object>());
-		this.sp.doStandAloneSimulation(0, 500.0);
+		this.sp.doStandAloneSimulation(0, 50000.0);
 		long end = System.currentTimeMillis();
 		this.logMessage("supervisor component ends simulation. " + (end - start));
 		Thread.sleep(1000);
 	}
 }
-// -----------------------------------------------------------------------------

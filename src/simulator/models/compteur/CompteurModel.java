@@ -3,9 +3,9 @@ package simulator.models.compteur;
 import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
-
 import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentStateAccessI;
 import fr.sorbonne_u.devs_simulation.models.AtomicModel;
+import fr.sorbonne_u.devs_simulation.models.annotations.ModelExternalEvents;
 import fr.sorbonne_u.devs_simulation.models.events.EventI;
 import fr.sorbonne_u.devs_simulation.models.time.Duration;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
@@ -15,6 +15,7 @@ import fr.sorbonne_u.utils.PlotterDescription;
 import fr.sorbonne_u.utils.XYPlotter;
 import simulator.events.aspirateur.SendAspirateurConsommation;
 
+@ModelExternalEvents(imported = { SendAspirateurConsommation.class})
 public class CompteurModel extends AtomicModel {
 
 	private static final long serialVersionUID = 1L;
