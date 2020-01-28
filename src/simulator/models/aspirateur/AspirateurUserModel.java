@@ -96,7 +96,7 @@ public class AspirateurUserModel extends AtomicES_Model {
 
 	@Override
 	public void userDefinedInternalTransition(Duration elapsedTime) {
-		System.out.println("EHHHHHHHHHHHHHHHHHHHH");
+		System.out.println("Internal Transition Aspi User");
 		Duration d;
 
 		assert this.eventList.size() >= 1 ;
@@ -104,20 +104,20 @@ public class AspirateurUserModel extends AtomicES_Model {
 		
 		if (this.nextEvent.equals(SwitchAspirateurOnSIL.class)) {
 			
-			d = new Duration(2.0 * this.rg.nextBeta(1.75, 1.75), this.getSimulatedTimeUnit());
+			d = new Duration(2 * this.rg.nextBeta(1.75, 1.75), this.getSimulatedTimeUnit());
 			Time t = this.getCurrentStateTime().add(d);
 			this.scheduleEvent(new SetPerformanceReduiteSIL(t));
 			
 		} else if (this.nextEvent.equals(SetPerformanceMaximaleSIL.class)) {
-			d = new Duration(2.0 * this.meanTimeAtPerformanceMaximale * this.rg.nextBeta(1.75, 1.75), this.getSimulatedTimeUnit());
+			d = new Duration(2 * this.meanTimeAtPerformanceMaximale * this.rg.nextBeta(1.75, 1.75), this.getSimulatedTimeUnit());
 			this.scheduleEvent(new SwitchAspirateurOffSIL(this.getCurrentStateTime().add(d)));
 			
 		} else if (this.nextEvent.equals(SetPerformanceReduiteSIL.class)) {
-			d = new Duration(2.0 * this.meanTimeAtPerformanceReduite * this.rg.nextBeta(1.75, 1.75), this.getSimulatedTimeUnit());
+			d = new Duration(2 * this.meanTimeAtPerformanceReduite * this.rg.nextBeta(1.75, 1.75), this.getSimulatedTimeUnit());
 			this.scheduleEvent(new SetPerformanceMaximaleSIL(this.getCurrentStateTime().add(d)));
 		
 		} else if (this.nextEvent.equals(SwitchAspirateurOffSIL.class)) {
-			d = new Duration(2.0 * this.meanTimeOff * this.rg.nextBeta(1.75, 1.75), this.getSimulatedTimeUnit());
+			d = new Duration(2 * this.meanTimeOff * this.rg.nextBeta(1.75, 1.75), this.getSimulatedTimeUnit());
 			this.scheduleEvent(new SwitchAspirateurOnSIL(this.getCurrentStateTime().add(d)));
 		}		
 	}

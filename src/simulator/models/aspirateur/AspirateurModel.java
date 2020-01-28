@@ -87,22 +87,28 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 	@Override
 	public ArrayList<EventI> output() {
 
-		if (this.consumptionHasChanged) {
-
-			ArrayList<EventI> ret = new ArrayList<EventI>() ;
-			Time t = this.getCurrentStateTime().add(getNextTimeAdvance()) ;
-			try {
-				ret.add(new SendAspirateurConsommation(t,
-						this.currentConsommation.v)) ;
-			} catch (Exception e) {
-				throw new RuntimeException(e) ;
-			}
-			this.consumptionHasChanged = false ;
-			return ret ;
-			
-		} else {
-			return null ;
-		}
+//		if (this.consumptionHasChanged) {
+//
+//			ArrayList<EventI> ret = new ArrayList<EventI>() ;
+//			Time t = this.getCurrentStateTime().add(getNextTimeAdvance()) ;
+//			try {
+//				ret.add(new SendAspirateurConsommation(t,
+//						this.currentConsommation.v)) ;
+//			} catch (Exception e) {
+//				throw new RuntimeException(e) ;
+//			}
+//		
+//			for(EventI e : ret)
+//				System.out.println("event " + e);
+//			
+//			this.consumptionHasChanged = false ;
+//			return ret ;
+//			
+//		} else {
+//			return null ;
+//		}
+		
+		return null;
 	}
 
 	@Override
@@ -116,15 +122,14 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 
 	@Override
 	public void userDefinedInternalTransition(Duration elapsedTime) {
-		System.out.println("INTERN ASPI");
 		try {
 			
 			this.powerPlotter.addData(SERIES_POWER, this.getCurrentStateTime().getSimulatedTime(), this.getConsommation());
-			super.userDefinedInternalTransition(elapsedTime) ;
 			
 			assert	this.componentRef != null ;
 			ModeAspirateur m = (ModeAspirateur) this.componentRef.getEmbeddingComponentStateValue(AspirateurModel.URI + " : state");
 			if (m != this.lastState) {
+				System.out.println("SWITCH " + lastState + " : " + m);
 				switch(m)
 				{
 					case OFF : this.setState(ModeAspirateur.OFF) ; break ;
@@ -136,7 +141,6 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 			}
 			
 			this.powerPlotter.addData(SERIES_POWER, this.getCurrentStateTime().getSimulatedTime(), this.getConsommation());
-			super.userDefinedInternalTransition(elapsedTime) ;
 		
 		} catch (Exception e) {
 			throw new RuntimeException(e) ;

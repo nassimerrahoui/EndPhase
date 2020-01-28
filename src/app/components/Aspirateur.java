@@ -104,9 +104,8 @@ public class Aspirateur
 	}
 
 	public void setModeAspirateur(ModeAspirateur etat) throws Exception {
-		System.out.println("BEFORE " + etat);
 		this.etat = etat;
-		System.out.println("AFTER " + etat);
+		System.out.println("SET " + etat);
 	}
 	
 	/**
@@ -185,7 +184,6 @@ public class Aspirateur
 			@Override
 			public void run() {
 				try {
-					((Aspirateur) this.getTaskOwner()).etat = (ModeAspirateur) ((Aspirateur) this.getTaskOwner()).asp.getModelStateValue(AspirateurModel.URI, "state");
 					((Aspirateur) this.getTaskOwner()).consommation = (Double) ((Aspirateur) this.getTaskOwner()).asp.getModelStateValue(AspirateurModel.URI, "consommation");
 					((Aspirateur) this.getTaskOwner()).logMessage("Mode : " + etat);
 					((Aspirateur) this.getTaskOwner()).logMessage("Consommation : " + consommation);
