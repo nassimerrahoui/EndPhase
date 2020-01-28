@@ -1,10 +1,11 @@
 package simulator.models.aspirateur;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 import app.util.ModeAspirateur;
-import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentStateAccessI;
+import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentAccessI;
 import fr.sorbonne_u.devs_simulation.hioa.annotations.ExportedVariable;
 import fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOAwithEquations;
 import fr.sorbonne_u.devs_simulation.hioa.models.vars.Value;
@@ -28,6 +29,7 @@ import simulator.tic.TicEvent;
 
 @ModelExternalEvents(
 		imported = { 
+			TicEvent.class,
 			SwitchAspirateurOn.class, 
 			SwitchAspirateurOff.class, 
 			SetPerformanceReduite.class,
@@ -68,7 +70,7 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 	protected Value<Double> currentConsommation = new Value<Double>(this, 0.0, 0); // Watts
 	protected ModeAspirateur currentState;
 	protected XYPlotter powerPlotter;
-	protected EmbeddingComponentStateAccessI componentRef;
+	protected EmbeddingComponentAccessI componentRef;
 	
 	/** true when a external event triggered a reading. */
 	protected boolean triggerReading;
@@ -90,7 +92,7 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 
 	@Override
 	public void setSimulationRunParameters(Map<String, Object> simParams) throws Exception {
-		this.componentRef = (EmbeddingComponentStateAccessI) simParams.get(URI + " : " + COMPONENT_REF);
+		this.componentRef = (EmbeddingComponentAccessI) simParams.get(URI + " : " + COMPONENT_REF);
 	
 		PlotterDescription pd = (PlotterDescription) simParams.get(URI + " : " + POWER_PLOTTING_PARAM_NAME);
 		this.powerPlotter = new XYPlotter(pd);
@@ -123,13 +125,15 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 	}
 
 	@Override
-	public Vector<EventI> output() {
+	public ArrayList<EventI> output() {
+		System.out.println("OUT ASPI");
 		if (this.triggerReading) {
 
+			System.out.println("OUT SEND ASPI");
 			this.lastReading = this.currentConsommation.v;
 			this.lastReadingTime = this.getCurrentStateTime().getSimulatedTime();
 
-			Vector<EventI> ret = new Vector<EventI>(1);
+			ArrayList<EventI> ret = new ArrayList<EventI>(1);
 			Time t = this.getCurrentStateTime().add(this.getNextTimeAdvance());
 			SendAspirateurConsommation bl = new SendAspirateurConsommation(t, currentConsommation.v);
 			ret.add(bl);
@@ -157,15 +161,16 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 
 	@Override
 	public void userDefinedInternalTransition(Duration elapsedTime) {
+		System.out.println("INTERN ASPI");
 		this.powerPlotter.addData(SERIES_POWER, this.getCurrentStateTime().getSimulatedTime(), this.getConsommation());
 		super.userDefinedInternalTransition(elapsedTime) ;
 	}
 
 	@Override
 	public void userDefinedExternalTransition(Duration elapsedTime) {
+		System.out.println("EXTERN ASPI");
 		
-		Vector<EventI> currentEvents = this.getStoredEventAndReset();
-		assert currentEvents != null;
+		ArrayList<EventI> currentEvents = this.getStoredEventAndReset();
 
 		for (EventI ce : currentEvents) {
 			if(ce instanceof AbstractAspirateurEvent) {
@@ -174,7 +179,6 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 				this.powerPlotter.addData(SERIES_POWER, this.getCurrentStateTime().getSimulatedTime(), this.getConsommation());
 		
 			} else if(ce instanceof TicEvent) {
-
 				this.triggerReading = true;
 			}
 		}

@@ -1,11 +1,11 @@
 package simulator.models.lavelinge;
 
+import java.util.ArrayList;
 import java.util.Map;
-import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 import app.util.ModeLaveLinge;
 import app.util.TemperatureLaveLinge;
-import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentStateAccessI;
+import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentAccessI;
 import fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOAwithEquations;
 import fr.sorbonne_u.devs_simulation.interfaces.SimulationReportI;
 import fr.sorbonne_u.devs_simulation.models.annotations.ModelExternalEvents;
@@ -54,7 +54,7 @@ public class LaveLingeModel extends AtomicHIOAwithEquations{
 	protected TemperatureLaveLinge currentTemperature; // degres celsius
 	protected XYPlotter powerPlotter;
 	
-	protected EmbeddingComponentStateAccessI componentRef;
+	protected EmbeddingComponentAccessI componentRef;
 	
 	public static class LaveLingeReport extends AbstractSimulationReport {
 		private static final long serialVersionUID = 1L;
@@ -78,7 +78,7 @@ public class LaveLingeModel extends AtomicHIOAwithEquations{
 	@Override
 	public void setSimulationRunParameters(Map<String, Object> simParams) throws Exception {
 		
-		this.componentRef = (EmbeddingComponentStateAccessI) simParams.get(URI + " : " + COMPONENT_REF);
+		this.componentRef = (EmbeddingComponentAccessI) simParams.get(URI + " : " + COMPONENT_REF);
 		
 		PlotterDescription pd = (PlotterDescription) simParams.get(URI + " : " + POWER_PLOTTING_PARAM_NAME);
 		this.powerPlotter = new XYPlotter(pd);
@@ -104,7 +104,7 @@ public class LaveLingeModel extends AtomicHIOAwithEquations{
 	}
 
 	@Override
-	public Vector<EventI> output() {
+	public ArrayList<EventI> output() {
 		// the model does not export any event.
 		return null;
 	}
@@ -158,7 +158,7 @@ public class LaveLingeModel extends AtomicHIOAwithEquations{
 	@Override
 	public void userDefinedExternalTransition(Duration elapsedTime) {
 
-		Vector<EventI> currentEvents = this.getStoredEventAndReset();
+		ArrayList<EventI> currentEvents = this.getStoredEventAndReset();
 		assert currentEvents != null;
 
 		for (EventI ce : currentEvents) {

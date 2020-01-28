@@ -22,12 +22,4 @@ public class SupervisorCoupledModel extends CoupledModel {
 			throws Exception {
 		super(uri, simulatedTimeUnit, simulationEngine, submodels, imported, reexported, connections);
 	}
-
-	public void disposePlotters() throws Exception {
-		for (int i = 0; i < this.submodels.length; i++) {
-			ModelDescriptionI m = this.submodels[i].getDescendentModel(this.submodels[i].getURI());
-			assert m instanceof SupervisorCoupledModel;
-			((SupervisorCoupledModel) m).disposePlotters();
-		}
-	}
 }

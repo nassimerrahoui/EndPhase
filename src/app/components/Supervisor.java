@@ -7,7 +7,6 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import app.interfaces.assembleur.IComposantDynamique;
 import app.ports.supervisor.SupervisorAssembleurInPort;
-import app.util.URI;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.cyphy.plugins.devs.SupervisorPlugin;
@@ -132,10 +131,13 @@ public class Supervisor extends AbstractComponent {
 		coupledModelDescriptors.put(SupervisorCoupledModel.URI,
 				ComponentCoupledModelDescriptor.create(SupervisorCoupledModel.class, SupervisorCoupledModel.URI, submodels, null, null,
 						connections, null, SimulationEngineCreationMode.COORDINATION_ENGINE,
-						URI.SUPERVISOR_URI.getURI()));
+						this.modelURIs2componentURIs.get(SupervisorCoupledModel.URI)));
 
 		ComponentModelArchitecture arch = new ComponentModelArchitecture(
-				SupervisorCoupledModel.URI, atomicModelDescriptors, coupledModelDescriptors, TimeUnit.SECONDS);
+				"SIL",
+				SupervisorCoupledModel.URI, 
+				atomicModelDescriptors, 
+				coupledModelDescriptors, TimeUnit.SECONDS);
 
 		return arch;
 	}

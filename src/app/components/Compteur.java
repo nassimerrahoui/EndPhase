@@ -1,7 +1,9 @@
 package app.components;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
+import java.util.concurrent.TimeUnit;
 import app.interfaces.assembleur.IComposantDynamique;
 import app.interfaces.compteur.ICompteur;
 import app.interfaces.compteur.ICompteurControleur;
@@ -9,20 +11,28 @@ import app.ports.compteur.CompteurAssembleurInPort;
 import app.ports.compteur.CompteurInPort;
 import app.ports.compteur.ConsommationProductionInPort;
 import app.util.URI;
-import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
+import fr.sorbonne_u.components.cyphy.AbstractCyPhyComponent;
+import fr.sorbonne_u.components.cyphy.plugins.devs.AtomicSimulatorPlugin;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
+import fr.sorbonne_u.devs_simulation.architectures.Architecture;
+import fr.sorbonne_u.devs_simulation.architectures.SimulationEngineCreationMode;
+import fr.sorbonne_u.devs_simulation.models.architectures.AbstractAtomicModelDescriptor;
+import fr.sorbonne_u.devs_simulation.models.architectures.AtomicModelDescriptor;
+import simulator.models.compteur.CompteurModel;
+import simulator.plugins.CompteurSimulatorPlugin;
 
 @OfferedInterfaces(offered = { ICompteurControleur.class, ICompteur.class, IComposantDynamique.class })
 @RequiredInterfaces(required = { })
-public class Compteur extends AbstractComponent {
+public class Compteur extends AbstractCyPhyComponent {
 
 	protected ConcurrentHashMap<String, Double> appareil_consommation = new ConcurrentHashMap<>();
 	protected ConcurrentHashMap<String, Double> unite_production = new ConcurrentHashMap<>();
+	protected AtomicSimulatorPlugin asp;
 
 	protected Compteur(
 			String COMPTEUR_URI,
@@ -56,6 +66,8 @@ public class Compteur extends AbstractComponent {
 		this.tracer.setTitle("Compteur");
 		this.tracer.setRelativePosition(1, 3);
 		this.toggleTracing();
+		
+		this.initialise();
 	}
 
 	public void ajouterAppareil(String uri) throws Exception {
@@ -143,5 +155,37 @@ public class Compteur extends AbstractComponent {
 			p3[0].unpublishPort();
 		} catch (Exception e) { throw new ComponentShutdownException(e); }
 		super.shutdownNow();
+	}
+	
+	
+	// ******************* Simulation *************************
+	
+	@Override
+	protected Architecture createLocalArchitecture(String modelURI) throws Exception {
+		Map<String,AbstractAtomicModelDescriptor> atomicModelDescriptors = new HashMap<>();
+		atomicModelDescriptors.put(
+				CompteurModel.URI,
+				AtomicModelDescriptor.create(
+						CompteurModel.class,
+						CompteurModel.URI,
+						TimeUnit.SECONDS,
+						null,
+						SimulationEngineCreationMode.ATOMIC_ENGINE)) ;
+		
+		Architecture localArchitecture =
+				new Architecture(
+						CompteurModel.URI,
+						atomicModelDescriptors,
+						new HashMap<>(),
+						TimeUnit.SECONDS) ;
+		return localArchitecture ;
+	}
+	
+	protected void	initialise() throws Exception {
+		Architecture localArchitecture = this.createLocalArchitecture(null);
+		this.asp = new CompteurSimulatorPlugin();
+		this.asp.setPluginURI(localArchitecture.getRootModelURI());
+		this.asp.setSimulationArchitecture(localArchitecture);
+		this.installPlugin(this.asp);	
 	}
 }

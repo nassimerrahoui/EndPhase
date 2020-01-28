@@ -2,11 +2,10 @@ package simulator.models.lavelinge;
 
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.math3.random.RandomDataGenerator;
 import app.util.ModeLaveLinge;
-import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentStateAccessI;
+import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentAccessI;
 import fr.sorbonne_u.devs_simulation.es.models.AtomicES_Model;
 import fr.sorbonne_u.devs_simulation.models.annotations.ModelExternalEvents;
 import fr.sorbonne_u.devs_simulation.models.events.EventI;
@@ -48,7 +47,7 @@ public class LaveLingePlanificationModel extends AtomicES_Model{
 	
 	protected ArrayList<ModeLaveLinge> planification_etats;
 	
-	protected EmbeddingComponentStateAccessI componentRef;
+	protected EmbeddingComponentAccessI componentRef;
 	
 	
 	public LaveLingePlanificationModel(String uri, TimeUnit simulatedTimeUnit, SimulatorI simulationEngine) throws Exception {
@@ -80,7 +79,7 @@ public class LaveLingePlanificationModel extends AtomicES_Model{
 	
 	@Override
 	public void setSimulationRunParameters(Map<String, Object> simParams) throws Exception {
-		this.componentRef = (EmbeddingComponentStateAccessI) simParams.get(LaveLingeModel.URI + " : " + LaveLingeModel.COMPONENT_REF);
+		this.componentRef = (EmbeddingComponentAccessI) simParams.get(LaveLingeModel.URI + " : " + LaveLingeModel.COMPONENT_REF);
 	}
 	
 	@Override
@@ -91,11 +90,11 @@ public class LaveLingePlanificationModel extends AtomicES_Model{
 	}
 
 	@Override
-	public Vector<EventI> output() {
+	public ArrayList<EventI> output() {
 
 		assert !this.eventList.isEmpty();
 
-		Vector<EventI> ret = super.output();
+		ArrayList<EventI> ret = super.output();
 
 		return ret;
 	}

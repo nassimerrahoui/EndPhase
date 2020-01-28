@@ -1,13 +1,11 @@
 package simulator.models.frigo;
 
+import java.util.ArrayList;
 import java.util.Map;
-import java.util.Vector;
 import java.util.concurrent.TimeUnit;
-
 import org.apache.commons.math3.random.RandomDataGenerator;
-
 import app.util.ModeFrigo;
-import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentStateAccessI;
+import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentAccessI;
 import fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOAwithEquations;
 import fr.sorbonne_u.devs_simulation.interfaces.SimulationReportI;
 import fr.sorbonne_u.devs_simulation.models.annotations.ModelExternalEvents;
@@ -89,7 +87,7 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 	protected final double LIMIT = 0.5; // degres celsius
 	
 	/** Reference du composant associe au modele */
-	protected EmbeddingComponentStateAccessI componentRef;
+	protected EmbeddingComponentAccessI componentRef;
 	
 	public FrigoModel(String uri, TimeUnit simulatedTimeUnit, SimulatorI simulationEngine) throws Exception {
 		super(uri, simulatedTimeUnit, simulationEngine);
@@ -100,7 +98,7 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 	@Override
 	public void setSimulationRunParameters(Map<String, Object> simParams) throws Exception {
 		
-		this.componentRef = (EmbeddingComponentStateAccessI) simParams.get(URI + " : " + COMPONENT_REF);
+		this.componentRef = (EmbeddingComponentAccessI) simParams.get(URI + " : " + COMPONENT_REF);
 
 		PlotterDescription pd = (PlotterDescription) simParams.get(URI + " : " + POWER_PLOTTING_PARAM_NAME) ;
 		this.powerPlotter = new XYPlotter(pd);
@@ -146,7 +144,7 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 	}
 
 	@Override
-	public Vector<EventI> output() {
+	public ArrayList<EventI> output() {
 		// the model does not export any event.
 		return null;
 	}
@@ -171,6 +169,22 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 		this.statePlotter.addData(SERIES_MODE, this.getCurrentStateTime().getSimulatedTime(), this.getState().getMode());
 		this.temperaturePlotter.addData(SERIES_TEMPERATURE, this.getCurrentStateTime().getSimulatedTime(), this.getCurrentTemperature());
 
+		assert this.componentRef != null ;
+		
+		try { 
+			ModeFrigo m = (ModeFrigo) this.componentRef.getEmbeddingComponentStateValue(FrigoModel.URI + " : state");
+			if (m != this.currentState) {
+				switch(m)
+				{
+					case OFF : this.setState(ModeFrigo.OFF) ; break ;
+					case LIGHT_OFF : this.setState(ModeFrigo.LIGHT_OFF) ; break ;
+					case LIGHT_ON : this.setState(ModeFrigo.LIGHT_ON) ;
+				}
+				this.currentState = m ;
+			}
+		}
+		catch (Exception e) { e.printStackTrace(); }
+		
 		this.computeNewLevel(this.getCurrentStateTime(), delta_t) ;
 	}
 	
@@ -236,7 +250,7 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 	@Override
 	public void userDefinedExternalTransition(Duration elapsedTime) {
 		
-		Vector<EventI> currentEvents = this.getStoredEventAndReset();
+		ArrayList<EventI> currentEvents = this.getStoredEventAndReset();
 		assert currentEvents != null && currentEvents.size() == 1;
 		Event ce = (Event) currentEvents.get(0);
 		assert ce instanceof AbstractFrigoEvent;

@@ -27,6 +27,8 @@ import simulator.events.aspirateur.SetPerformanceMaximale;
 import simulator.events.aspirateur.SetPerformanceReduite;
 import simulator.events.aspirateur.SwitchAspirateurOff;
 import simulator.events.aspirateur.SwitchAspirateurOn;
+import simulator.tic.TicEvent;
+import simulator.tic.TicModel;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -59,6 +61,8 @@ public class AspirateurCoupledModel extends CoupledModel {
 	public static Architecture build() throws Exception {
 		Map<String, AbstractAtomicModelDescriptor> atomicModelDescriptors = new HashMap<>();
 
+		atomicModelDescriptors.put(TicModel.URI, AtomicModelDescriptor.create(TicModel.class, TicModel.URI,
+				TimeUnit.SECONDS, null, SimulationEngineCreationMode.ATOMIC_ENGINE));
 		atomicModelDescriptors.put(AspirateurModel.URI, AtomicHIOA_Descriptor.create(AspirateurModel.class,
 				AspirateurModel.URI, TimeUnit.SECONDS, null, SimulationEngineCreationMode.ATOMIC_ENGINE));
 		atomicModelDescriptors.put(AspirateurUserModel.URI, AtomicModelDescriptor.create(AspirateurUserModel.class,
@@ -67,6 +71,7 @@ public class AspirateurCoupledModel extends CoupledModel {
 		Map<String, CoupledModelDescriptor> coupledModelDescriptors = new HashMap<String, CoupledModelDescriptor>();
 
 		Set<String> submodels = new HashSet<String>();
+		submodels.add(TicModel.URI);
 		submodels.add(AspirateurModel.URI);
 		submodels.add(AspirateurUserModel.URI);
 
@@ -75,6 +80,9 @@ public class AspirateurCoupledModel extends CoupledModel {
 		reexported.put(SendAspirateurConsommation.class, new ReexportedEvent(AspirateurModel.URI, SendAspirateurConsommation.class)) ;
 		
 		Map<EventSource, EventSink[]> connections = new HashMap<EventSource, EventSink[]>();
+		EventSource from0 = new EventSource(TicModel.URI, TicEvent.class);
+		EventSink[] to0 = new EventSink[] { new EventSink(AspirateurModel.URI, TicEvent.class) };
+		connections.put(from0, to0);
 		EventSource from1 = new EventSource(AspirateurUserModel.URI, SwitchAspirateurOn.class);
 		EventSink[] to1 = new EventSink[] { new EventSink(AspirateurModel.URI, SwitchAspirateurOn.class) };
 		connections.put(from1, to1);

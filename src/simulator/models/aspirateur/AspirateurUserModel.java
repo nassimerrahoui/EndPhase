@@ -14,8 +14,7 @@ import simulator.events.aspirateur.SetPerformanceMaximale;
 import simulator.events.aspirateur.SetPerformanceReduite;
 import simulator.events.aspirateur.SwitchAspirateurOff;
 import simulator.events.aspirateur.SwitchAspirateurOn;
-
-import java.util.Vector;
+import java.util.ArrayList;
 
 @ModelExternalEvents(exported = { 
 		SwitchAspirateurOn.class, 
@@ -80,21 +79,19 @@ public class AspirateurUserModel extends AtomicES_Model {
 	public Duration timeAdvance() {
 
 		Duration d = super.timeAdvance();
-		this.logMessage("AspirateurUserModel::timeAdvance() 1 " + d + " " + this.eventListAsString());
 		return d;
 	}
 
 	@Override
-	public Vector<EventI> output() {
+	public ArrayList<EventI> output() {
 
 		assert !this.eventList.isEmpty();
 
-		Vector<EventI> ret = super.output();
+		ArrayList<EventI> ret = super.output();
 
 		assert ret.size() == 1;
 		this.nextEvent = ret.get(0).getClass();
-
-		this.logMessage("AspirateurUserModel::output() " + this.nextEvent.getCanonicalName());
+		
 		return ret;
 	}
 

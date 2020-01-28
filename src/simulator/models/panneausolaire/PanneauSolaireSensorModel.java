@@ -1,5 +1,6 @@
 package simulator.models.panneausolaire;
 
+import java.util.ArrayList;
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
@@ -95,13 +96,13 @@ public class PanneauSolaireSensorModel extends AtomicHIOAwithEquations {
 	}
 
 	@Override
-	public Vector<EventI> output() {
+	public ArrayList<EventI> output() {
 		if (this.triggerReading) {
 
 			this.lastReading = this.solarIntensity.v;
 			this.lastReadingTime = this.getCurrentStateTime().getSimulatedTime();
 
-			Vector<EventI> ret = new Vector<EventI>(1);
+			ArrayList<EventI> ret = new ArrayList<EventI>(1);
 			Time t = this.getCurrentStateTime().add(this.getNextTimeAdvance());
 			SolarIntensity bl = new SolarIntensity(t, this.solarIntensity.v);
 			ret.add(bl);
@@ -143,7 +144,7 @@ public class PanneauSolaireSensorModel extends AtomicHIOAwithEquations {
 	public void userDefinedExternalTransition(Duration elapsedTime) {
 		super.userDefinedExternalTransition(elapsedTime);
 
-		Vector<EventI> current = this.getStoredEventAndReset();
+		ArrayList<EventI> current = this.getStoredEventAndReset();
 		boolean ticReceived = false;
 		for (int i = 0; !ticReceived && i < current.size(); i++) {
 			if (current.get(i) instanceof TicEvent) {

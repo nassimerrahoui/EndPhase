@@ -13,6 +13,9 @@ public enum URI {
 	/** URI du supervisor */
 	SUPERVISOR_URI("SUPERVISOR_URI"),
 	
+	/** URI du coordinateur */
+	COORDINATOR_URI("COORDINATOR_URI"),
+	
 	/** URI des composants */
 	CONTROLEUR_URI("CONTROLEUR_URI"),
 	FRIGO_URI("FRIGO_URI"),

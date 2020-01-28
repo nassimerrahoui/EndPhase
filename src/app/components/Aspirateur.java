@@ -21,7 +21,7 @@ import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.cyphy.AbstractCyPhyComponent;
-import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentStateAccessI;
+import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentAccessI;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
@@ -36,7 +36,7 @@ import simulator.plugins.AspirateurSimulatorPlugin;
 @RequiredInterfaces(required = { IAjoutAppareil.class, IConsommation.class })
 public class Aspirateur 
 	extends AbstractCyPhyComponent 
-	implements EmbeddingComponentStateAccessI {
+	implements EmbeddingComponentAccessI {
 
 	/** port sortant permettant a l'appareil de s'inscrire sur la liste des appareil du controleur */
 	protected AspirateurControleurOutPort controleur_OUTPORT;

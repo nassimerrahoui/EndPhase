@@ -41,6 +41,7 @@ import simulator.models.compteur.CompteurModel;
 import simulator.models.frigo.FrigoCoupledModel;
 import simulator.models.lavelinge.LaveLingeCoupledModel;
 import simulator.models.panneausolaire.PanneauSolaireCoupledModel;
+import simulator.models.supervisor.SupervisorCoupledModel;
 
 /**
  * Ce composant permet de creer l'ensembles des autres composants tels que : 
@@ -66,7 +67,7 @@ public class Assembleur extends AbstractComponent {
 		super(uri, 10, 10);
 		
 		this.LISTE_JVM_URI = LISTE_JVM_URI;
-		this.LISTE_REFLECTION_INPORT = new String[8];
+		this.LISTE_REFLECTION_INPORT = new String[9];
 		this.hm = new HashMap<String, String>();
 
 		this.tracer.setTitle("Assembleur");
@@ -221,8 +222,14 @@ public class Assembleur extends AbstractComponent {
 						Integer.valueOf(8)});
 		
 		hm.put(CompteurModel.URI, LISTE_REFLECTION_INPORT[6]);
-
-		LISTE_REFLECTION_INPORT[7] = DynamicOutPort.createComponent(Supervisor.class.getCanonicalName(),
+		
+		LISTE_REFLECTION_INPORT[7] = DynamicOutPort.createComponent(Coordinator.class.getCanonicalName(),
+				new Object[]{URI.COORDINATOR_URI.getURI()}) ;
+		
+		// URI SUPERVISOR POUR COORDINATOR 
+		hm.put(SupervisorCoupledModel.URI, LISTE_REFLECTION_INPORT[7]);
+		
+		LISTE_REFLECTION_INPORT[8] = DynamicOutPort.createComponent(Supervisor.class.getCanonicalName(),
 				new Object[]{URI.SUPERVISOR_URI.getURI(),hm}) ;
 		
 		DynamicOutPort.doDisconnection();
@@ -232,7 +239,7 @@ public class Assembleur extends AbstractComponent {
 		// Recuperation des ports entrants des entites pour le controleur et pour l'assembleur
 		
 		String[] entite_uri_inport = new String[6];
-		this.launch_uri_inport = new String[8];
+		this.launch_uri_inport = new String[9];
 		
 
 		ReflectionOutboundPort rop = new ReflectionOutboundPort(this);
@@ -274,6 +281,10 @@ public class Assembleur extends AbstractComponent {
 		
 		rop.doConnection(LISTE_REFLECTION_INPORT[7], ReflectionConnector.class.getCanonicalName());
 		launch_uri_inport[7] = rop.findInboundPortURIsFromInterface(IComposantDynamique.class)[0];
+		rop.doDisconnection();
+		
+		rop.doConnection(LISTE_REFLECTION_INPORT[8], ReflectionConnector.class.getCanonicalName());
+		launch_uri_inport[8] = rop.findInboundPortURIsFromInterface(IComposantDynamique.class)[0];
 		rop.doDisconnection();
 		
 		// Connexion du controleur vers les entites
@@ -481,8 +492,14 @@ public class Assembleur extends AbstractComponent {
 		AssembleurOutPort.dynamicExecute();
 		this.doPortDisconnection(AssembleurOutPort.getPortURI());
 
-		// execution du supervisor
+		// execution du coordinator
 		this.doPortConnection(AssembleurOutPort.getPortURI(), launch_uri_inport[7],
+				AssembleurEntiteConnector.class.getCanonicalName());
+		AssembleurOutPort.dynamicExecute();
+		this.doPortDisconnection(AssembleurOutPort.getPortURI());
+		
+		// execution du supervisor
+		this.doPortConnection(AssembleurOutPort.getPortURI(), launch_uri_inport[8],
 				AssembleurEntiteConnector.class.getCanonicalName());
 		AssembleurOutPort.dynamicExecute();
 		this.doPortDisconnection(AssembleurOutPort.getPortURI());

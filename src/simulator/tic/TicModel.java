@@ -1,7 +1,7 @@
 package simulator.tic;
 
+import java.util.ArrayList;
 import java.util.Map;
-import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 import fr.sorbonne_u.devs_simulation.interfaces.SimulationReportI;
 import fr.sorbonne_u.devs_simulation.models.AtomicModel;
@@ -95,9 +95,9 @@ extends		AtomicModel
 	 * @see fr.sorbonne_u.devs_simulation.models.interfaces.AtomicModelI#output()
 	 */
 	@Override
-	public Vector<EventI>	output()
+	public ArrayList<EventI>	output()
 	{
-		Vector<EventI> ret = new Vector<EventI>() ;
+		ArrayList<EventI> ret = new ArrayList<EventI>() ;
 		// compute the current simulation time because it has not been
 		// updated yet.
 		Time t = this.getCurrentStateTime().add(this.getNextTimeAdvance()) ;
