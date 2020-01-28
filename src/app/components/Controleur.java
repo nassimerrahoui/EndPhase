@@ -239,13 +239,14 @@ public class Controleur extends AbstractComponent {
 			}
 		}, 3000, TimeUnit.MILLISECONDS);
 		
+		/*
 		this.scheduleTask(new AbstractComponent.AbstractTask() {
 			@Override
 			public void run() {
 				try { ((Controleur) this.getTaskOwner()).envoyerEtatAspirateur(ModeAspirateur.PERFORMANCE_REDUITE); }
 				catch (Exception e) { throw new RuntimeException(e); }
 			}
-		}, 3000, TimeUnit.MILLISECONDS);
+		}, 3000, TimeUnit.MILLISECONDS);*/
 		
 		this.scheduleTask(new AbstractComponent.AbstractTask() {
 			@Override

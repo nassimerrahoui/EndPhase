@@ -14,5 +14,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="jars/jfreechart-1.6.0-snapshot.jar"/>
 	<classpathentry kind="lib" path="jars/Simulation-23012020.jar"/>
+	<classpathentry kind="lib" path="/users/Etu6/3873896/Documents/ALASCA/BCM-CyPhy-Components-23012020.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -146,7 +146,7 @@ public class Supervisor extends AbstractComponent {
 		super.execute();
 
 		this.logMessage("supervisor component begins execution.");
-		this.sp.createSimulator();
+		this.sp.createSimulator();		
 		Thread.sleep(1000L);
 		this.logMessage("supervisor component begins simulation.");
 		long start = System.currentTimeMillis();

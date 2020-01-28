@@ -104,7 +104,9 @@ public class Aspirateur
 	}
 
 	public void setModeAspirateur(ModeAspirateur etat) throws Exception {
+		System.out.println("BEFORE " + etat);
 		this.etat = etat;
+		System.out.println("AFTER " + etat);
 	}
 	
 	/**
