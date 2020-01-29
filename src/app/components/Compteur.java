@@ -87,22 +87,42 @@ public class Compteur extends AbstractCyPhyComponent implements EmbeddingCompone
 		this.initialise();
 	}
 
+	/**
+	 * Permet au controleur d'ajouter des appareils au compteur
+	 * @param uri
+	 * @throws Exception
+	 */
 	public void ajouterAppareil(String uri) throws Exception {
 		this.appareil_consommation.put(uri, 0.0);
 		this.logMessage(uri + " a ete ajoute au compteur");
 		this.logMessage("...");
 	}
 	
+	/**
+	 * Permet au controleur d'ajouter des unites de production au compteur
+	 * @param uri
+	 * @throws Exception
+	 */
 	public void ajouterUniteProduction(String uri) throws Exception {
 		this.unite_production.put(uri, 0.0);
 		this.logMessage(uri + " a ete ajoute au compteur");
 		this.logMessage("...");
 	}
 
+	/**
+	 * Envoi la consommation globale au controleur
+	 * @return
+	 * @throws Exception
+	 */
 	public double envoyerConsommationGlobale() throws Exception {
 		return appareil_consommation.values().stream().mapToDouble(i -> i).sum();
 	}
 
+	/**
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
 	public double envoyerProductionGlobale() throws Exception {
 		return unite_production.values().stream().mapToDouble(i -> i).sum();
 	}
@@ -139,6 +159,10 @@ public class Compteur extends AbstractCyPhyComponent implements EmbeddingCompone
 		this.logMessage("Phase d'execution du compteur.");
 	}
 	
+	/**
+	 * Execute depuis l'assembleur
+	 * @throws Exception
+	 */
 	public void dynamicExecute() throws Exception {
 
 		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 10L ;
@@ -239,6 +263,10 @@ public class Compteur extends AbstractCyPhyComponent implements EmbeddingCompone
 		return localArchitecture ;
 	}
 	
+	/**
+	 * Installe le plugin
+	 * @throws Exception
+	 */
 	protected void	initialise() throws Exception {
 		Architecture localArchitecture = this.createLocalArchitecture(null);
 		this.asp = new CompteurSimulatorPlugin();

@@ -46,7 +46,10 @@ public class Batterie extends AbstractCyPhyComponent implements EmbeddingCompone
 	/** port sortant permettant au compteur de recupere la production de l'unite */
 	protected BatterieCompteurOutPort production_OUTPORT;
 	
+	/** Etat actuel de la batterie */
 	protected EtatUniteProduction etat;
+	
+	/** Production en Watts par l'unite de production */
 	protected Double production;
 
 	protected BatterieSimulatorPlugin asp ;
@@ -94,15 +97,30 @@ public class Batterie extends AbstractCyPhyComponent implements EmbeddingCompone
 		this.initialise();
 	}
 	
-
+	/**
+	 * Ajoute l'URI de l'unite de production a la map des appareils du controleur
+	 * @param uri
+	 * @throws Exception
+	 */
 	public void demandeAjoutControleur(String uri) throws Exception {
 		this.controleur_OUTPORT.demandeAjoutControleur(uri);
 	}
 
+	/**
+	 * Envoie la production au compteur
+	 * @param uri
+	 * @param consommation
+	 * @throws Exception
+	 */
 	public void envoyerProduction(String uri, double production) throws Exception {
 		this.production_OUTPORT.envoyerProduction(uri, production);
 	}
 	
+	/**
+	 * Modifie l'etat de l'unite de production
+	 * @param etat
+	 * @throws Exception
+	 */
 	public void setEtatUniteProduction(EtatUniteProduction etat) throws Exception {
 		this.etat = etat;
 	}
@@ -115,6 +133,10 @@ public class Batterie extends AbstractCyPhyComponent implements EmbeddingCompone
 		this.logMessage("Demarrage de la batterie...");
 	}
 	
+	/**
+	 * Execution depuis l'assembleur
+	 * @throws Exception
+	 */
 	public void dynamicExecute() throws Exception {
 		this.logMessage("Phase d'execution de la batterie.");
 		
@@ -216,6 +238,10 @@ public class Batterie extends AbstractCyPhyComponent implements EmbeddingCompone
 		super.shutdownNow();
 	}
 	
+	/**
+	 * Installe le plugin
+	 * @throws Exception
+	 */
 	protected void initialise() throws Exception {
 		Architecture localArchitecture = this.createLocalArchitecture(null) ;
 		this.asp = new BatterieSimulatorPlugin() ;

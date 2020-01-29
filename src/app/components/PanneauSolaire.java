@@ -45,7 +45,10 @@ public class PanneauSolaire
 	/** port sortant permettant au compteur de recupere la production de l'unite */
 	protected PanneauCompteurOutPort production_OUTPORT;
 	
+	/** Etat actuel du panneau solaire */
 	protected EtatUniteProduction etat;
+	
+	/** Production en Watts par l'unite de production */
 	protected double production;
 	
 	protected PanneauSolaireSimulatorPlugin asp;
@@ -93,15 +96,30 @@ public class PanneauSolaire
 		this.initialise();
 	}
 	
-
+	/**
+	 * Ajoute l'URI de l'unite de production a la map des appareils du controleur
+	 * @param uri
+	 * @throws Exception
+	 */
 	public void demandeAjoutControleur(String uri) throws Exception {
 		this.controleur_OUTPORT.demandeAjoutControleur(uri);
 	}
 
+	/**
+	 * Envoie la production au compteur
+	 * @param uri
+	 * @param consommation
+	 * @throws Exception
+	 */
 	public void envoyerProduction(String uri, double production) throws Exception {
 		this.production_OUTPORT.envoyerProduction(uri, production);
 	}
 	
+	/**
+	 * Modifie l'etat de l'unite de production
+	 * @param etat
+	 * @throws Exception
+	 */
 	public void setEtatUniteProduction(EtatUniteProduction etat) throws Exception {
 		this.etat = etat;
 	}
@@ -114,6 +132,10 @@ public class PanneauSolaire
 		this.logMessage("Demarrage du panneau solaire...");
 	}
 	
+	/**
+	 * Execution depuis l'assembleur
+	 * @throws Exception
+	 */
 	public void dynamicExecute() throws Exception {
 		
 		this.logMessage("Phase d'execution du panneau solaire.");
@@ -237,6 +259,10 @@ public class PanneauSolaire
 		return null;
 	}
 	
+	/**
+	 * Installe le plugin
+	 * @throws Exception
+	 */
 	protected void initialise() throws Exception {
 		Architecture localArchitecture = this.createLocalArchitecture(null) ;
 		this.asp = new PanneauSolaireSimulatorPlugin();

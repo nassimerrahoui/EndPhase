@@ -108,7 +108,6 @@ public class Controleur extends AbstractCyPhyComponent implements OrderManagerCo
 			this.executionLog.setDirectory(System.getProperty("user.home")) ;
 		}
 		
-		/** TODO definir des constantes pour les pools */
 		this.createNewExecutorService(URI.POOL_AJOUT_CONTROLEUR_URI.getURI(), 5, false) ;
 		this.createNewExecutorService(URI.POOL_CONSO_PROD_CONTROLEUR_URI.getURI(), 5, false) ;
 		
@@ -121,60 +120,124 @@ public class Controleur extends AbstractCyPhyComponent implements OrderManagerCo
 	
 	// ******* Services requis pour changer le mode des appareils *********
 
+	/**
+	 * Ordonne au frigo de se mettre dans un etat
+	 * @param etat
+	 * @throws Exception
+	 */
 	public void envoyerEtatFrigo(ModeFrigo etat) throws Exception {
 		this.frigo_OUTPORT.envoyerModeFrigo(etat);
 	}
 	
+	/**
+	 * Ordonne au lave-linge de se mettre dans un etat
+	 * @param etat
+	 * @throws Exception
+	 */
 	public void envoyerEtatLaveLinge(ModeLaveLinge etat) throws Exception {
 		this.lavelinge_OUTPORT.envoyerModeLaveLinge(etat);
 	}
 	
+	/**
+	 * Ordonne a l'aspirateur de se mettre dans un etat
+	 * @param etat
+	 * @throws Exception
+	 */
 	public void envoyerEtatAspirateur(ModeAspirateur etat) throws Exception {
 		this.aspirateur_OUTPORT.envoyerModeAspirateur(etat);
 	}
 
 	// ******* Services requis pour allumer ou eteindre des unites de production *********
 	
+	/**
+	 * Ordonne au panneau solaire de se mettre dans un etat
+	 * @param etat
+	 * @throws Exception
+	 */
 	public void envoyerEtatPanneauSolaire(EtatUniteProduction etat) throws Exception {
 		this.panneausolaire_OUTPORT.envoyerEtatUniteProduction(etat);	
 	}
 	
+	/**
+	 * Ordonne a la batterie de se mettre dans un etat
+	 * @param etat
+	 * @throws Exception
+	 */
 	public void envoyerEtatBatterie(EtatUniteProduction etat) throws Exception {
 		this.batterie_OUTPORT.envoyerEtatUniteProduction(etat);	
 	}
 
 	// ******* Services requis pour effectuer des actions sur lave-linge *********
 	
+	/**
+	 * Envoie une planification de taches au lave-linge
+	 * @param planification
+	 * @param heure
+	 * @param minutes
+	 * @throws Exception
+	 */
 	public void envoyerPlanificationCycle(ArrayList<ModeLaveLinge> planification, int heure, int minutes) throws Exception {
 		this.lavelinge_OUTPORT.envoyerPlanificationCycle(planification, heure, minutes);		
 	}
 
+	/**
+	 * Modifie la temperature de l'eau du lave-linge
+	 * @param tl
+	 * @throws Exception
+	 */
 	public void envoyerTemperature(TemperatureLaveLinge tl) throws Exception {
 		this.lavelinge_OUTPORT.envoyerTemperature(tl);
 	}
 	
 	// ******* Services requis pour effectuer des actions sur frigo *********
 
+	/**
+	 * Modifie la temperature du refrigerateur
+	 * @param temperature
+	 * @throws Exception
+	 */
 	public void envoyerTemperature_Refrigerateur(double temperature) throws Exception {
 		this.frigo_OUTPORT.envoyerTemperature_Refrigerateur(temperature);
 	}
 
+	/**
+	 * Modifie la temperature du congelateur
+	 * @param temperature
+	 * @throws Exception
+	 */
 	public void envoyerTemperature_Congelateur(double temperature) throws Exception {
 		this.frigo_OUTPORT.envoyerTemperature_Congelateur(temperature);
 	}
 	
 	// ******* Services requis pour recuperer les informations du compteur *********
 	
+	/**
+	 * Recupere la consommation globale
+	 * @return
+	 * @throws Exception
+	 */
 	public double getConsommationGlobale() throws Exception {
 		return this.compteur_OUTPORT.getConsommationGlobale();
 	}
 
+	/**
+	 * Recupere la production globale
+	 * @return
+	 * @throws Exception
+	 */
 	public double getProductionGlobale() throws Exception {
 		return this.compteur_OUTPORT.getProductionGlobale();
 	}
 	
 	// ******* Service offert pour les appareils *********
 
+	/**
+	 * Permet aux appareils de demander un ajout au controleur
+	 * @param uri
+	 * @param className
+	 * @param type
+	 * @throws Exception
+	 */
 	public void ajouterAppareil(String uri, String className, TypeAppareil type) throws Exception {
 		this.appareils_priority.put(uri, type);
 		this.appareils_className.put(uri, className);
@@ -183,6 +246,11 @@ public class Controleur extends AbstractCyPhyComponent implements OrderManagerCo
 	
 	// ******* Service offert pour les unites de production  *********
 
+	/**
+	 * Permet aux unites de production de demander un ajout au controleur
+	 * @param uri
+	 * @throws Exception
+	 */
 	public void ajouterUniteProduction(String uri) throws Exception {
 		this.unitesProduction.add(uri);
 		this.compteur_OUTPORT.demanderAjoutUniteProduction(uri);
@@ -280,6 +348,10 @@ public class Controleur extends AbstractCyPhyComponent implements OrderManagerCo
 		this.logMessage("Demarrage du controleur...");
 	}
 	
+	/**
+	 * Execute depuis l'aseembleur
+	 * @throws Exception
+	 */
 	public void dynamicExecute() throws Exception {
 		
 		this.logMessage("Phase d'execution du controleur.");
@@ -417,6 +489,10 @@ public class Controleur extends AbstractCyPhyComponent implements OrderManagerCo
 		super.shutdownNow();
 	}
 
+	/**
+	 * Installe le plugin
+	 * @throws Exception
+	 */
 	protected void initialise() throws Exception {
 		Architecture localArchitecture = this.createLocalArchitecture(null);
 		

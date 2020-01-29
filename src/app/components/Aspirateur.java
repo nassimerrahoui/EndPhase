@@ -36,6 +36,8 @@ import simulator.plugins.AspirateurSimulatorPlugin;
 
 @OfferedInterfaces(offered = { IAspirateur.class, IComposantDynamique.class })
 @RequiredInterfaces(required = { IAjoutAppareil.class, IConsommation.class })
+
+
 public class Aspirateur 
 	extends AbstractCyPhyComponent 
 	implements EmbeddingComponentAccessI {
@@ -46,8 +48,13 @@ public class Aspirateur
 	/** port sortant permettant au compteur de recupere la consommation de l'aspirateur */
 	protected AspirateurCompteurOutPort consommation_OUTPORT;
 
+	/** Gestion de priorite pour les decisions du controleur*/
 	protected TypeAppareil type;
+	
+	/** Etat actuel de l'appareil */
 	protected ModeAspirateur etat;
+	
+	/** Consommation en Watts par l'appareil */
 	protected Double consommation;
 	
 	protected AspirateurSimulatorPlugin asp;
@@ -97,17 +104,32 @@ public class Aspirateur
 		this.initialise();
 	}
 
+	/**
+	 * Ajoute l'URI de l'appareil a la map des appareils du controleur
+	 * @param uri
+	 * @throws Exception
+	 */
 	public void demandeAjoutControleur(String uri) throws Exception {
 		this.controleur_OUTPORT.demandeAjoutControleur(uri, getClass().getName(), this.type);
 	}
 
+	/**
+	 * Envoie la consommation au compteur
+	 * @param uri
+	 * @param consommation
+	 * @throws Exception
+	 */
 	public void envoyerConsommation(String uri, double consommation) throws Exception {
 		this.consommation_OUTPORT.envoyerConsommation(uri, consommation);
 	}
 
+	/**
+	 * Modifie l'etat de l'aspirateur
+	 * @param etat
+	 * @throws Exception
+	 */
 	public void setModeAspirateur(ModeAspirateur etat) throws Exception {
 		this.etat = etat;
-		System.out.println("SET " + etat);
 	}
 	
 	/**
@@ -125,6 +147,10 @@ public class Aspirateur
 		this.logMessage("Demarrage de l'aspirateur...");
 	}
 	
+	/**
+	 * Execution depuis l'assembleur
+	 * @throws Exception
+	 */
 	public void dynamicExecute() throws Exception {
 
 		this.logMessage("Phase d'execution de l'aspirateur.");
@@ -251,6 +277,10 @@ public class Aspirateur
 		return null;
 	}
 	
+	/**
+	 * Installe le plugin
+	 * @throws Exception
+	 */
 	protected void initialise() throws Exception {
 		Architecture localArchitecture = this.createLocalArchitecture(null) ;
 		this.asp = new AspirateurSimulatorPlugin() ;

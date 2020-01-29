@@ -46,7 +46,10 @@ public class Frigo
 	/** port sortant permettant au compteur de recupere la consommation du frigo */
 	protected FrigoCompteurOutPort consommation_OUTPORT;
 
+	/** Gestion de priorite pour les decisions du controleur*/
 	protected TypeAppareil type;
+	
+	/** Etat actuel de l'appareil */
 	protected ModeFrigo etat;
 
 	protected double  refrigerateur_current_temperature;
@@ -54,6 +57,8 @@ public class Frigo
 	
 	protected double congelateur_temperature_cible;
 	protected double refrigerateur_temperature_cible;
+
+	/** Consommation en Watts par l'appareil */
 	protected double consommation;
 	
 	protected FrigoSimulatorPlugin asp;
@@ -106,22 +111,48 @@ public class Frigo
 		this.initialise();
 	}
 
+	/**
+	 * Ajoute l'URI de l'appareil a la map des appareils du controleur
+	 * @param uri
+	 * @throws Exception
+	 */
 	public void demandeAjoutControleur(String uri) throws Exception {
 		this.controleur_OUTPORT.demandeAjoutControleur(uri, getClass().getName(), this.type);
 	}
 
+	/**
+	 * Envoie la consommation au compteur
+	 * @param uri
+	 * @param consommation
+	 * @throws Exception
+	 */
 	public void envoyerConsommation(String uri, double consommation) throws Exception {
 		this.consommation_OUTPORT.envoyerConsommation(uri, consommation);
 	}
 
+	/**
+	 * Modifie l'etat du frigo
+	 * @param etat
+	 * @throws Exception
+	 */
 	public void setModeFrigo(ModeFrigo etat) throws Exception {
 		this.etat = etat;
 	}
 
+	/**
+	 * Modifie la temperature du refrigerateur
+	 * @param temperature
+	 * @throws Exception
+	 */
 	public void setTemperature_Refrigerateur(double temperature) throws Exception {
 		this.refrigerateur_temperature_cible = temperature;
 	}
 
+	/**
+	 * Modifie la temperature du congelateur
+	 * @param temperature
+	 * @throws Exception
+	 */
 	public void setTemperature_Congelateur(double temperature) throws Exception {
 		this.congelateur_temperature_cible = temperature;
 	}
@@ -130,8 +161,7 @@ public class Frigo
 	 * Actions du frigo pendant l'execution
 	 */
 	protected void runningAndPrint() {
-		
-		/** TODO */
+
 	}
 	
 	// ************* Cycle de vie du composant ************* 
@@ -142,7 +172,10 @@ public class Frigo
 		this.logMessage("Demarrage du frigo...");
 	}
 	
-	
+	/**
+	 * Execution depuis l'assembleur
+	 * @throws Exception
+	 */
 	public void dynamicExecute() throws Exception {
 		
 		this.logMessage("Phase d'execution du frigo.");
@@ -292,7 +325,10 @@ public class Frigo
 	}
 	
 	
-	
+	/**
+	 * Installe le plugin
+	 * @throws Exception
+	 */
 	protected void initialise() throws Exception {
 		
 		Architecture localArchitecture = this.createLocalArchitecture(null) ;

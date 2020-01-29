@@ -8,11 +8,14 @@ import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.ports.PortI;
 
 @OfferedInterfaces(offered = { IComposantDynamique.class })
+
+/**
+ * Le coordinateur est utilise par le supervisor pour coordonnées les echanges d'evenement entre les architectures
+ *
+ */
 public class Coordinator extends AbstractCyPhyComponent {
 
 	protected Coordinator() throws Exception {
-		// a coordinator needs to have 2 threads, one to execute the simulator
-		// and the other to receive parent notifications from the submodels.
 		super(2, 0);
 		
 		// port entrant permettant a l'assembleur de deployer le composant
@@ -23,8 +26,6 @@ public class Coordinator extends AbstractCyPhyComponent {
 	}
 
 	protected Coordinator(String reflectionInboundPortURI) throws Exception {
-		// a coordinator needs to have 2 threads, one to execute the simulator
-		// and the other to receive parent notifications from the submodels.
 		super(reflectionInboundPortURI, 2, 0);
 		
 		// port entrant permettant a l'assembleur de deployer le composant
@@ -55,12 +56,19 @@ public class Coordinator extends AbstractCyPhyComponent {
 		super.shutdownNow();
 	}
 
+	/**
+	 * Initialise le plugin
+	 */
 	protected void initialise() {
 		this.tracer.setTitle("Smart grid coupled model component");
 		this.tracer.setRelativePosition(1, 4);
 		this.toggleTracing();
 	}
 
+	/**
+	 * Execution depuis l'assembleur
+	 * @throws Exception
+	 */
 	public void dynamicExecute() throws Exception {
 		super.execute();
 		this.logMessage("Coordinator component begins execution.");
