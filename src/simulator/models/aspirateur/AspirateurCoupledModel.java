@@ -38,8 +38,12 @@ public class AspirateurCoupledModel extends CoupledModel {
 			Map<StaticVariableDescriptor, VariableSink[]> importedVars,
 			Map<VariableSource, StaticVariableDescriptor> reexportedVars, Map<VariableSource, VariableSink[]> bindings)
 			throws Exception {
+		
 		super(uri, simulatedTimeUnit, simulationEngine, submodels, imported, reexported, connections, importedVars,
 				reexportedVars, bindings);
+		
+		System.out.println("OOOOOOOOHHH" + simulationEngine.getURI());
+
 	}
 
 	@Override

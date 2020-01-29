@@ -5,6 +5,8 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
+
+import app.CVM;
 import app.interfaces.appareil.IAjoutAppareil;
 import app.interfaces.appareil.IConsommation;
 import app.interfaces.assembleur.IComposantDynamique;
@@ -50,8 +52,8 @@ public class Aspirateur
 	
 	protected AspirateurSimulatorPlugin asp;
 	
-	public static int ORIGIN_X = -340;
-	public static int ORIGIN_Y = 20;
+	public static int ORIGIN_X = CVM.plotX;
+	public static int ORIGIN_Y = CVM.plotY;
 
 	protected Aspirateur(
 			String ASPIRATEUR_URI, 
@@ -96,7 +98,7 @@ public class Aspirateur
 	}
 
 	public void demandeAjoutControleur(String uri) throws Exception {
-		this.controleur_OUTPORT.demandeAjoutControleur(uri);
+		this.controleur_OUTPORT.demandeAjoutControleur(uri, getClass().getName(), this.type);
 	}
 
 	public void envoyerConsommation(String uri, double consommation) throws Exception {
@@ -159,7 +161,7 @@ public class Aspirateur
 				"Consommation Aspirateur", 
 				"Temps (sec)", 
 				"Consommation (Watt)", 
-				ORIGIN_X + getPlotterWidth(),
+				ORIGIN_X - getPlotterWidth(),
 		  		ORIGIN_Y,
 		  		getPlotterWidth(),
 		  		getPlotterHeight())) ;

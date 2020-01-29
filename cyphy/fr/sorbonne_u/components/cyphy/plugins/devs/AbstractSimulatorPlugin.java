@@ -893,6 +893,7 @@ implements	AbstractSimulatorPluginI
 		) throws Exception
 	{
 		assert	this.simulator != null ;
+		System.out.println("juioppd : " + simulator.getURI());
 
 		this.simulator.doStandAloneSimulation(startTime, simulationDuration) ;
 		if (this.snop != null && this.snop.connected()) {

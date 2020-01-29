@@ -103,7 +103,6 @@ public class CompteurModel extends AtomicModel {
 	
 	@Override
 	public void userDefinedExternalTransition(Duration elapsedTime) {
-		System.out.println("COMPTEURRRR");
 		super.userDefinedExternalTransition(elapsedTime);
 		ArrayList<EventI> current = this.getStoredEventAndReset();
 		

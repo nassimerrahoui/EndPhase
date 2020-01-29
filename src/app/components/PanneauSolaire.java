@@ -5,6 +5,8 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
+
+import app.CVM;
 import app.interfaces.assembleur.IComposantDynamique;
 import app.interfaces.production.IAjoutUniteProduction;
 import app.interfaces.production.IPanneau;
@@ -48,8 +50,8 @@ public class PanneauSolaire
 	
 	protected PanneauSolaireSimulatorPlugin asp;
 	
-	public static int ORIGIN_X = 340;
-	public static int ORIGIN_Y = 20;
+	public static int ORIGIN_X = CVM.plotX;
+	public static int ORIGIN_Y = CVM.plotY;
 
 	protected PanneauSolaire(
 			String PANNEAUSOLAIRE_URI, 

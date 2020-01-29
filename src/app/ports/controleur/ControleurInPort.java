@@ -2,6 +2,7 @@ package app.ports.controleur;
 
 import app.components.Controleur;
 import app.interfaces.controleur.IControleur;
+import app.util.TypeAppareil;
 import app.util.URI;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.ComponentI;
@@ -20,10 +21,10 @@ public class ControleurInPort extends AbstractInboundPort implements IControleur
 	}
 
 	@Override
-	public void ajouterAppareil(String uri) throws Exception {
+	public void ajouterAppareil(String uri, String className ,TypeAppareil type) throws Exception {
 		AbstractComponent.AbstractService<Void> task = new AbstractComponent.AbstractService<Void>() {
 			public Void call() throws Exception {
-				((Controleur) owner).ajouterAppareil(uri);
+				((Controleur) owner).ajouterAppareil(uri, className ,type);
 				return null;
 			}
 		};

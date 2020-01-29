@@ -5,6 +5,8 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
+
+import app.CVM;
 import app.interfaces.appareil.IAjoutAppareil;
 import app.interfaces.appareil.IConsommation;
 import app.interfaces.appareil.IFrigo;
@@ -56,8 +58,8 @@ public class Frigo
 	
 	protected FrigoSimulatorPlugin asp;
 	
-	public static int ORIGIN_X = 340 ;
-	public static int ORIGIN_Y = 20 ;
+	public static int ORIGIN_X = CVM.plotX ;
+	public static int ORIGIN_Y = CVM.plotY ;
 
 	protected Frigo(
 			String FRIGO_URI, 
@@ -105,7 +107,7 @@ public class Frigo
 	}
 
 	public void demandeAjoutControleur(String uri) throws Exception {
-		this.controleur_OUTPORT.demandeAjoutControleur(uri);
+		this.controleur_OUTPORT.demandeAjoutControleur(uri, getClass().getName(), this.type);
 	}
 
 	public void envoyerConsommation(String uri, double consommation) throws Exception {
@@ -191,7 +193,7 @@ public class Frigo
 		simParams.put(FrigoModel.URI + " : " + FrigoModel.TEMPERATURE_PLOTTING_PARAM_NAME, new PlotterDescription(
 				"Frigo Model - Temperature",
 				"Time (sec)",
-				"Temperature (°C)",
+				"Temperature (ï¿½C)",
 				ORIGIN_X + 2 * getPlotterWidth(),
 		  		ORIGIN_Y + getPlotterHeight(),
 		  		getPlotterWidth(),

@@ -64,7 +64,7 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 	/** Temperature initiale du refrigerateur eteint */
 	public static final double AMBIENT_TEMPERATURE = 20.0; // Degres celsius
 	protected static final double CONSOMMAION_REPOS = 10; // Watt
-	protected static final double CONSOMMATION_INITIALE_COMPRESSEUR = 600; // Watt
+	protected static final double CONSOMMATION_INITIALE_COMPRESSEUR = 100; // Watt
 	protected static final double CONSOMMATION_EXECUTE_COMPRESSEUR = 70; // Watt
 	
 	/** Permet de generer des valeurs aleatoires */
@@ -206,7 +206,9 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 			
 			if(currentState == ModeFrigo.LIGHT_ON) {
 				// porte ouverte equivalent a une augmentation de la temperature du frigo
-				currentTemperature += this.rgNewVariationTemperature.nextBeta(2, 2) * 2;
+				if(currentTemperature < AMBIENT_TEMPERATURE) {
+					currentTemperature += this.rgNewVariationTemperature.nextBeta(2, 2) * 2;
+				}
 			} else {
 				
 				if(temperature_cible < currentTemperature) {
@@ -218,7 +220,7 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 					}
 				} else if(temperature_cible > currentTemperature) {
 					while(delta_t >= 1.0) {
-						if(temperature_cible < currentTemperature + variation_temperature/4)
+						if(currentTemperature < AMBIENT_TEMPERATURE && temperature_cible < currentTemperature + variation_temperature/4)
 							break;
 						currentTemperature += variation_temperature;
 						delta_t--;
@@ -283,7 +285,7 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 	}
 
 	public void setState(ModeFrigo s) {
-		if(currentState != ModeFrigo.LIGHT_ON && s == ModeFrigo.LIGHT_ON) {
+		if(currentState != ModeFrigo.LIGHT_ON && s == ModeFrigo.LIGHT_ON && currentTemperature <= AMBIENT_TEMPERATURE) {
 			// ouverture de porte equivalent a une augmentation de la temperature du frigo
 			currentTemperature += this.rgNewVariationTemperature.nextBeta(2, 2) * 2;
 		}

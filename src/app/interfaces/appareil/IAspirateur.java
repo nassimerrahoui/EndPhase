@@ -16,4 +16,6 @@ public interface IAspirateur extends OfferedI {
 	 * @throws Exception
 	 */
 	public void setModeAspirateur(ModeAspirateur etat) throws Exception;
+	
+	
 }

@@ -40,7 +40,7 @@ public class LaveLingePlanificationModel extends AtomicES_Model{
 	protected double meanTimeExecuteTask;
 	protected final RandomDataGenerator rg;
 	protected ModeLaveLinge etat_lavelinge;
-	protected static final double NB_STOP_BETWEEN_ROTATIONS = 10;
+	protected static final double NB_STOP_BETWEEN_ROTATIONS = 10; // non utilise, devrait etre utilise pour un modele plus realiste
 	
 	// delai dans lequel la planification d'un mode va se declencher
 	protected double delai;
@@ -113,27 +113,14 @@ public class LaveLingePlanificationModel extends AtomicES_Model{
 			e.printStackTrace();
 		}
 		
-		Duration d, dt;
+		Duration d;
 		int i = 1;
 		for (ModeLaveLinge mode : planification_etats) {
 			Duration d2 = new Duration(this.meanTimeExecuteTask * i, this.getSimulatedTimeUnit());
 			Time t = this.getCurrentStateTime().add(d2);
 
-			if(mode == ModeLaveLinge.LAVAGE) {
-				for (int j = 1; j < NB_STOP_BETWEEN_ROTATIONS; j++) {
-					/** TODO GERER LA DURATION DES EVENTS */
-					
-					//*********** TEST EN COURS ****************
-					dt = new Duration( (this.meanTimeExecuteTask / 6)*j, this.getSimulatedTimeUnit());
-					this.scheduleEvent(new SetLavage(t));
-					t.add(d2).add(dt);
-					this.scheduleEvent(new SetLaveLingeVeille(t));
-					dt = new Duration( (this.meanTimeExecuteTask / 8)*j, this.getSimulatedTimeUnit());
-					t.add(d2).add(dt);
-					//*********** TEST EN COURS ****************
-				}
-			}
-			
+			if(mode == ModeLaveLinge.LAVAGE)
+				this.scheduleEvent(new SetLavage(t));
 			else if (mode == ModeLaveLinge.RINCAGE)
 				this.scheduleEvent(new SetRincage(t));
 			else if (mode == ModeLaveLinge.ESSORAGE)
@@ -148,7 +135,7 @@ public class LaveLingePlanificationModel extends AtomicES_Model{
 			i++;
 		}
 		
-		// event de mise en veille au cas ou le controleur n'aurait pas planifie la veille
+		// event de mise en arret si aucune planification n'a ete faite
 		if(i > 1) {
 			d = new Duration((this.delai + this.meanTimeExecuteTask * (i+1) ), this.getSimulatedTimeUnit());
 			this.scheduleEvent(new SetLaveLingeVeille(this.getCurrentStateTime().add(d)));

@@ -1,7 +1,13 @@
 package app.components;
 
+import java.awt.DisplayMode;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import app.CVM;
 import app.interfaces.assembleur.IComposantDynamique;
 import app.interfaces.production.IAjoutUniteProduction;
 import app.interfaces.production.IBatterie;
@@ -16,13 +22,23 @@ import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
+import fr.sorbonne_u.components.cyphy.AbstractCyPhyComponent;
+import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentAccessI;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
+import fr.sorbonne_u.devs_simulation.architectures.Architecture;
+import fr.sorbonne_u.devs_simulation.architectures.SimulationEngineCreationMode;
+import fr.sorbonne_u.devs_simulation.hioa.architectures.AtomicHIOA_Descriptor;
+import fr.sorbonne_u.devs_simulation.models.architectures.AbstractAtomicModelDescriptor;
+import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
+import fr.sorbonne_u.utils.PlotterDescription;
+import simulator.models.batterie.BatterieModel;
+import simulator.plugins.BatterieSimulatorPlugin;
 
 @OfferedInterfaces(offered = { IBatterie.class, IComposantDynamique.class })
 @RequiredInterfaces(required = { IAjoutUniteProduction.class, IProduction.class })
-public class Batterie extends AbstractComponent {
+public class Batterie extends AbstractCyPhyComponent implements EmbeddingComponentAccessI{
 
 	/** port sortant permettant a l'unite de s'inscrire sur la liste des unites du controleur */
 	protected BatterieControleurOutPort controleur_OUTPORT;
@@ -33,6 +49,11 @@ public class Batterie extends AbstractComponent {
 	protected EtatUniteProduction etat;
 	protected Double production;
 
+	protected BatterieSimulatorPlugin asp ;
+	
+	public static int ORIGIN_X = CVM.plotX;
+	public static int ORIGIN_Y = CVM.plotY;
+	
 	protected Batterie (
 			String BATTERIE_URI, 
 			String BATTERIE_COMPTEUR_OP_URI,
@@ -69,6 +90,8 @@ public class Batterie extends AbstractComponent {
 		// attributs
 		etat = EtatUniteProduction.OFF;
 		production = 0.0;
+		
+		this.initialise();
 	}
 	
 
@@ -93,7 +116,6 @@ public class Batterie extends AbstractComponent {
 	}
 	
 	public void dynamicExecute() throws Exception {
-		
 		this.logMessage("Phase d'execution de la batterie.");
 		
 		this.logMessage("Execution en cours...");
@@ -105,6 +127,49 @@ public class Batterie extends AbstractComponent {
 				catch (Exception e) { throw new RuntimeException(e); }
 			}
 		}, 2000, 1000, TimeUnit.MILLISECONDS);
+		
+		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
+		
+		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 10L ;
+		
+		simParams.put(BatterieModel.URI + " : " + BatterieModel.COMPONENT_REF, this);
+		
+		simParams.put(BatterieModel.URI + " : " + BatterieModel.PRODUCTION_PLOTTING_PARAM_NAME, new PlotterDescription(
+				"Production Batterie", 
+				"Temps (sec)", 
+				"Production (Watt)", 
+				Batterie.ORIGIN_X + Batterie.getPlotterWidth(),
+				Batterie.ORIGIN_Y + 2 * Batterie.getPlotterHeight(),
+				Batterie.getPlotterWidth(),
+				Batterie.getPlotterHeight())) ;
+		
+		
+		this.asp.setSimulationRunParameters(simParams) ;
+		
+		this.runTask(
+				new AbstractComponent.AbstractTask() {
+					@Override
+					public void run() {
+						try {
+							asp.doStandAloneSimulation(0.0, 60000.0) ;
+						} catch (Exception e) {
+							throw new RuntimeException(e) ;
+						}
+					}
+		});
+		
+		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
+			@Override
+			public void run() {
+				try {
+					((Batterie) this.getTaskOwner()).production = (double) ((Batterie) this.getTaskOwner()).asp.getModelStateValue(BatterieModel.URI, "energy");
+					((Batterie) this.getTaskOwner()).logMessage("Production : " + Math.round(production));
+					Thread.sleep(10L);
+				} catch (Exception e) { e.printStackTrace(); }
+			}
+		}, 2000, 1000, TimeUnit.MILLISECONDS);
+		
+		execute();
 	}
 	
 	@Override
@@ -150,4 +215,71 @@ public class Batterie extends AbstractComponent {
 		} catch (Exception e) { throw new ComponentShutdownException(e); }
 		super.shutdownNow();
 	}
+	
+	protected void initialise() throws Exception {
+		Architecture localArchitecture = this.createLocalArchitecture(null) ;
+		this.asp = new BatterieSimulatorPlugin() ;
+		this.asp.setPluginURI(localArchitecture.getRootModelURI()) ;
+		this.asp.setSimulationArchitecture(localArchitecture) ;
+		System.out.println("init");
+		this.installPlugin(this.asp) ;
+		
+		System.out.println("init");
+		
+	}
+	
+	@Override
+	protected Architecture createLocalArchitecture(String modelURI) throws Exception {
+		
+		Map<String, AbstractAtomicModelDescriptor> atomicModelDescriptors = new HashMap<>();
+
+		atomicModelDescriptors.put(BatterieModel.URI, AtomicHIOA_Descriptor.create(BatterieModel.class,
+				BatterieModel.URI, TimeUnit.SECONDS, null, SimulationEngineCreationMode.ATOMIC_ENGINE));
+		Architecture localArchitecture = new Architecture(BatterieModel.URI, atomicModelDescriptors, new HashMap<>(),
+				TimeUnit.SECONDS);
+		return localArchitecture;
+
+		
+	}
+	
+	@Override
+	public Object getEmbeddingComponentStateValue(String name) throws Exception {
+		if(name.equals(BatterieModel.URI + " : state")) {
+			return etat;
+		} else if(name.equals(BatterieModel.URI + " : production")) {
+			return production;
+		} 
+		return null;
+	}
+	
+	// ************** Plotter ******************************
+	
+	public static int getPlotterWidth() {
+		int ret = Integer.MAX_VALUE ;
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment() ;
+		GraphicsDevice[] gs = ge.getScreenDevices() ;
+		for (int i = 0; i < gs.length; i++) {
+			DisplayMode dm = gs[i].getDisplayMode() ;
+			int width = dm.getWidth() ;
+			if (width < ret) {
+				ret = width ;
+			}
+		}
+		return (int) (0.25 * ret) ;
+	}
+
+	public static int getPlotterHeight() {
+		int ret = Integer.MAX_VALUE ;
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment() ;
+		GraphicsDevice[] gs = ge.getScreenDevices() ;
+		for (int i = 0; i < gs.length; i++) {
+			DisplayMode dm = gs[i].getDisplayMode() ;
+			int height = dm.getHeight() ;
+			if (height < ret) {
+				ret = height ;
+			}
+		}
+		return (int) (0.2 * ret) ;
+	}
+	
 }

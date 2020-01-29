@@ -6,6 +6,8 @@ import java.awt.GraphicsEnvironment;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
+
+import app.CVM;
 import app.interfaces.appareil.IAjoutAppareil;
 import app.interfaces.appareil.IConsommation;
 import app.interfaces.appareil.ILaveLinge;
@@ -59,8 +61,8 @@ public class LaveLinge
 	protected LaveLingeSimulatorPlugin asp;
 	
 	/** TODO */
-	public static int ORIGIN_X = 0;
-	public static int ORIGIN_Y = 20;
+	public static int ORIGIN_X = CVM.plotX;
+	public static int ORIGIN_Y = CVM.plotY;
 
 	protected LaveLinge(
 			String LAVELIGNE_URI, 
@@ -109,7 +111,7 @@ public class LaveLinge
 	}
 	
 	public void demandeAjoutControleur(String uri) throws Exception {
-		this.controleur_OUTPORT.demandeAjoutControleur(uri);
+		this.controleur_OUTPORT.demandeAjoutControleur(uri, this.getClass().getName(), this.type);
 	}
 
 	public void envoyerConsommation(String uri, double consommation) throws Exception {
@@ -193,7 +195,7 @@ public class LaveLinge
 				"Consommation Lave-Linge", 
 				"Temps (sec)", 
 				"Consommation (Watt)", 
-				ORIGIN_X + getPlotterWidth(),
+				ORIGIN_X ,
 		  		ORIGIN_Y,
 		  		getPlotterWidth(),
 		  		getPlotterHeight())) ;

@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+
+import app.CVM;
 import app.interfaces.assembleur.IComposantDynamique;
 import app.interfaces.compteur.ICompteur;
 import app.interfaces.compteur.ICompteurControleur;
@@ -39,8 +41,10 @@ public class Compteur extends AbstractCyPhyComponent implements EmbeddingCompone
 	protected ConcurrentHashMap<String, Double> appareil_consommation = new ConcurrentHashMap<>();
 	protected ConcurrentHashMap<String, Double> unite_production = new ConcurrentHashMap<>();
 	protected AtomicSimulatorPlugin asp;
-	public static int ORIGIN_X = 340 ;
-	public static int ORIGIN_Y = 20 ;
+	
+	public static int ORIGIN_X = CVM.plotX ;
+	public static int ORIGIN_Y = CVM.plotY ;
+	
 	protected double consommation_globale;
 	protected double production_globale;
 
@@ -107,8 +111,8 @@ public class Compteur extends AbstractCyPhyComponent implements EmbeddingCompone
 		double c = (double) Math.round(consommation);
 		if(appareil_consommation.containsKey(uri)) {
 			appareil_consommation.put(uri, c);
-			this.logMessage(uri + " consomme " + c + " Watt.");
-			this.logMessage("...");
+			//this.logMessage(uri + " consomme " + c + " Watt.");
+			//this.logMessage("...");
 		}
 	}
 
@@ -116,9 +120,14 @@ public class Compteur extends AbstractCyPhyComponent implements EmbeddingCompone
 		double p = (double) Math.round(production);
 		if(unite_production.containsKey(uri)) {
 			unite_production.put(uri, p);
-			this.logMessage(uri + " produit " + p + " Watt.");
-			this.logMessage("...");
+			//this.logMessage(uri + " produit " + p + " Watt.");
+			//this.logMessage("...");
 		}
+	}
+	
+	public void updateConsommationAndProduction() {
+		consommation_globale = appareil_consommation.values().stream().mapToDouble(i -> i).sum();
+		production_globale = unite_production.values().stream().mapToDouble(i -> i).sum();
 	}
 	
 	// ************* Cycle de vie du composant ************* 
@@ -156,8 +165,10 @@ public class Compteur extends AbstractCyPhyComponent implements EmbeddingCompone
 			@Override
 			public void run() {
 				try {
-					((Compteur) this.getTaskOwner()).consommation_globale = (double) ((Compteur) this.getTaskOwner()).asp.getModelStateValue(CompteurModel.URI, "consommation");
-					((Compteur) this.getTaskOwner()).production_globale = (double) ((Compteur) this.getTaskOwner()).asp.getModelStateValue(CompteurModel.URI, "production");
+					//((Compteur) this.getTaskOwner()).consommation_globale = (double) ((Compteur) this.getTaskOwner()).asp.getModelStateValue(CompteurModel.URI, "consommation");
+					//((Compteur) this.getTaskOwner()).production_globale = (double) ((Compteur) this.getTaskOwner()).asp.getModelStateValue(CompteurModel.URI, "production");
+					updateConsommationAndProduction();
+					
 					((Compteur) this.getTaskOwner()).logMessage("Consommation globale : " + Math.round(consommation_globale));
 					((Compteur) this.getTaskOwner()).logMessage("Production globale : " + Math.round(production_globale));
 					Thread.sleep(10L);

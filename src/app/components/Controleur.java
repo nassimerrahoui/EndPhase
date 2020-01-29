@@ -1,6 +1,8 @@
 package app.components;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 import app.interfaces.controleur.IControleBatterie;
@@ -24,14 +26,23 @@ import app.util.ModeFrigo;
 import app.util.ModeLaveLinge;
 import app.util.ModeAspirateur;
 import app.util.TemperatureLaveLinge;
+import app.util.TypeAppareil;
 import app.util.URI;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
+import fr.sorbonne_u.components.cyphy.AbstractCyPhyComponent;
+import fr.sorbonne_u.components.cyphy.plugins.devs.AtomicSimulatorPlugin;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
+import fr.sorbonne_u.devs_simulation.architectures.Architecture;
+import fr.sorbonne_u.devs_simulation.architectures.SimulationEngineCreationMode;
+import fr.sorbonne_u.devs_simulation.models.architectures.AbstractAtomicModelDescriptor;
+import fr.sorbonne_u.devs_simulation.models.architectures.AtomicModelDescriptor;
+import simulator.models.controleur.ControleurModel;
+import simulator.models.controleur.OrderManagerComponentAccessI;
 
 @OfferedInterfaces(offered = { IControleur.class, IComposantDynamique.class })
 @RequiredInterfaces(required = { 
@@ -41,7 +52,8 @@ import fr.sorbonne_u.components.ports.PortI;
 		IControleAspirateur.class,
 		IControlePanneau.class,
 		IControleBatterie.class })
-public class Controleur extends AbstractComponent {
+
+public class Controleur extends AbstractCyPhyComponent implements OrderManagerComponentAccessI{
 	
 	protected ControleurFrigoOutPort frigo_OUTPORT;
 	protected ControleurLaveLingeOutPort lavelinge_OUTPORT;
@@ -51,7 +63,11 @@ public class Controleur extends AbstractComponent {
 	protected ControleurCompteurOutPort compteur_OUTPORT;
 
 	protected Vector<String> unitesProduction = new Vector<>();
-	protected Vector<String> appareils = new Vector<>();
+	protected HashMap<String, TypeAppareil> appareils_priority = new HashMap<>();
+	protected HashMap<String, String> appareils_className = new HashMap<>();
+	protected int niveauDeControle = 1;
+	
+	protected AtomicSimulatorPlugin	asp ;
 
 	protected Controleur(
 			String CONTROLEUR_URI,
@@ -99,6 +115,8 @@ public class Controleur extends AbstractComponent {
 		// affichage
 		this.tracer.setTitle("Controleur");
 		this.tracer.setRelativePosition(2, 3);
+		
+		this.initialise();
 	}
 	
 	// ******* Services requis pour changer le mode des appareils *********
@@ -157,8 +175,9 @@ public class Controleur extends AbstractComponent {
 	
 	// ******* Service offert pour les appareils *********
 
-	public void ajouterAppareil(String uri) throws Exception {
-		this.appareils.add(uri);
+	public void ajouterAppareil(String uri, String className, TypeAppareil type) throws Exception {
+		this.appareils_priority.put(uri, type);
+		this.appareils_className.put(uri, className);
 		this.compteur_OUTPORT.demanderAjoutAppareil(uri);
 	}
 	
@@ -169,6 +188,11 @@ public class Controleur extends AbstractComponent {
 		this.compteur_OUTPORT.demanderAjoutUniteProduction(uri);
 	}
 	
+	@Override
+	public void controlTask(double simulatedTime) throws Exception {
+		runningAndPrint();
+	}
+	
 	/**
 	 * Gerer et afficher ce qui se passe pendant l'execution du controleur
 	 * @throws Exception 
@@ -176,13 +200,73 @@ public class Controleur extends AbstractComponent {
 	public void runningAndPrint() throws Exception {
 		this.logMessage("Decisions controleur...");
 		
-		/** TODO code pour gerer les decisions reactives du controleur */
-		
 		double consommation = getConsommationGlobale();
 		double production = getProductionGlobale();
 		
 		if(consommation > production) {
 			/** actions */
+			ArrayList<String> uris = new ArrayList<>();
+			
+			switch(niveauDeControle) {
+				case 1 :
+					for(String uri : appareils_priority.keySet()) {
+						if(appareils_priority.get(uri).getValue() == 3)
+							uris.add(uri);
+					}
+					
+					for(String uri : uris) {
+						if (appareils_className.get(uri).equals(Aspirateur.class.getName())) {
+							this.runTask(new AbstractComponent.AbstractTask() {
+								@Override
+								public void run() {
+									try {
+										((Controleur) this.getTaskOwner()).envoyerEtatAspirateur(ModeAspirateur.OFF); 
+									} catch (Exception e) { throw new RuntimeException(e); }
+								}
+							});
+						}
+					}
+					break;
+					
+				case 2 :
+					for(String uri : appareils_priority.keySet()) {
+						if(appareils_priority.get(uri).getValue() == 2)
+							uris.add(uri);
+					}
+					
+					for(String uri : uris) {
+						if (appareils_className.get(uri).equals(LaveLinge.class.getName())) {
+							this.runTask(new AbstractComponent.AbstractTask() {
+								@Override
+								public void run() {
+									try {
+																		
+											((Controleur) this.getTaskOwner()).envoyerEtatLaveLinge(ModeLaveLinge.OFF); 
+									} catch (Exception e) { throw new RuntimeException(e); }
+								}
+							});
+						}
+					}
+					break;
+					
+				case 3 :
+					this.runTask(new AbstractComponent.AbstractTask() {
+						@Override
+						public void run() {
+							try {
+								((Controleur) this.getTaskOwner()).envoyerEtatBatterie(EtatUniteProduction.ON);
+							} catch (Exception e) { throw new RuntimeException(e); }
+						}
+					});
+					break;
+			}
+			
+			niveauDeControle++;	
+			
+			this.logMessage("Nouvelle decision : " + niveauDeControle);
+			
+		} else {
+			niveauDeControle = 1;
 		}
 		
 		this.logMessage("...");
@@ -206,14 +290,6 @@ public class Controleur extends AbstractComponent {
 		 * en utilisant des synthese (historique, donnees)
 		 * donnees -> etat -> planification
 		 * */
-		
-		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
-			@Override
-			public void run() {
-				try { ((Controleur) this.getTaskOwner()).runningAndPrint(); } 
-				catch (Exception e) { throw new RuntimeException(e); }
-			}
-		}, 4000, 5000, TimeUnit.MILLISECONDS);
 		
 		this.scheduleTask(new AbstractComponent.AbstractTask() {
 			@Override
@@ -239,14 +315,14 @@ public class Controleur extends AbstractComponent {
 			}
 		}, 3000, TimeUnit.MILLISECONDS);
 		
-		/*
+		
 		this.scheduleTask(new AbstractComponent.AbstractTask() {
 			@Override
 			public void run() {
 				try { ((Controleur) this.getTaskOwner()).envoyerEtatAspirateur(ModeAspirateur.PERFORMANCE_REDUITE); }
 				catch (Exception e) { throw new RuntimeException(e); }
 			}
-		}, 3000, TimeUnit.MILLISECONDS);*/
+		}, 3000, TimeUnit.MILLISECONDS);
 		
 		this.scheduleTask(new AbstractComponent.AbstractTask() {
 			@Override
@@ -264,6 +340,23 @@ public class Controleur extends AbstractComponent {
 				catch (Exception e) { throw new RuntimeException(e); }
 			}
 		}, 3000, TimeUnit.MILLISECONDS);
+		
+		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
+		simParams.put(ControleurModel.URI + " : " + ControleurModel.COMPONENT_REF, this);
+		
+		this.asp.setSimulationRunParameters(simParams) ;
+		
+		this.runTask(
+				new AbstractComponent.AbstractTask() {
+					@Override
+					public void run() {
+						try {
+							asp.doStandAloneSimulation(0.0, 60000.0) ;
+						} catch (Exception e) {
+							throw new RuntimeException(e) ;
+						}
+					}
+				});
 	}
 	
 	@Override
@@ -323,4 +416,40 @@ public class Controleur extends AbstractComponent {
 		} catch (Exception e) { throw new ComponentShutdownException(e); }
 		super.shutdownNow();
 	}
+
+	protected void initialise() throws Exception {
+		Architecture localArchitecture = this.createLocalArchitecture(null);
+		
+		OrderManagerComponentAccessI ref = this;
+		
+		this.asp = new AtomicSimulatorPlugin() {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void setSimulationRunParameters(Map<String, Object> simParams) throws Exception {
+				simParams.put(ControleurModel.COMPONENT_REF, ref);
+				super.setSimulationRunParameters(simParams);
+				simParams.remove(ControleurModel.COMPONENT_REF);
+			}
+		};
+		
+		this.asp.setPluginURI(localArchitecture.getRootModelURI());
+		this.asp.setSimulationArchitecture(localArchitecture);
+		this.installPlugin(this.asp);
+	}
+	
+	@Override
+	protected Architecture createLocalArchitecture(String modelURI) throws Exception {
+		
+		Map<String, AbstractAtomicModelDescriptor> atomicModelDescriptors = new HashMap<>();
+
+		atomicModelDescriptors.put(ControleurModel.URI, AtomicModelDescriptor.create(ControleurModel.class,
+				ControleurModel.URI, TimeUnit.SECONDS, null, SimulationEngineCreationMode.ATOMIC_ENGINE));
+		Architecture localArchitecture = new Architecture(ControleurModel.URI, atomicModelDescriptors, new HashMap<>(),
+				TimeUnit.SECONDS);
+		return localArchitecture;
+
+		
+	}
+	
 }

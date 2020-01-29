@@ -199,7 +199,7 @@ public class Assembleur extends AbstractComponent {
 		DynamicOutPort.doConnection( 
 				LISTE_JVM_URI[i] + AbstractCVM.DCC_INBOUNDPORT_URI_SUFFIX,
 				DynamicComponentCreationConnector.class.getCanonicalName());
-		
+
 		LISTE_REFLECTION_INPORT[5] = DynamicOutPort.createComponent(Batterie.class.getCanonicalName(),
 				new Object[] { 
 						URI.BATTERIE_URI.getURI(), 
