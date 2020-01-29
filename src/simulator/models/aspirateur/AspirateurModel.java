@@ -87,7 +87,7 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 	@Override
 	public ArrayList<EventI> output() {
 
-//		if (this.consumptionHasChanged) {
+		if (this.consumptionHasChanged) {
 
 			ArrayList<EventI> ret = new ArrayList<EventI>() ;
 			Time t = this.getCurrentStateTime().add(getNextTimeAdvance()) ;
@@ -104,9 +104,9 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 			this.consumptionHasChanged = false ;
 			return ret ;
 			
-//		} else {
-//			return null ;
-//		}
+		} else {
+			return null ;
+		}
 		
 //		return null;
 	}

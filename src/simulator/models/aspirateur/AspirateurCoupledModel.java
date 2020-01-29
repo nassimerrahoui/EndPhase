@@ -41,9 +41,6 @@ public class AspirateurCoupledModel extends CoupledModel {
 		
 		super(uri, simulatedTimeUnit, simulationEngine, submodels, imported, reexported, connections, importedVars,
 				reexportedVars, bindings);
-		
-		System.out.println("OOOOOOOOHHH" + simulationEngine.getURI());
-
 	}
 
 	@Override

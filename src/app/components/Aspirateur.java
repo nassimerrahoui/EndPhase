@@ -193,18 +193,7 @@ public class Aspirateur
 		  		getPlotterHeight())) ;
 		
 		this.asp.setSimulationRunParameters(simParams) ;
-
-		this.runTask(
-				new AbstractComponent.AbstractTask() {
-					@Override
-					public void run() {
-						try {
-							asp.doStandAloneSimulation(0.0, 60000.0) ;
-						} catch (Exception e) {
-							throw new RuntimeException(e) ;
-						}
-					}
-				});
+		this.asp.doStandAloneSimulation(0.0, 60000.0) ;
 		
 		Thread.sleep(10L);
 		

@@ -8,7 +8,7 @@ import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
 
 public class CVM extends AbstractCVM {
 	
-	public static final int plotX = 480;
+	public static final int plotX = 340; //480
 	public static final int plotY = 20;
 
 	public CVM() throws Exception { 

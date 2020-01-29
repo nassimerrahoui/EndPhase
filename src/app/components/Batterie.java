@@ -247,11 +247,7 @@ public class Batterie extends AbstractCyPhyComponent implements EmbeddingCompone
 		this.asp = new BatterieSimulatorPlugin() ;
 		this.asp.setPluginURI(localArchitecture.getRootModelURI()) ;
 		this.asp.setSimulationArchitecture(localArchitecture) ;
-		System.out.println("init");
 		this.installPlugin(this.asp) ;
-		
-		System.out.println("init");
-		
 	}
 	
 	@Override
