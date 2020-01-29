@@ -99,7 +99,7 @@ public class AspirateurUserModel extends AtomicES_Model {
 		System.out.println("Internal Transition Aspi User");
 		Duration d;
 
-		assert this.eventList.size() >= 1 ;
+		//assert this.eventList.size() >= 1 ;
 		this.nextEvent = this.eventList.peek().getClass() ;
 		
 		if (this.nextEvent.equals(SwitchAspirateurOnSIL.class)) {

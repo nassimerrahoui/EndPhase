@@ -1,5 +1,8 @@
 package app.components;
 
+import java.awt.DisplayMode;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -11,10 +14,12 @@ import app.ports.compteur.CompteurAssembleurInPort;
 import app.ports.compteur.CompteurInPort;
 import app.ports.compteur.ConsommationProductionInPort;
 import app.util.URI;
+import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.cyphy.AbstractCyPhyComponent;
+import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentAccessI;
 import fr.sorbonne_u.components.cyphy.plugins.devs.AtomicSimulatorPlugin;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
@@ -23,16 +28,21 @@ import fr.sorbonne_u.devs_simulation.architectures.Architecture;
 import fr.sorbonne_u.devs_simulation.architectures.SimulationEngineCreationMode;
 import fr.sorbonne_u.devs_simulation.models.architectures.AbstractAtomicModelDescriptor;
 import fr.sorbonne_u.devs_simulation.models.architectures.AtomicModelDescriptor;
+import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
 import simulator.models.compteur.CompteurModel;
 import simulator.plugins.CompteurSimulatorPlugin;
 
 @OfferedInterfaces(offered = { ICompteurControleur.class, ICompteur.class, IComposantDynamique.class })
 @RequiredInterfaces(required = { })
-public class Compteur extends AbstractCyPhyComponent {
+public class Compteur extends AbstractCyPhyComponent implements EmbeddingComponentAccessI {
 
 	protected ConcurrentHashMap<String, Double> appareil_consommation = new ConcurrentHashMap<>();
 	protected ConcurrentHashMap<String, Double> unite_production = new ConcurrentHashMap<>();
 	protected AtomicSimulatorPlugin asp;
+	public static int ORIGIN_X = 340 ;
+	public static int ORIGIN_Y = 20 ;
+	protected double consommation_globale;
+	protected double production_globale;
 
 	protected Compteur(
 			String COMPTEUR_URI,
@@ -61,6 +71,9 @@ public class Compteur extends AbstractCyPhyComponent {
 		
 		this.createNewExecutorService(URI.POOL_CONSO_PROD_COMPTEUR_URI.getURI(), 5, false) ;
 		this.createNewExecutorService(URI.POOL_CONTROLE_COMPTEUR_URI.getURI(), 5, false) ;
+		
+		consommation_globale = 0.0;
+		production_globale = 0.0;
 		
 		// affichage
 		this.tracer.setTitle("Compteur");
@@ -117,8 +130,42 @@ public class Compteur extends AbstractCyPhyComponent {
 		this.logMessage("Phase d'execution du compteur.");
 	}
 	
-	public void dynamicExecute() {
-		/** TODO */
+	public void dynamicExecute() throws Exception {
+
+		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 10L ;
+		
+		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
+		
+		this.asp.setSimulationRunParameters(simParams) ;
+		
+		this.runTask(
+				new AbstractComponent.AbstractTask() {
+					@Override
+					public void run() {
+						try {
+							asp.doStandAloneSimulation(0.0, 60000.0) ;
+						} catch (Exception e) {
+							throw new RuntimeException(e) ;
+						}
+					}
+				});
+		
+		Thread.sleep(10L);
+		
+		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
+			@Override
+			public void run() {
+				try {
+					((Compteur) this.getTaskOwner()).consommation_globale = (double) ((Compteur) this.getTaskOwner()).asp.getModelStateValue(CompteurModel.URI, "consommation");
+					((Compteur) this.getTaskOwner()).production_globale = (double) ((Compteur) this.getTaskOwner()).asp.getModelStateValue(CompteurModel.URI, "production");
+					((Compteur) this.getTaskOwner()).logMessage("Consommation globale : " + Math.round(consommation_globale));
+					((Compteur) this.getTaskOwner()).logMessage("Production globale : " + Math.round(production_globale));
+					Thread.sleep(10L);
+				} catch (Exception e) { e.printStackTrace(); }
+			}
+		}, 2500, 1000, TimeUnit.MILLISECONDS);
+		
+		execute();
 	}
 	
 	@Override
@@ -187,5 +234,35 @@ public class Compteur extends AbstractCyPhyComponent {
 		this.asp.setPluginURI(localArchitecture.getRootModelURI());
 		this.asp.setSimulationArchitecture(localArchitecture);
 		this.installPlugin(this.asp);	
+	}
+	
+	// ************** Plotter ******************************
+	
+	public static int getPlotterWidth() {
+		int ret = Integer.MAX_VALUE ;
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment() ;
+		GraphicsDevice[] gs = ge.getScreenDevices() ;
+		for (int i = 0; i < gs.length; i++) {
+			DisplayMode dm = gs[i].getDisplayMode() ;
+			int width = dm.getWidth() ;
+			if (width < ret) {
+				ret = width ;
+			}
+		}
+		return (int) (0.25 * ret) ;
+	}
+
+	public static int getPlotterHeight() {
+		int ret = Integer.MAX_VALUE ;
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment() ;
+		GraphicsDevice[] gs = ge.getScreenDevices() ;
+		for (int i = 0; i < gs.length; i++) {
+			DisplayMode dm = gs[i].getDisplayMode() ;
+			int height = dm.getHeight() ;
+			if (height < ret) {
+				ret = height ;
+			}
+		}
+		return (int) (0.2 * ret) ;
 	}
 }

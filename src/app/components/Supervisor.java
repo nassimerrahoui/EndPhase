@@ -129,7 +129,10 @@ public class Supervisor extends AbstractComponent {
 				new EventSink[] { new EventSink(CompteurModel.URI, SendAspirateurConsommation.class) });
 
 		coupledModelDescriptors.put(SupervisorCoupledModel.URI,
-				ComponentCoupledModelDescriptor.create(SupervisorCoupledModel.class, SupervisorCoupledModel.URI, submodels, null, null,
+				ComponentCoupledModelDescriptor.create(
+						SupervisorCoupledModel.class, 
+						SupervisorCoupledModel.URI, 
+						submodels, null, null,
 						connections, null, SimulationEngineCreationMode.COORDINATION_ENGINE,
 						this.modelURIs2componentURIs.get(SupervisorCoupledModel.URI)));
 

@@ -45,13 +45,11 @@ public class CompteurModel extends AtomicModel {
 	
 	@Override
 	public void setSimulationRunParameters(Map<String, Object> simParams) throws Exception {
-		
 		this.componentRef = (EmbeddingComponentAccessI) simParams.get(URI + " : " + COMPONENT_REF);
-
-		PlotterDescription pd = (PlotterDescription) simParams.get(URI + " : " + CONSOMMATION_PLOTTING_PARAM_NAME) ;
+		
+		PlotterDescription pd = (PlotterDescription) simParams.get(CompteurModel.URI + " : " + CompteurModel.CONSOMMATION_PLOTTING_PARAM_NAME) ;
 		this.consommationPlotter = new XYPlotter(pd);
 		this.consommationPlotter.createSeries(SERIES_CONSOMMATION);
-		
 		
 		pd = (PlotterDescription) simParams.get(URI + " : " + PRODUCTION_PLOTTING_PARAM_NAME) ;
 		this.productionPlotter = new XYPlotter(pd);
@@ -97,8 +95,6 @@ public class CompteurModel extends AtomicModel {
 	
 	@Override
 	public void userDefinedInternalTransition(Duration elapsedTime) {
-		System.out.println("CONSO : " + consommation_globale);
-
 		this.consommationPlotter.addData(SERIES_CONSOMMATION, this.getCurrentStateTime().getSimulatedTime(), this.consommation_globale);
 		this.productionPlotter.addData(SERIES_PRODUCTION, this.getCurrentStateTime().getSimulatedTime(), this.production_globale);
 		
@@ -107,13 +103,10 @@ public class CompteurModel extends AtomicModel {
 	
 	@Override
 	public void userDefinedExternalTransition(Duration elapsedTime) {
-		
+		System.out.println("COMPTEURRRR");
 		super.userDefinedExternalTransition(elapsedTime);
 		ArrayList<EventI> current = this.getStoredEventAndReset();
 		
-		this.logMessage("EXT EVENT COMPTEUR MODEL");
-		System.out.println("EXT EVENT COMPTEUR MODEL");
-				
 		for (int i = 0 ; i < current.size() ; i++) {
 			if(current.get(i) instanceof SendAspirateurConsommation)
 				this.consommation_globale += ((SendAspirateurConsommation.Reading)
