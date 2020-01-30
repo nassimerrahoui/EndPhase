@@ -1,13 +1,11 @@
 package simulator.models.frigo;
 
+import java.util.ArrayList;
 import java.util.Map;
-import java.util.Vector;
 import java.util.concurrent.TimeUnit;
-
 import org.apache.commons.math3.random.RandomDataGenerator;
-
 import app.util.ModeFrigo;
-import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentStateAccessI;
+import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentAccessI;
 import fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOAwithEquations;
 import fr.sorbonne_u.devs_simulation.interfaces.SimulationReportI;
 import fr.sorbonne_u.devs_simulation.models.annotations.ModelExternalEvents;
@@ -66,7 +64,7 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 	/** Temperature initiale du refrigerateur eteint */
 	public static final double AMBIENT_TEMPERATURE = 20.0; // Degres celsius
 	protected static final double CONSOMMAION_REPOS = 10; // Watt
-	protected static final double CONSOMMATION_INITIALE_COMPRESSEUR = 600; // Watt
+	protected static final double CONSOMMATION_INITIALE_COMPRESSEUR = 100; // Watt
 	protected static final double CONSOMMATION_EXECUTE_COMPRESSEUR = 70; // Watt
 	
 	/** Permet de generer des valeurs aleatoires */
@@ -89,7 +87,7 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 	protected final double LIMIT = 0.5; // degres celsius
 	
 	/** Reference du composant associe au modele */
-	protected EmbeddingComponentStateAccessI componentRef;
+	protected EmbeddingComponentAccessI componentRef;
 	
 	public FrigoModel(String uri, TimeUnit simulatedTimeUnit, SimulatorI simulationEngine) throws Exception {
 		super(uri, simulatedTimeUnit, simulationEngine);
@@ -100,7 +98,7 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 	@Override
 	public void setSimulationRunParameters(Map<String, Object> simParams) throws Exception {
 		
-		this.componentRef = (EmbeddingComponentStateAccessI) simParams.get(URI + " : " + COMPONENT_REF);
+		this.componentRef = (EmbeddingComponentAccessI) simParams.get(URI + " : " + COMPONENT_REF);
 
 		PlotterDescription pd = (PlotterDescription) simParams.get(URI + " : " + POWER_PLOTTING_PARAM_NAME) ;
 		this.powerPlotter = new XYPlotter(pd);
@@ -146,7 +144,7 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 	}
 
 	@Override
-	public Vector<EventI> output() {
+	public ArrayList<EventI> output() {
 		// the model does not export any event.
 		return null;
 	}
@@ -171,6 +169,22 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 		this.statePlotter.addData(SERIES_MODE, this.getCurrentStateTime().getSimulatedTime(), this.getState().getMode());
 		this.temperaturePlotter.addData(SERIES_TEMPERATURE, this.getCurrentStateTime().getSimulatedTime(), this.getCurrentTemperature());
 
+		assert this.componentRef != null ;
+		
+		try { 
+			ModeFrigo m = (ModeFrigo) this.componentRef.getEmbeddingComponentStateValue(FrigoModel.URI + " : state");
+			if (m != this.currentState) {
+				switch(m)
+				{
+					case OFF : this.setState(ModeFrigo.OFF) ; break ;
+					case LIGHT_OFF : this.setState(ModeFrigo.LIGHT_OFF) ; break ;
+					case LIGHT_ON : this.setState(ModeFrigo.LIGHT_ON) ;
+				}
+				this.currentState = m ;
+			}
+		}
+		catch (Exception e) { e.printStackTrace(); }
+		
 		this.computeNewLevel(this.getCurrentStateTime(), delta_t) ;
 	}
 	
@@ -192,7 +206,9 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 			
 			if(currentState == ModeFrigo.LIGHT_ON) {
 				// porte ouverte equivalent a une augmentation de la temperature du frigo
-				currentTemperature += this.rgNewVariationTemperature.nextBeta(2, 2) * 2;
+				if(currentTemperature < AMBIENT_TEMPERATURE) {
+					currentTemperature += this.rgNewVariationTemperature.nextBeta(2, 2) * 2;
+				}
 			} else {
 				
 				if(temperature_cible < currentTemperature) {
@@ -204,7 +220,7 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 					}
 				} else if(temperature_cible > currentTemperature) {
 					while(delta_t >= 1.0) {
-						if(temperature_cible < currentTemperature + variation_temperature/4)
+						if(currentTemperature < AMBIENT_TEMPERATURE && temperature_cible < currentTemperature + variation_temperature/4)
 							break;
 						currentTemperature += variation_temperature;
 						delta_t--;
@@ -236,7 +252,7 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 	@Override
 	public void userDefinedExternalTransition(Duration elapsedTime) {
 		
-		Vector<EventI> currentEvents = this.getStoredEventAndReset();
+		ArrayList<EventI> currentEvents = this.getStoredEventAndReset();
 		assert currentEvents != null && currentEvents.size() == 1;
 		Event ce = (Event) currentEvents.get(0);
 		assert ce instanceof AbstractFrigoEvent;
@@ -269,7 +285,7 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 	}
 
 	public void setState(ModeFrigo s) {
-		if(currentState != ModeFrigo.LIGHT_ON && s == ModeFrigo.LIGHT_ON) {
+		if(currentState != ModeFrigo.LIGHT_ON && s == ModeFrigo.LIGHT_ON && currentTemperature <= AMBIENT_TEMPERATURE) {
 			// ouverture de porte equivalent a une augmentation de la temperature du frigo
 			currentTemperature += this.rgNewVariationTemperature.nextBeta(2, 2) * 2;
 		}

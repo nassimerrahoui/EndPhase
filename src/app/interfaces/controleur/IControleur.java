@@ -1,5 +1,6 @@
 package app.interfaces.controleur;
 
+import app.util.TypeAppareil;
 import fr.sorbonne_u.components.interfaces.OfferedI;
 
 /**
@@ -15,7 +16,7 @@ public interface IControleur extends OfferedI {
 	 * @param uri
 	 * @throws Exception
 	 */
-	public void ajouterAppareil(String uri) throws Exception;
+	public void ajouterAppareil(String uri, String className, TypeAppareil type) throws Exception;
 	
 	/**
 	 * Permet d'offrir l'ajout d'une unite de production a la liste des unite de production du controleur

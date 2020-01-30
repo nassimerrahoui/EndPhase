@@ -22,11 +22,7 @@ import fr.sorbonne_u.devs_simulation.models.events.EventSource;
 import fr.sorbonne_u.devs_simulation.models.events.ReexportedEvent;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import fr.sorbonne_u.devs_simulation.utils.StandardCoupledModelReport;
-import simulator.events.aspirateur.SetPerformanceMaximale;
-import simulator.events.aspirateur.SetPerformanceReduite;
-import simulator.events.aspirateur.SwitchAspirateurOff;
-import simulator.events.aspirateur.SwitchAspirateurOn;
-
+import simulator.events.aspirateur.SendAspirateurConsommation;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -42,6 +38,7 @@ public class AspirateurCoupledModel extends CoupledModel {
 			Map<StaticVariableDescriptor, VariableSink[]> importedVars,
 			Map<VariableSource, StaticVariableDescriptor> reexportedVars, Map<VariableSource, VariableSink[]> bindings)
 			throws Exception {
+		
 		super(uri, simulatedTimeUnit, simulationEngine, submodels, imported, reexported, connections, importedVars,
 				reexportedVars, bindings);
 	}
@@ -68,24 +65,22 @@ public class AspirateurCoupledModel extends CoupledModel {
 		Set<String> submodels = new HashSet<String>();
 		submodels.add(AspirateurModel.URI);
 		submodels.add(AspirateurUserModel.URI);
+		
 
-		Map<EventSource, EventSink[]> connections = new HashMap<EventSource, EventSink[]>();
-		EventSource from1 = new EventSource(AspirateurUserModel.URI, SwitchAspirateurOn.class);
-		EventSink[] to1 = new EventSink[] { new EventSink(AspirateurModel.URI, SwitchAspirateurOn.class) };
-		connections.put(from1, to1);
-		EventSource from2 = new EventSource(AspirateurUserModel.URI, SwitchAspirateurOff.class);
-		EventSink[] to2 = new EventSink[] { new EventSink(AspirateurModel.URI, SwitchAspirateurOff.class) };
-		connections.put(from2, to2);
-		EventSource from3 = new EventSource(AspirateurUserModel.URI, SetPerformanceReduite.class);
-		EventSink[] to3 = new EventSink[] { new EventSink(AspirateurModel.URI, SetPerformanceReduite.class) };
-		connections.put(from3, to3);
-		EventSource from4 = new EventSource(AspirateurUserModel.URI, SetPerformanceMaximale.class);
-		EventSink[] to4 = new EventSink[] { new EventSink(AspirateurModel.URI, SetPerformanceMaximale.class) };
-		connections.put(from4, to4);
-
+		Map<Class<? extends EventI>,ReexportedEvent> reexported =
+				new HashMap<Class<? extends EventI>,ReexportedEvent>() ;
+		reexported.put(SendAspirateurConsommation.class, new ReexportedEvent(AspirateurModel.URI, SendAspirateurConsommation.class)) ;
+		
 		coupledModelDescriptors.put(AspirateurCoupledModel.URI,
-				new CoupledHIOA_Descriptor(AspirateurCoupledModel.class, AspirateurCoupledModel.URI, submodels, null,
-						null, connections, null, SimulationEngineCreationMode.COORDINATION_ENGINE, null, null, null));
+				new CoupledHIOA_Descriptor(
+						AspirateurCoupledModel.class,
+						AspirateurCoupledModel.URI, 
+						submodels, 
+						null,
+						reexported, 
+						null, 
+						null, 
+						SimulationEngineCreationMode.COORDINATION_ENGINE, null, null, null));
 
 		return new Architecture(AspirateurCoupledModel.URI, atomicModelDescriptors, coupledModelDescriptors,
 				TimeUnit.SECONDS);

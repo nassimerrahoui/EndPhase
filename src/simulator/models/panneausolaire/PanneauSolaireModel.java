@@ -1,10 +1,10 @@
 package simulator.models.panneausolaire;
 
+import java.util.ArrayList;
 import java.util.Map;
-import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 import app.util.EtatUniteProduction;
-import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentStateAccessI;
+import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentAccessI;
 import fr.sorbonne_u.devs_simulation.hioa.annotations.ImportedVariable;
 import fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOAwithEquations;
 import fr.sorbonne_u.devs_simulation.hioa.models.vars.Value;
@@ -37,7 +37,7 @@ public class PanneauSolaireModel extends AtomicHIOAwithEquations {
 	protected Value<Double> currentSolarIntensity = new Value<Double>(this, 0.0, 0);
 	
 	protected XYPlotter intensityPlotter;
-	protected EmbeddingComponentStateAccessI componentRef;
+	protected EmbeddingComponentAccessI componentRef;
 	
 	public static class PanneauSolaireStateReport extends AbstractSimulationReport {
 		private static final long serialVersionUID = 1L;
@@ -60,7 +60,7 @@ public class PanneauSolaireModel extends AtomicHIOAwithEquations {
 
 	@Override
 	public void setSimulationRunParameters(Map<String, Object> simParams) throws Exception {
-		this.componentRef = (EmbeddingComponentStateAccessI) simParams.get(URI + " : " + COMPONENT_REF);
+		this.componentRef = (EmbeddingComponentAccessI) simParams.get(URI + " : " + COMPONENT_REF);
 	
 		PlotterDescription pd = (PlotterDescription) simParams.get(URI + " : " + INTENSITY_PLOTTING_PARAM_NAME);
 		this.intensityPlotter = new XYPlotter(pd);
@@ -84,7 +84,7 @@ public class PanneauSolaireModel extends AtomicHIOAwithEquations {
 	}
 
 	@Override
-	public Vector<EventI> output() {
+	public ArrayList<EventI> output() {
 		// the model does not export any event.
 		return null;
 	}
@@ -108,7 +108,7 @@ public class PanneauSolaireModel extends AtomicHIOAwithEquations {
 	@Override
 	public void userDefinedExternalTransition(Duration elapsedTime) {
 		
-		Vector<EventI> current = this.getStoredEventAndReset();
+		ArrayList<EventI> current = this.getStoredEventAndReset();
 		assert current != null;
 		
 		for (int i = 0 ; i < current.size() ; i++) {

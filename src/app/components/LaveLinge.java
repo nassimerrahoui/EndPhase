@@ -6,6 +6,8 @@ import java.awt.GraphicsEnvironment;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
+
+import app.CVM;
 import app.interfaces.appareil.IAjoutAppareil;
 import app.interfaces.appareil.IConsommation;
 import app.interfaces.appareil.ILaveLinge;
@@ -23,7 +25,7 @@ import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.cyphy.AbstractCyPhyComponent;
-import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentStateAccessI;
+import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentAccessI;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
@@ -38,7 +40,7 @@ import simulator.plugins.LaveLingeSimulatorPlugin;
 @RequiredInterfaces(required = { IAjoutAppareil.class, IConsommation.class })
 public class LaveLinge 
 	extends AbstractCyPhyComponent 
-	implements EmbeddingComponentStateAccessI {
+	implements EmbeddingComponentAccessI {
 
 	/** port sortant permettant a l'appareil de s'inscrire sur la liste des appareil du controleur */
 	protected LaveLingeControleurOutPort controleur_OUTPORT;
@@ -46,21 +48,26 @@ public class LaveLinge
 	/** port sortant permettant au compteur de recupere la consommation du lave-linge */
 	protected LaveLingeCompteurOutPort consommation_OUTPORT;
 
+	/** Gestion de priorite pour les decisions du controleur*/
 	protected TypeAppareil type;
+	
+	/** Etat actuel de l'appareil */
 	protected ModeLaveLinge etat;
 	
 	protected ArrayList<ModeLaveLinge> planification_etats;
 	
 	protected int heure;
 	protected int minutes;
+	
+	/** Consommation en Watts par l'appareil */
 	protected Double consommation;
 	protected TemperatureLaveLinge temperature;
 	
 	protected LaveLingeSimulatorPlugin asp;
 	
 	/** TODO */
-	public static int ORIGIN_X = 0;
-	public static int ORIGIN_Y = 20;
+	public static int ORIGIN_X = CVM.plotX;
+	public static int ORIGIN_Y = CVM.plotY;
 
 	protected LaveLinge(
 			String LAVELIGNE_URI, 
@@ -108,21 +115,44 @@ public class LaveLinge
 		this.initialise();
 	}
 	
+	/**
+	 * Ajoute l'URI de l'appareil a la map des appareils du controleur
+	 * @param uri
+	 * @throws Exception
+	 */
 	public void demandeAjoutControleur(String uri) throws Exception {
-		this.controleur_OUTPORT.demandeAjoutControleur(uri);
+		this.controleur_OUTPORT.demandeAjoutControleur(uri, this.getClass().getName(), this.type);
 	}
 
+	/**
+	 * Envoie la consommation au compteur
+	 * @param uri
+	 * @param consommation
+	 * @throws Exception
+	 */
 	public void envoyerConsommation(String uri, double consommation) throws Exception {
 		this.consommation_OUTPORT.envoyerConsommation(uri, consommation);
 	}
 
+	/**
+	 * Modifie l'etat du lave-linge
+	 * @param etat
+	 * @throws Exception
+	 */
 	public void setModeLaveLinge(ModeLaveLinge etat) throws Exception {
 		if(etat == ModeLaveLinge.OFF || etat == ModeLaveLinge.VEILLE)
 			this.etat = etat;
 	}
 
+	/**
+	 * Definit une planification qui est une suite d'etats 
+	 * que le lave-linge doit prendre dans le futur
+	 * @param planification
+	 * @param heure
+	 * @param min
+	 * @throws Exception
+	 */
 	public void planifierCycle(ArrayList<ModeLaveLinge> planification, int heure, int min) throws Exception {
-		/** TODO */
 		if(heure >= 0 && heure <= 23 && min >= 0 && min <= 59) {
 			this.planification_etats = planification;
 			this.heure = heure;
@@ -131,6 +161,10 @@ public class LaveLinge
 		}
 	}
 
+	/**
+	 * Modifie la temperature de l'eau du lave-linge
+	 * @param tl
+	 */
 	public void setTemperature(TemperatureLaveLinge tl) {
 		this.temperature = tl;
 	}
@@ -139,13 +173,7 @@ public class LaveLinge
 	 * Gerer et afficher ce qui se passe pendant un mode
 	 */
 	public void runningAndPrint() {
-		/** TODO Redefinir toString a la place de name */
 		this.logMessage("Mode actuel : " + etat.name());
-		
-		/** TODO code pour gerer ce qui se passe pendant un mode */
-		
-		/** TODO lancer cycle en fonction de l'horloge du lave linge */
-		
 		this.logMessage("...");
 	}
 	
@@ -157,6 +185,10 @@ public class LaveLinge
 		this.logMessage("Demarrage du lave-linge...");
 	}
 	
+	/**
+	 * Execution depuis l'assembleur
+	 * @throws Exception
+	 */
 	public void dynamicExecute() throws Exception {
 		
 		this.logMessage("Phase d'execution du lave-linge.");
@@ -193,7 +225,7 @@ public class LaveLinge
 				"Consommation Lave-Linge", 
 				"Temps (sec)", 
 				"Consommation (Watt)", 
-				ORIGIN_X + getPlotterWidth(),
+				ORIGIN_X ,
 		  		ORIGIN_Y,
 		  		getPlotterWidth(),
 		  		getPlotterHeight())) ;
@@ -292,6 +324,10 @@ public class LaveLinge
 		return null;
 	}
 	
+	/**
+	 * Installe le plugin
+	 * @throws Exception
+	 */
 	protected void initialise() throws Exception {
 		
 		Architecture localArchitecture = this.createLocalArchitecture(null) ;

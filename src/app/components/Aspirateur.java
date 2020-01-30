@@ -3,8 +3,8 @@ package app.components;
 import java.awt.DisplayMode;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
-import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
+import app.CVM;
 import app.interfaces.appareil.IAjoutAppareil;
 import app.interfaces.appareil.IConsommation;
 import app.interfaces.assembleur.IComposantDynamique;
@@ -21,22 +21,23 @@ import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.cyphy.AbstractCyPhyComponent;
-import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentStateAccessI;
+import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentAccessI;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
 import fr.sorbonne_u.devs_simulation.architectures.Architecture;
 import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
-import fr.sorbonne_u.utils.PlotterDescription;
 import simulator.models.aspirateur.AspirateurCoupledModel;
 import simulator.models.aspirateur.AspirateurModel;
 import simulator.plugins.AspirateurSimulatorPlugin;
 
 @OfferedInterfaces(offered = { IAspirateur.class, IComposantDynamique.class })
 @RequiredInterfaces(required = { IAjoutAppareil.class, IConsommation.class })
+
+
 public class Aspirateur 
 	extends AbstractCyPhyComponent 
-	implements EmbeddingComponentStateAccessI {
+	implements EmbeddingComponentAccessI {
 
 	/** port sortant permettant a l'appareil de s'inscrire sur la liste des appareil du controleur */
 	protected AspirateurControleurOutPort controleur_OUTPORT;
@@ -44,14 +45,19 @@ public class Aspirateur
 	/** port sortant permettant au compteur de recupere la consommation de l'aspirateur */
 	protected AspirateurCompteurOutPort consommation_OUTPORT;
 
+	/** Gestion de priorite pour les decisions du controleur*/
 	protected TypeAppareil type;
+	
+	/** Etat actuel de l'appareil */
 	protected ModeAspirateur etat;
+	
+	/** Consommation en Watts par l'appareil */
 	protected Double consommation;
 	
 	protected AspirateurSimulatorPlugin asp;
 	
-	public static int ORIGIN_X = -340;
-	public static int ORIGIN_Y = 20;
+	public static int ORIGIN_X = CVM.plotX;
+	public static int ORIGIN_Y = CVM.plotY;
 
 	protected Aspirateur(
 			String ASPIRATEUR_URI, 
@@ -95,14 +101,30 @@ public class Aspirateur
 		this.initialise();
 	}
 
+	/**
+	 * Ajoute l'URI de l'appareil a la map des appareils du controleur
+	 * @param uri
+	 * @throws Exception
+	 */
 	public void demandeAjoutControleur(String uri) throws Exception {
-		this.controleur_OUTPORT.demandeAjoutControleur(uri);
+		this.controleur_OUTPORT.demandeAjoutControleur(uri, getClass().getName(), this.type);
 	}
 
+	/**
+	 * Envoie la consommation au compteur
+	 * @param uri
+	 * @param consommation
+	 * @throws Exception
+	 */
 	public void envoyerConsommation(String uri, double consommation) throws Exception {
 		this.consommation_OUTPORT.envoyerConsommation(uri, consommation);
 	}
 
+	/**
+	 * Modifie l'etat de l'aspirateur
+	 * @param etat
+	 * @throws Exception
+	 */
 	public void setModeAspirateur(ModeAspirateur etat) throws Exception {
 		this.etat = etat;
 	}
@@ -122,6 +144,10 @@ public class Aspirateur
 		this.logMessage("Demarrage de l'aspirateur...");
 	}
 	
+	/**
+	 * Execution depuis l'assembleur
+	 * @throws Exception
+	 */
 	public void dynamicExecute() throws Exception {
 
 		this.logMessage("Phase d'execution de l'aspirateur.");
@@ -144,38 +170,10 @@ public class Aspirateur
 			}
 		}, 4000, 1000, TimeUnit.MILLISECONDS);
 		
-		execute();
-	}
-	
-	@Override
-	public void execute() throws Exception {
 		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 10L ;
 
-		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
-		simParams.put(AspirateurModel.URI + " : " + AspirateurModel.COMPONENT_REF, this);
-		
-		simParams.put(AspirateurModel.URI + " : " + AspirateurModel.POWER_PLOTTING_PARAM_NAME, new PlotterDescription(
-				"Consommation Aspirateur", 
-				"Temps (sec)", 
-				"Consommation (Watt)", 
-				ORIGIN_X + getPlotterWidth(),
-		  		ORIGIN_Y,
-		  		getPlotterWidth(),
-		  		getPlotterHeight())) ;
-		
-		this.asp.setSimulationRunParameters(simParams) ;
-
-		this.runTask(
-				new AbstractComponent.AbstractTask() {
-					@Override
-					public void run() {
-						try {
-							asp.doStandAloneSimulation(0.0, 60000.0) ;
-						} catch (Exception e) {
-							throw new RuntimeException(e) ;
-						}
-					}
-				});
+		//HashMap<String,Object> simParams = new HashMap<String,Object>() ;
+		//this.asp.setSimulationRunParameters(simParams) ;
 		
 		Thread.sleep(10L);
 		
@@ -183,7 +181,6 @@ public class Aspirateur
 			@Override
 			public void run() {
 				try {
-					((Aspirateur) this.getTaskOwner()).etat = (ModeAspirateur) ((Aspirateur) this.getTaskOwner()).asp.getModelStateValue(AspirateurModel.URI, "state");
 					((Aspirateur) this.getTaskOwner()).consommation = (Double) ((Aspirateur) this.getTaskOwner()).asp.getModelStateValue(AspirateurModel.URI, "consommation");
 					((Aspirateur) this.getTaskOwner()).logMessage("Mode : " + etat);
 					((Aspirateur) this.getTaskOwner()).logMessage("Consommation : " + consommation);
@@ -249,6 +246,10 @@ public class Aspirateur
 		return null;
 	}
 	
+	/**
+	 * Installe le plugin
+	 * @throws Exception
+	 */
 	protected void initialise() throws Exception {
 		Architecture localArchitecture = this.createLocalArchitecture(null) ;
 		this.asp = new AspirateurSimulatorPlugin() ;

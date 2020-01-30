@@ -2,26 +2,22 @@ package simulator.models.aspirateur;
 
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.math3.random.RandomDataGenerator;
+import app.components.Aspirateur;
 import app.util.ModeAspirateur;
 import fr.sorbonne_u.devs_simulation.es.models.AtomicES_Model;
-import fr.sorbonne_u.devs_simulation.models.annotations.ModelExternalEvents;
 import fr.sorbonne_u.devs_simulation.models.events.EventI;
 import fr.sorbonne_u.devs_simulation.models.time.Duration;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
-import simulator.events.aspirateur.SetPerformanceMaximale;
-import simulator.events.aspirateur.SetPerformanceReduite;
-import simulator.events.aspirateur.SwitchAspirateurOff;
-import simulator.events.aspirateur.SwitchAspirateurOn;
+import simulator.events.aspirateur.SetPerformanceMaximaleSIL;
+import simulator.events.aspirateur.SetPerformanceReduiteSIL;
+import simulator.events.aspirateur.SwitchAspirateurOffSIL;
+import simulator.events.aspirateur.SwitchAspirateurOnSIL;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Map;
 
-@ModelExternalEvents(exported = { 
-		SwitchAspirateurOn.class, 
-		SwitchAspirateurOff.class, 
-		SetPerformanceReduite.class, 
-		SetPerformanceMaximale.class })
 
 public class AspirateurUserModel extends AtomicES_Model {
 
@@ -37,6 +33,7 @@ public class AspirateurUserModel extends AtomicES_Model {
 	protected Class<?> nextEvent;
 	protected final RandomDataGenerator rg;
 	protected ModeAspirateur etat_aspirateur;
+	protected Aspirateur componentRef;
 
 	public AspirateurUserModel(String uri, TimeUnit simulatedTimeUnit, SimulatorI simulationEngine) throws Exception {
 		super(uri, simulatedTimeUnit, simulationEngine);
@@ -44,6 +41,15 @@ public class AspirateurUserModel extends AtomicES_Model {
 		this.rg = new RandomDataGenerator();
 
 		this.setLogger(new StandardLogger());
+	}
+	
+	public Aspirateur getComponentRef() {
+		return this.componentRef;
+	}
+	
+	@Override
+	public void setSimulationRunParameters(Map<String, Object> simParams) throws Exception {
+		this.componentRef = (Aspirateur) simParams.get(AspirateurModel.URI + " : " + AspirateurModel.COMPONENT_REF);
 	}
 
 	@Override
@@ -64,7 +70,7 @@ public class AspirateurUserModel extends AtomicES_Model {
 		Duration d2 = new Duration(2.0 * this.meanTimeBetweenUsages * this.rg.nextBeta(1.75, 1.75),
 				this.getSimulatedTimeUnit());
 		Time t = this.getCurrentStateTime().add(d1).add(d2);
-		this.scheduleEvent(new SwitchAspirateurOn(t));
+		this.scheduleEvent(new SwitchAspirateurOnSIL(t));
 
 		this.nextTimeAdvance = this.timeAdvance();
 		this.timeOfNextEvent = this.getCurrentStateTime().add(this.nextTimeAdvance);
@@ -80,48 +86,39 @@ public class AspirateurUserModel extends AtomicES_Model {
 	public Duration timeAdvance() {
 
 		Duration d = super.timeAdvance();
-		this.logMessage("AspirateurUserModel::timeAdvance() 1 " + d + " " + this.eventListAsString());
 		return d;
 	}
 
 	@Override
-	public Vector<EventI> output() {
-
-		assert !this.eventList.isEmpty();
-
-		Vector<EventI> ret = super.output();
-
-		assert ret.size() == 1;
-		this.nextEvent = ret.get(0).getClass();
-
-		this.logMessage("AspirateurUserModel::output() " + this.nextEvent.getCanonicalName());
-		return ret;
+	public ArrayList<EventI> output() {
+		return null;
 	}
 
 	@Override
 	public void userDefinedInternalTransition(Duration elapsedTime) {
-
+		System.out.println("Internal Transition Aspi User");
 		Duration d;
-		if (this.nextEvent.equals(SwitchAspirateurOn.class)) {
-			d = new Duration(2.0 * this.rg.nextBeta(1.75, 1.75), this.getSimulatedTimeUnit());
-			Time t = this.getCurrentStateTime().add(d);
-			this.scheduleEvent(new SetPerformanceReduite(t));
 
-//			d = new Duration(this.interdayDelay, this.getSimulatedTimeUnit());
-//			this.scheduleEvent(new SwitchAspirateurOn(this.getCurrentStateTime().add(d)));
-			
-		} else if (this.nextEvent.equals(SetPerformanceMaximale.class)) {
-			d = new Duration(2.0 * this.meanTimeAtPerformanceMaximale * this.rg.nextBeta(1.75, 1.75), this.getSimulatedTimeUnit());
-			this.scheduleEvent(new SwitchAspirateurOff(this.getCurrentStateTime().add(d)));
-			
-		} else if (this.nextEvent.equals(SetPerformanceReduite.class)) {
-			d = new Duration(2.0 * this.meanTimeAtPerformanceReduite * this.rg.nextBeta(1.75, 1.75), this.getSimulatedTimeUnit());
-			this.scheduleEvent(new SetPerformanceMaximale(this.getCurrentStateTime().add(d)));
+		//assert this.eventList.size() >= 1 ;
+		this.nextEvent = this.eventList.peek().getClass() ;
 		
-		} else if (this.nextEvent.equals(SwitchAspirateurOff.class)) {
-			d = new Duration(2.0 * this.meanTimeOff * this.rg.nextBeta(1.75, 1.75), this.getSimulatedTimeUnit());
-			this.scheduleEvent(new SwitchAspirateurOn(this.getCurrentStateTime().add(d)));
-		}
+		if (this.nextEvent.equals(SwitchAspirateurOnSIL.class)) {
+			
+			d = new Duration(2 * this.rg.nextBeta(1.75, 1.75), this.getSimulatedTimeUnit());
+			Time t = this.getCurrentStateTime().add(d);
+			this.scheduleEvent(new SetPerformanceReduiteSIL(t));
+			
+		} else if (this.nextEvent.equals(SetPerformanceMaximaleSIL.class)) {
+			d = new Duration(2 * this.meanTimeAtPerformanceMaximale * this.rg.nextBeta(1.75, 1.75), this.getSimulatedTimeUnit());
+			this.scheduleEvent(new SwitchAspirateurOffSIL(this.getCurrentStateTime().add(d)));
+			
+		} else if (this.nextEvent.equals(SetPerformanceReduiteSIL.class)) {
+			d = new Duration(2 * this.meanTimeAtPerformanceReduite * this.rg.nextBeta(1.75, 1.75), this.getSimulatedTimeUnit());
+			this.scheduleEvent(new SetPerformanceMaximaleSIL(this.getCurrentStateTime().add(d)));
 		
+		} else if (this.nextEvent.equals(SwitchAspirateurOffSIL.class)) {
+			d = new Duration(2 * this.meanTimeOff * this.rg.nextBeta(1.75, 1.75), this.getSimulatedTimeUnit());
+			this.scheduleEvent(new SwitchAspirateurOnSIL(this.getCurrentStateTime().add(d)));
+		}		
 	}
 }

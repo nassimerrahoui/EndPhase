@@ -1,11 +1,11 @@
 package simulator.models.compteur;
 
+import java.util.ArrayList;
 import java.util.Map;
-import java.util.Vector;
 import java.util.concurrent.TimeUnit;
-
-import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentStateAccessI;
+import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentAccessI;
 import fr.sorbonne_u.devs_simulation.models.AtomicModel;
+import fr.sorbonne_u.devs_simulation.models.annotations.ModelExternalEvents;
 import fr.sorbonne_u.devs_simulation.models.events.EventI;
 import fr.sorbonne_u.devs_simulation.models.time.Duration;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
@@ -15,6 +15,7 @@ import fr.sorbonne_u.utils.PlotterDescription;
 import fr.sorbonne_u.utils.XYPlotter;
 import simulator.events.aspirateur.SendAspirateurConsommation;
 
+@ModelExternalEvents(imported = { SendAspirateurConsommation.class})
 public class CompteurModel extends AtomicModel {
 
 	private static final long serialVersionUID = 1L;
@@ -34,7 +35,7 @@ public class CompteurModel extends AtomicModel {
 	protected double production_globale;
 	
 	/** Reference du composant associe au modele */
-	protected EmbeddingComponentStateAccessI componentRef;
+	protected EmbeddingComponentAccessI componentRef;
 	
 	
 	public CompteurModel(String uri, TimeUnit simulatedTimeUnit, SimulatorI simulationEngine) throws Exception {
@@ -44,13 +45,11 @@ public class CompteurModel extends AtomicModel {
 	
 	@Override
 	public void setSimulationRunParameters(Map<String, Object> simParams) throws Exception {
+		this.componentRef = (EmbeddingComponentAccessI) simParams.get(URI + " : " + COMPONENT_REF);
 		
-		this.componentRef = (EmbeddingComponentStateAccessI) simParams.get(URI + " : " + COMPONENT_REF);
-
-		PlotterDescription pd = (PlotterDescription) simParams.get(URI + " : " + CONSOMMATION_PLOTTING_PARAM_NAME) ;
+		PlotterDescription pd = (PlotterDescription) simParams.get(CompteurModel.URI + " : " + CompteurModel.CONSOMMATION_PLOTTING_PARAM_NAME) ;
 		this.consommationPlotter = new XYPlotter(pd);
 		this.consommationPlotter.createSeries(SERIES_CONSOMMATION);
-		
 		
 		pd = (PlotterDescription) simParams.get(URI + " : " + PRODUCTION_PLOTTING_PARAM_NAME) ;
 		this.productionPlotter = new XYPlotter(pd);
@@ -80,7 +79,7 @@ public class CompteurModel extends AtomicModel {
 	}
 
 	@Override
-	public Vector<EventI> output() {
+	public ArrayList<EventI> output() {
 		// No exported event
 		return null;
 	}
@@ -96,31 +95,28 @@ public class CompteurModel extends AtomicModel {
 	
 	@Override
 	public void userDefinedInternalTransition(Duration elapsedTime) {
-		super.userDefinedInternalTransition(elapsedTime) ;
-
 		this.consommationPlotter.addData(SERIES_CONSOMMATION, this.getCurrentStateTime().getSimulatedTime(), this.consommation_globale);
 		this.productionPlotter.addData(SERIES_PRODUCTION, this.getCurrentStateTime().getSimulatedTime(), this.production_globale);
-
+		
+		super.userDefinedInternalTransition(elapsedTime) ;
 	}
 	
 	@Override
 	public void userDefinedExternalTransition(Duration elapsedTime) {
-		Vector<EventI> current = this.getStoredEventAndReset();
-		assert current != null;
+		super.userDefinedExternalTransition(elapsedTime);
+		ArrayList<EventI> current = this.getStoredEventAndReset();
 		
 		for (int i = 0 ; i < current.size() ; i++) {
 			if(current.get(i) instanceof SendAspirateurConsommation)
+				System.out.println("AVANT " + this.consommation_globale);
 				this.consommation_globale += ((SendAspirateurConsommation.Reading)
 						((SendAspirateurConsommation) current.get(i)).
 						getEventInformation()).value;
+				System.out.println("APRES " + this.consommation_globale);
 		}
 		
 		this.consommationPlotter.addData(SERIES_CONSOMMATION, this.getCurrentStateTime().getSimulatedTime(), this.consommation_globale);
 		this.productionPlotter.addData(SERIES_PRODUCTION, this.getCurrentStateTime().getSimulatedTime(), this.production_globale);
-		
-		
-		super.userDefinedExternalTransition(elapsedTime);
-
 	}
 	
 	@Override

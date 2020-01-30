@@ -1,13 +1,11 @@
 package simulator.models.batterie;
 
+import java.util.ArrayList;
 import java.util.Map;
-import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 import app.util.EtatUniteProduction;
-import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentStateAccessI;
-import fr.sorbonne_u.devs_simulation.hioa.annotations.ImportedVariable;
+import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentAccessI;
 import fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOAwithEquations;
-import fr.sorbonne_u.devs_simulation.hioa.models.vars.Value;
 import fr.sorbonne_u.devs_simulation.interfaces.SimulationReportI;
 import fr.sorbonne_u.devs_simulation.models.events.EventI;
 import fr.sorbonne_u.devs_simulation.models.time.Duration;
@@ -30,11 +28,10 @@ public class BatterieModel extends AtomicHIOAwithEquations {
 	protected double currentProduction;
 	protected EtatUniteProduction currentState;
 	
-	@ImportedVariable(type = Double.class)
-	protected Value<Double> currentSolarIntensity = new Value<Double>(this, 0.0, 0);
+	protected static final double ON_PRODUCTION = 150;
 	
-	protected XYPlotter intensityPlotter;
-	protected EmbeddingComponentStateAccessI componentRef;
+	protected XYPlotter powerPlotter;
+	protected EmbeddingComponentAccessI componentRef;
 	
 	public static class BatterieStateReport extends AbstractSimulationReport {
 		private static final long serialVersionUID = 1L;
@@ -57,18 +54,20 @@ public class BatterieModel extends AtomicHIOAwithEquations {
 
 	@Override
 	public void setSimulationRunParameters(Map<String, Object> simParams) throws Exception {
-		this.componentRef = (EmbeddingComponentStateAccessI) simParams.get(URI + " : " + COMPONENT_REF);
-	
+		
+		this.componentRef = (EmbeddingComponentAccessI) simParams.get(URI + " : " + COMPONENT_REF);
+
 		PlotterDescription pd = (PlotterDescription) simParams.get(URI + " : " + PRODUCTION_PLOTTING_PARAM_NAME);
-		this.intensityPlotter = new XYPlotter(pd);
-		this.intensityPlotter.createSeries(SERIES_PRODUCTION);
+		this.powerPlotter = new XYPlotter(pd);
+		this.powerPlotter.createSeries(SERIES_PRODUCTION);
 	}
 
 	@Override
 	public void initialiseState(Time initialTime) {
+		this.currentProduction = 0.0;
 		this.currentState = EtatUniteProduction.ON;	
-		this.intensityPlotter.initialise();
-		this.intensityPlotter.showPlotter();
+		this.powerPlotter.initialise();
+		this.powerPlotter.showPlotter();
 
 		try {
 			//this.setDebugLevel(1);
@@ -81,13 +80,13 @@ public class BatterieModel extends AtomicHIOAwithEquations {
 
 	@Override
 	protected void initialiseVariables(Time startTime) {
-		this.currentProduction = 0.0;
-		this.intensityPlotter.addData(SERIES_PRODUCTION, this.getCurrentStateTime().getSimulatedTime(), this.getEnergy());
+		
+		this.powerPlotter.addData(SERIES_PRODUCTION, this.getCurrentStateTime().getSimulatedTime(), this.getEnergy());
 		super.initialiseVariables(startTime);
 	}
 
 	@Override
-	public Vector<EventI> output() {
+	public ArrayList<EventI> output() {
 		// the model does not export any event.
 		return null;
 	}
@@ -105,54 +104,28 @@ public class BatterieModel extends AtomicHIOAwithEquations {
 	public void userDefinedInternalTransition(Duration elapsedTime) {
 		if (this.componentRef != null) {
 			try {
+				this.setState((EtatUniteProduction) componentRef.getEmbeddingComponentStateValue(URI + " : state"));
 				this.logMessage("batterie energy = " + componentRef.getEmbeddingComponentStateValue(URI + " : energy"));
 			} catch (Exception e) {
+				e.printStackTrace();
 				throw new RuntimeException(e);
 			}
 		}
 		
-		super.userDefinedInternalTransition(elapsedTime) ;
+		super.userDefinedInternalTransition(elapsedTime);
+		this.powerPlotter.addData(SERIES_PRODUCTION, this.getCurrentStateTime().getSimulatedTime(), this.getEnergy());
 	}
 
 	@Override
 	public void userDefinedExternalTransition(Duration elapsedTime) {
-		
-		Vector<EventI> current = this.getStoredEventAndReset();
-		assert current != null;
-		
-		/*
-		for (int i = 0 ; i < current.size() ; i++) {
-			if (current.get(i) instanceof SolarIntensity) {
-				this.currentSolarIntensity.v = ((SolarIntensity.Reading) 
-											((SolarIntensity) current.get(i)).
-											getEventInformation()).value;
-			}
-		}
-		*/
-		
-		this.intensityPlotter.addData(SERIES_PRODUCTION, this.getCurrentStateTime().getSimulatedTime(), this.getEnergy());
-		
-
-		/** TODO */
-		setState(EtatUniteProduction.ON);
-//		assert current != null && current.size() == 1;
-//		
-//		Event e = (Event) current.get(0);
-//		
-//		this.intensityPlotter.addData(SERIES_INTENSITY, this.getCurrentStateTime().getSimulatedTime(), this.getEnergy());
-//		
-//		e.executeOn(this);
-//		
-//		this.intensityPlotter.addData(SERIES_INTENSITY, this.getCurrentStateTime().getSimulatedTime(), this.getEnergy());
-
-		super.userDefinedExternalTransition(elapsedTime);
+		// No external event imported
 	}
 
 	@Override
 	public void endSimulation(Time endTime) throws Exception {
-		this.intensityPlotter.addData(SERIES_PRODUCTION, endTime.getSimulatedTime(), this.getEnergy());
+		this.powerPlotter.addData(SERIES_PRODUCTION, endTime.getSimulatedTime(), this.getEnergy());
 		Thread.sleep(10000L);
-		this.intensityPlotter.dispose();
+		this.powerPlotter.dispose();
 
 		super.endSimulation(endTime);
 	}
@@ -169,7 +142,7 @@ public class BatterieModel extends AtomicHIOAwithEquations {
 			this.currentProduction = 0.0;
 			break;
 		case ON:
-			this.currentProduction = currentSolarIntensity.v * 20;
+			this.currentProduction = ON_PRODUCTION;
 			break;
 		default:
 			// cannot happen

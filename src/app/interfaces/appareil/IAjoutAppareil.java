@@ -1,5 +1,6 @@
 package app.interfaces.appareil;
 
+import app.util.TypeAppareil;
 import fr.sorbonne_u.components.interfaces.RequiredI;
 
 /**
@@ -14,5 +15,5 @@ public interface IAjoutAppareil extends RequiredI {
 	 * @param uri
 	 * @throws Exception
 	 */
-	public void demandeAjoutControleur(String uri) throws Exception;
+	public void demandeAjoutControleur(String uri, String classe, TypeAppareil type) throws Exception;
 }
