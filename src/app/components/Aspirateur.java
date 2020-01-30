@@ -171,11 +171,6 @@ public class Aspirateur
 			}
 		}, 4000, 1000, TimeUnit.MILLISECONDS);
 		
-		execute();
-	}
-	
-	@Override
-	public void execute() throws Exception {
 		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 10L ;
 
 		HashMap<String,Object> simParams = new HashMap<String,Object>() ;

@@ -153,7 +153,7 @@ public class Supervisor extends AbstractComponent {
 		Thread.sleep(1000L);
 		this.logMessage("supervisor component begins simulation.");
 		long start = System.currentTimeMillis();
-		//this.sp.setSimulationRunParameters(new HashMap<String, Object>());
+		this.sp.setSimulationRunParameters(new HashMap<String, Object>());
 		this.sp.doStandAloneSimulation(0, 50000.0);
 		long end = System.currentTimeMillis();
 		this.logMessage("supervisor component ends simulation. " + (end - start));

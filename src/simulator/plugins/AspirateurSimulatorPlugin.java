@@ -13,7 +13,7 @@ public class AspirateurSimulatorPlugin extends AtomicSimulatorPlugin {
 	
 	@Override
 	public void setSimulationRunParameters(Map<String, Object> simParams) throws Exception {
-		simParams.put(AspirateurModel.URI + " : " + AspirateurModel.COMPONENT_REF, this);
+		simParams.put(AspirateurModel.URI + " : " + AspirateurModel.COMPONENT_REF, this.owner);
 		
 		simParams.put(AspirateurModel.URI + " : " + AspirateurModel.POWER_PLOTTING_PARAM_NAME, new PlotterDescription(
 				"Consommation Aspirateur", 
