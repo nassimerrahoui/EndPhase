@@ -54,13 +54,9 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 
 	@Override
 	public void setSimulationRunParameters(Map<String, Object> simParams) throws Exception {
-		System.out.println("RUN PARAMS ASPI MODEL");
-		
 		this.componentRef = (EmbeddingComponentAccessI) simParams.get(URI + " : " + COMPONENT_REF);
-		System.out.println("REF " + this.componentRef);
 		
 		PlotterDescription pd = (PlotterDescription) simParams.get(URI + " : " + POWER_PLOTTING_PARAM_NAME);
-		System.out.println("PD " + pd);
 		
 		this.powerPlotter = new XYPlotter(pd);
 		this.powerPlotter.createSeries(SERIES_POWER);

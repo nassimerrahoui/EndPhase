@@ -3,7 +3,6 @@ package app.components;
 import java.awt.DisplayMode;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
-import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 import app.CVM;
 import app.interfaces.appareil.IAjoutAppareil;
@@ -173,14 +172,8 @@ public class Aspirateur
 		
 		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 10L ;
 
-		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
-		
-		this.asp.setSimulationRunParameters(simParams) ;
-		try {
-			this.asp.doStandAloneSimulation(0.0, 60000.0) ;
-		} catch (Exception e) {
-			//e.printStackTrace();
-		}
+		//HashMap<String,Object> simParams = new HashMap<String,Object>() ;
+		//this.asp.setSimulationRunParameters(simParams) ;
 		
 		Thread.sleep(10L);
 		

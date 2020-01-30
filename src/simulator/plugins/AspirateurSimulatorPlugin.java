@@ -24,8 +24,6 @@ public class AspirateurSimulatorPlugin extends AtomicSimulatorPlugin {
 		  		Aspirateur.getPlotterWidth(),
 		  		Aspirateur.getPlotterHeight())) ;
 		
-		System.out.println(this.getURI() + "SET RUN PARAMS");
-		
 		super.setSimulationRunParameters(simParams);
 	}
 	

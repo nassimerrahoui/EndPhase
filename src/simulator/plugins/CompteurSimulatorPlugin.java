@@ -20,7 +20,7 @@ public class CompteurSimulatorPlugin extends AtomicSimulatorPlugin {
 				"Time (sec)",
 				"Consommation (W)",
 				Compteur.ORIGIN_X + Compteur.getPlotterWidth(),
-				Compteur.ORIGIN_Y + 5 * Compteur.getPlotterHeight(),
+				Compteur.ORIGIN_Y + 4 * Compteur.getPlotterHeight(),
 		  		Compteur.getPlotterWidth(),
 		  		Compteur.getPlotterHeight())) ;
 		simParams.put(CompteurModel.URI + " : " + CompteurModel.PRODUCTION_PLOTTING_PARAM_NAME, new PlotterDescription(
@@ -28,7 +28,7 @@ public class CompteurSimulatorPlugin extends AtomicSimulatorPlugin {
 				"Time (sec)",
 				"Etat",
 				Compteur.ORIGIN_X + 2 * Compteur.getPlotterWidth(),
-				Compteur.ORIGIN_Y + 5 * Compteur.getPlotterHeight(),
+				Compteur.ORIGIN_Y + 4 * Compteur.getPlotterHeight(),
 		  		Compteur.getPlotterWidth(),
 				Compteur.getPlotterHeight())) ;
 		

@@ -165,15 +165,8 @@ public class Compteur extends AbstractCyPhyComponent implements EmbeddingCompone
 
 		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 10L ;
 		
-		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
-		
-		this.asp.setSimulationRunParameters(simParams) ;
-		try {
-			asp.doStandAloneSimulation(0.0, 60000.0) ;
-		} catch (Exception e) {
-			//e.printStackTrace();
-			throw new RuntimeException(e) ;
-		}
+		//HashMap<String,Object> simParams = new HashMap<String,Object>() ;
+		//this.asp.setSimulationRunParameters(simParams) ;
 		
 		Thread.sleep(10L);
 		

@@ -108,9 +108,11 @@ public class CompteurModel extends AtomicModel {
 		
 		for (int i = 0 ; i < current.size() ; i++) {
 			if(current.get(i) instanceof SendAspirateurConsommation)
+				System.out.println("AVANT " + this.consommation_globale);
 				this.consommation_globale += ((SendAspirateurConsommation.Reading)
 						((SendAspirateurConsommation) current.get(i)).
 						getEventInformation()).value;
+				System.out.println("APRES " + this.consommation_globale);
 		}
 		
 		this.consommationPlotter.addData(SERIES_CONSOMMATION, this.getCurrentStateTime().getSimulatedTime(), this.consommation_globale);
