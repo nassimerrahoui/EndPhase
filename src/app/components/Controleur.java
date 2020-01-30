@@ -33,7 +33,6 @@ import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.cyphy.AbstractCyPhyComponent;
-import fr.sorbonne_u.components.cyphy.plugins.devs.AtomicSimulatorPlugin;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
@@ -43,6 +42,7 @@ import fr.sorbonne_u.devs_simulation.models.architectures.AbstractAtomicModelDes
 import fr.sorbonne_u.devs_simulation.models.architectures.AtomicModelDescriptor;
 import simulator.models.controleur.ControleurModel;
 import simulator.models.controleur.OrderManagerComponentAccessI;
+import simulator.plugins.ControleurSimulatorPlugin;
 
 @OfferedInterfaces(offered = { IControleur.class, IComposantDynamique.class })
 @RequiredInterfaces(required = { 
@@ -67,7 +67,7 @@ public class Controleur extends AbstractCyPhyComponent implements OrderManagerCo
 	protected HashMap<String, String> appareils_className = new HashMap<>();
 	protected int niveauDeControle = 1;
 	
-	protected AtomicSimulatorPlugin	asp ;
+	protected ControleurSimulatorPlugin	asp ;
 
 	protected Controleur(
 			String CONTROLEUR_URI,
@@ -414,7 +414,6 @@ public class Controleur extends AbstractCyPhyComponent implements OrderManagerCo
 		}, 3000, TimeUnit.MILLISECONDS);
 		
 		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
-		simParams.put(ControleurModel.URI + " : " + ControleurModel.COMPONENT_REF, this);
 		
 		this.asp.setSimulationRunParameters(simParams) ;
 		
@@ -495,20 +494,7 @@ public class Controleur extends AbstractCyPhyComponent implements OrderManagerCo
 	 */
 	protected void initialise() throws Exception {
 		Architecture localArchitecture = this.createLocalArchitecture(null);
-		
-		OrderManagerComponentAccessI ref = this;
-		
-		this.asp = new AtomicSimulatorPlugin() {
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void setSimulationRunParameters(Map<String, Object> simParams) throws Exception {
-				simParams.put(ControleurModel.COMPONENT_REF, ref);
-				super.setSimulationRunParameters(simParams);
-				simParams.remove(ControleurModel.COMPONENT_REF);
-			}
-		};
-		
+		this.asp = new ControleurSimulatorPlugin();
 		this.asp.setPluginURI(localArchitecture.getRootModelURI());
 		this.asp.setSimulationArchitecture(localArchitecture);
 		this.installPlugin(this.asp);

@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
-
 import app.CVM;
 import app.interfaces.assembleur.IComposantDynamique;
 import app.interfaces.compteur.ICompteur;
@@ -22,7 +21,6 @@ import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.cyphy.AbstractCyPhyComponent;
 import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentAccessI;
-import fr.sorbonne_u.components.cyphy.plugins.devs.AtomicSimulatorPlugin;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
@@ -40,7 +38,7 @@ public class Compteur extends AbstractCyPhyComponent implements EmbeddingCompone
 
 	protected ConcurrentHashMap<String, Double> appareil_consommation = new ConcurrentHashMap<>();
 	protected ConcurrentHashMap<String, Double> unite_production = new ConcurrentHashMap<>();
-	protected AtomicSimulatorPlugin asp;
+	protected CompteurSimulatorPlugin asp;
 	
 	public static int ORIGIN_X = CVM.plotX ;
 	public static int ORIGIN_Y = CVM.plotY ;
@@ -170,18 +168,12 @@ public class Compteur extends AbstractCyPhyComponent implements EmbeddingCompone
 		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
 		
 		this.asp.setSimulationRunParameters(simParams) ;
-		
-		this.runTask(
-				new AbstractComponent.AbstractTask() {
-					@Override
-					public void run() {
-						try {
-							asp.doStandAloneSimulation(0.0, 60000.0) ;
-						} catch (Exception e) {
-							throw new RuntimeException(e) ;
-						}
-					}
-				});
+		try {
+			asp.doStandAloneSimulation(0.0, 60000.0) ;
+		} catch (Exception e) {
+			//e.printStackTrace();
+			throw new RuntimeException(e) ;
+		}
 		
 		Thread.sleep(10L);
 		

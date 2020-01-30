@@ -106,13 +106,13 @@ public class Supervisor extends AbstractComponent {
 	protected ComponentModelArchitecture createSILArchitecture() throws Exception {
 		Map<String, AbstractAtomicModelDescriptor> atomicModelDescriptors = new HashMap<>();
 
-		// export consommation
+		// export consommation aspirateur
 		atomicModelDescriptors.put(AspirateurCoupledModel.URI,
 				ComponentAtomicModelDescriptor.create(AspirateurCoupledModel.URI,
 						null, (Class<? extends EventI>[]) new Class<?>[] { SendAspirateurConsommation.class }, 
 						TimeUnit.SECONDS,
 						this.modelURIs2componentURIs.get(AspirateurCoupledModel.URI)));
-		// import consommation
+		// import consommation aspirateur
 		atomicModelDescriptors.put(CompteurModel.URI,
 				ComponentAtomicModelDescriptor.create(CompteurModel.URI,
 						(Class<? extends EventI>[]) new Class<?>[] { SendAspirateurConsommation.class }, null,
@@ -153,7 +153,7 @@ public class Supervisor extends AbstractComponent {
 		Thread.sleep(1000L);
 		this.logMessage("supervisor component begins simulation.");
 		long start = System.currentTimeMillis();
-		this.sp.setSimulationRunParameters(new HashMap<String, Object>());
+		//this.sp.setSimulationRunParameters(new HashMap<String, Object>());
 		this.sp.doStandAloneSimulation(0, 50000.0);
 		long end = System.currentTimeMillis();
 		this.logMessage("supervisor component ends simulation. " + (end - start));

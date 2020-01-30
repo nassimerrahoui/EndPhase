@@ -5,7 +5,6 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
-
 import app.CVM;
 import app.interfaces.appareil.IAjoutAppareil;
 import app.interfaces.appareil.IConsommation;
@@ -29,7 +28,6 @@ import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
 import fr.sorbonne_u.devs_simulation.architectures.Architecture;
 import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
-import fr.sorbonne_u.utils.PlotterDescription;
 import simulator.models.aspirateur.AspirateurCoupledModel;
 import simulator.models.aspirateur.AspirateurModel;
 import simulator.plugins.AspirateurSimulatorPlugin;
@@ -181,19 +179,13 @@ public class Aspirateur
 		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 10L ;
 
 		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
-		simParams.put(AspirateurModel.URI + " : " + AspirateurModel.COMPONENT_REF, this);
-		
-		simParams.put(AspirateurModel.URI + " : " + AspirateurModel.POWER_PLOTTING_PARAM_NAME, new PlotterDescription(
-				"Consommation Aspirateur", 
-				"Temps (sec)", 
-				"Consommation (Watt)", 
-				ORIGIN_X - getPlotterWidth(),
-		  		ORIGIN_Y,
-		  		getPlotterWidth(),
-		  		getPlotterHeight())) ;
 		
 		this.asp.setSimulationRunParameters(simParams) ;
-		this.asp.doStandAloneSimulation(0.0, 60000.0) ;
+		try {
+			this.asp.doStandAloneSimulation(0.0, 60000.0) ;
+		} catch (Exception e) {
+			//e.printStackTrace();
+		}
 		
 		Thread.sleep(10L);
 		
