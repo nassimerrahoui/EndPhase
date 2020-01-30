@@ -108,7 +108,8 @@ public class Compteur extends AbstractCyPhyComponent implements EmbeddingCompone
 	}
 
 	/**
-	 * Envoi la consommation globale au controleur
+	 * Envoie la consommation globale des appareils
+	 * au controleur
 	 * @return
 	 * @throws Exception
 	 */
@@ -117,7 +118,8 @@ public class Compteur extends AbstractCyPhyComponent implements EmbeddingCompone
 	}
 
 	/**
-	 * 
+	 * Envoie la production totale des unites de productions
+	 * au controleur
 	 * @return
 	 * @throws Exception
 	 */
@@ -125,24 +127,35 @@ public class Compteur extends AbstractCyPhyComponent implements EmbeddingCompone
 		return unite_production.values().stream().mapToDouble(i -> i).sum();
 	}
 	
+	/**
+	 * Met a jour la consommation electrique d'un appareil
+	 * @param uri
+	 * @param consommation
+	 * @throws Exception
+	 */
 	public void setAppareilConsommation(String uri, double consommation) throws Exception {
 		double c = (double) Math.round(consommation);
 		if(appareil_consommation.containsKey(uri)) {
 			appareil_consommation.put(uri, c);
-			//this.logMessage(uri + " consomme " + c + " Watt.");
-			//this.logMessage("...");
 		}
 	}
 
+	/**
+	 * Met a jour la production electrique d'une unite de production
+	 * @param uri
+	 * @param production
+	 * @throws Exception
+	 */
 	public void setUniteProduction(String uri, double production) throws Exception {
 		double p = (double) Math.round(production);
 		if(unite_production.containsKey(uri)) {
 			unite_production.put(uri, p);
-			//this.logMessage(uri + " produit " + p + " Watt.");
-			//this.logMessage("...");
 		}
 	}
 	
+	/**
+	 * Met a jour la consommation/production electrique globale
+	 */
 	public void updateConsommationAndProduction() {
 		consommation_globale = appareil_consommation.values().stream().mapToDouble(i -> i).sum();
 		production_globale = unite_production.values().stream().mapToDouble(i -> i).sum();

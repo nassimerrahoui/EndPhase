@@ -4,7 +4,7 @@ import app.util.ModeFrigo;
 import fr.sorbonne_u.components.interfaces.RequiredI;
 
 /**
- * Interface requise pour que le controleur envoi une ou plusieurs actions au frigo
+ * Interface requise pour que le controleur envoie une ou plusieurs actions au frigo
  * 
  * @author Willy Nassim
  *

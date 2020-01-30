@@ -135,6 +135,11 @@ public class BatterieModel extends AtomicHIOAwithEquations {
 		return new BatterieStateReport(this.getURI());
 	}
 
+	/**
+	 * Change l'etat de la batterie en mettant
+	 * a jour la production electrique
+	 * @param s
+	 */
 	public void setState(EtatUniteProduction s) {
 		this.currentState = s;
 		switch (s) {

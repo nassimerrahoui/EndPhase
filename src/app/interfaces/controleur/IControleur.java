@@ -4,7 +4,7 @@ import app.util.TypeAppareil;
 import fr.sorbonne_u.components.interfaces.OfferedI;
 
 /**
- * Offre une interface pour que les appareils s'ajoute au systeme.
+ * Offre une interface pour que les appareils s'ajoutent au systeme.
  * 
  * @author Willy Nassim
  *

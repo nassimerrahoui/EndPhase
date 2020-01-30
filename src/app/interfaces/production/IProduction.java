@@ -10,7 +10,7 @@ import fr.sorbonne_u.components.interfaces.RequiredI;
 public interface IProduction extends RequiredI {
 	
 	/**
-	 * Envoi la production electrique d'une unite de production au compteur
+	 * Envoie la production electrique d'une unite de production au compteur
 	 * @return
 	 * @throws Exception
 	 */

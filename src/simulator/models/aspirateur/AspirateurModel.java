@@ -130,7 +130,6 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 			assert	this.componentRef != null ;
 			ModeAspirateur m = (ModeAspirateur) this.componentRef.getEmbeddingComponentStateValue(AspirateurModel.URI + " : state");
 			if (m != this.lastState) {
-				System.out.println("SWITCH " + lastState + " : " + m);
 				switch(m)
 				{
 					case OFF : this.setState(ModeAspirateur.OFF) ; break ;
@@ -139,7 +138,6 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 				}
 				this.consumptionHasChanged = true ;
 				this.lastState = m ;
-				System.out.println("FIN SWITCH");
 			}
 			
 			//this.powerPlotter.addData(SERIES_POWER, this.getCurrentStateTime().getSimulatedTime(), this.getConsommation());
@@ -164,6 +162,11 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 		super.endSimulation(endTime);
 	}
 	
+	/**
+	 * Modifie l'etat de l'aspirateur 
+	 * en mettant a jour sa consommation electrique
+	 * @param s
+	 */
 	public void setState(ModeAspirateur s) {
 		this.currentState = s;
 		switch (s) {

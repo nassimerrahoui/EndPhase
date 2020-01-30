@@ -239,6 +239,9 @@ public class Controleur extends AbstractCyPhyComponent implements OrderManagerCo
 	 * @throws Exception
 	 */
 	public void ajouterAppareil(String uri, String className, TypeAppareil type) throws Exception {
+		assert className != null;
+		assert type != null;
+		
 		this.appareils_priority.put(uri, type);
 		this.appareils_className.put(uri, className);
 		this.compteur_OUTPORT.demanderAjoutAppareil(uri);
@@ -262,7 +265,13 @@ public class Controleur extends AbstractCyPhyComponent implements OrderManagerCo
 	}
 	
 	/**
-	 * Gerer et afficher ce qui se passe pendant l'execution du controleur
+	 * Les decisions du controleur
+	 * Gere et affiche ce qui se passe pendant l'execution du controleur
+	 * 
+	 * Si la consommation electrique est plus elevee que la production electrique,
+	 * le controleur va chercher a eteindre les appareils selon une priorite definie
+	 * par le type des appareils
+	 * 
 	 * @throws Exception 
 	 */
 	public void runningAndPrint() throws Exception {
@@ -272,7 +281,6 @@ public class Controleur extends AbstractCyPhyComponent implements OrderManagerCo
 		double production = getProductionGlobale();
 		
 		if(consommation > production) {
-			/** actions */
 			ArrayList<String> uris = new ArrayList<>();
 			
 			switch(niveauDeControle) {

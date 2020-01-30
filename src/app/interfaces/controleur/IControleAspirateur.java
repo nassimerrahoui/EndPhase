@@ -4,7 +4,7 @@ import app.util.ModeAspirateur;
 import fr.sorbonne_u.components.interfaces.RequiredI;
 
 /**
- * Interface requise pour que le controleur envoi une ou plusieurs actions a l'aspirateur.
+ * Interface requise pour que le controleur envoie une ou plusieurs actions a l'aspirateur.
  * 
  * @author Willy Nassim
  *

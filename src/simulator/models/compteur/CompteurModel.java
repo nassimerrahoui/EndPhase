@@ -141,22 +141,5 @@ public class CompteurModel extends AtomicModel {
 		return this.production_globale;
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 }
