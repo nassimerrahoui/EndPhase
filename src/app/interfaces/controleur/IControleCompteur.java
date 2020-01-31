@@ -4,7 +4,7 @@ import fr.sorbonne_u.components.interfaces.RequiredI;
 
 /**
  * Interface requise pour recuperer les consommations et productions globales du systeme
- * et permettre l'ajout d'appareil sur le compteur
+ * et permettre l'ajout d'appareils sur le compteur
  * 
  * @author Willy Nassim
  */
@@ -25,7 +25,7 @@ public interface IControleCompteur extends RequiredI {
 	public void demanderAjoutUniteProduction(String uri) throws Exception;
 	
 	/**
-	 * Permet de récupérer la consommation totale des appareils depuis le compteur
+	 * Permet de recuperer la consommation totale des appareils depuis le compteur
 	 * requiert un compteur
 	 * @return
 	 * @throws Exception
@@ -33,7 +33,7 @@ public interface IControleCompteur extends RequiredI {
 	public double getConsommationGlobale() throws Exception;
 	
 	/**
-	 * Permet de récuperer la production totale des unités de production depuis le compteur
+	 * Permet de recuperer la production totale des unites de production depuis le compteur
 	 * requiert un compteur
 	 * @return
 	 * @throws Exception

@@ -28,7 +28,6 @@ import fr.sorbonne_u.devs_simulation.architectures.Architecture;
 import fr.sorbonne_u.devs_simulation.architectures.SimulationEngineCreationMode;
 import fr.sorbonne_u.devs_simulation.models.architectures.AbstractAtomicModelDescriptor;
 import fr.sorbonne_u.devs_simulation.models.architectures.AtomicModelDescriptor;
-import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
 import simulator.models.compteur.CompteurModel;
 import simulator.plugins.CompteurSimulatorPlugin;
 
@@ -108,7 +107,8 @@ public class Compteur extends AbstractCyPhyComponent implements EmbeddingCompone
 	}
 
 	/**
-	 * Envoi la consommation globale au controleur
+	 * Envoie la consommation globale des appareils
+	 * au controleur
 	 * @return
 	 * @throws Exception
 	 */
@@ -117,7 +117,8 @@ public class Compteur extends AbstractCyPhyComponent implements EmbeddingCompone
 	}
 
 	/**
-	 * 
+	 * Envoie la production totale des unites de productions
+	 * au controleur
 	 * @return
 	 * @throws Exception
 	 */
@@ -125,24 +126,37 @@ public class Compteur extends AbstractCyPhyComponent implements EmbeddingCompone
 		return unite_production.values().stream().mapToDouble(i -> i).sum();
 	}
 	
+	/**
+	 * Met a jour la consommation electrique d'un appareil
+	 * si nous voulous utiliser une communication par ports pour la consommation
+	 * @param uri
+	 * @param consommation
+	 * @throws Exception
+	 */
 	public void setAppareilConsommation(String uri, double consommation) throws Exception {
 		double c = (double) Math.round(consommation);
 		if(appareil_consommation.containsKey(uri)) {
 			appareil_consommation.put(uri, c);
-			//this.logMessage(uri + " consomme " + c + " Watt.");
-			//this.logMessage("...");
 		}
 	}
 
+	/**
+	 * Met a jour la production electrique d'une unite de production
+	 * si nous voulous utiliser une communication par ports pour la production
+	 * @param uri
+	 * @param production
+	 * @throws Exception
+	 */
 	public void setUniteProduction(String uri, double production) throws Exception {
 		double p = (double) Math.round(production);
 		if(unite_production.containsKey(uri)) {
 			unite_production.put(uri, p);
-			//this.logMessage(uri + " produit " + p + " Watt.");
-			//this.logMessage("...");
 		}
 	}
 	
+	/**
+	 * Met a jour la consommation/production electrique globale
+	 */
 	public void updateConsommationAndProduction() {
 		consommation_globale = appareil_consommation.values().stream().mapToDouble(i -> i).sum();
 		production_globale = unite_production.values().stream().mapToDouble(i -> i).sum();
@@ -162,28 +176,22 @@ public class Compteur extends AbstractCyPhyComponent implements EmbeddingCompone
 	 * @throws Exception
 	 */
 	public void dynamicExecute() throws Exception {
-
-		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 10L ;
-		
-		//HashMap<String,Object> simParams = new HashMap<String,Object>() ;
-		//this.asp.setSimulationRunParameters(simParams) ;
-		
 		Thread.sleep(10L);
 		
 		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
 			@Override
 			public void run() {
 				try {
-					//((Compteur) this.getTaskOwner()).consommation_globale = (double) ((Compteur) this.getTaskOwner()).asp.getModelStateValue(CompteurModel.URI, "consommation");
-					//((Compteur) this.getTaskOwner()).production_globale = (double) ((Compteur) this.getTaskOwner()).asp.getModelStateValue(CompteurModel.URI, "production");
 					updateConsommationAndProduction();
+					
+					/** TODO get model state value pour consommation et production depuis le compteur */
 					
 					((Compteur) this.getTaskOwner()).logMessage("Consommation globale : " + Math.round(consommation_globale));
 					((Compteur) this.getTaskOwner()).logMessage("Production globale : " + Math.round(production_globale));
 					Thread.sleep(10L);
 				} catch (Exception e) { e.printStackTrace(); }
 			}
-		}, 2500, 1000, TimeUnit.MILLISECONDS);
+		}, 1000, 1000, TimeUnit.MILLISECONDS);
 		
 		execute();
 	}

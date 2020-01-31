@@ -10,7 +10,7 @@ import fr.sorbonne_u.components.interfaces.RequiredI;
 public interface IConsommation extends RequiredI {
 	
 	/**
-	 * Envoi la consommation electrique d'un appareil au compteur
+	 * Envoie la consommation electrique d'un appareil au compteur
 	 * @return
 	 * @throws Exception
 	 */

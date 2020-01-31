@@ -3,9 +3,7 @@ package app.components;
 import java.awt.DisplayMode;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
-import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
-
 import app.CVM;
 import app.interfaces.appareil.IAjoutAppareil;
 import app.interfaces.appareil.IConsommation;
@@ -28,8 +26,6 @@ import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
 import fr.sorbonne_u.devs_simulation.architectures.Architecture;
-import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
-import fr.sorbonne_u.utils.PlotterDescription;
 import simulator.models.frigo.FrigoCoupledModel;
 import simulator.models.frigo.FrigoModel;
 import simulator.plugins.FrigoSimulatorPlugin;
@@ -202,50 +198,7 @@ public class Frigo
 	}
 	
 	@Override
-	public void execute() throws Exception {
-		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 10L ;
-		
-		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
-		simParams.put(FrigoModel.URI + " : " + FrigoModel.COMPONENT_REF, this);
-		simParams.put(FrigoModel.URI + " : " + FrigoModel.POWER_PLOTTING_PARAM_NAME, new PlotterDescription(
-				"Frigo Model - Consommation",
-				"Time (sec)",
-				"Consommation (W)",
-				ORIGIN_X + getPlotterWidth(),
-		  		ORIGIN_Y,
-		  		getPlotterWidth(),
-		  		getPlotterHeight())) ;
-		simParams.put(FrigoModel.URI + " : " + FrigoModel.STATE_PLOTTING_PARAM_NAME, new PlotterDescription(
-				"Frigo Model - Etat",
-				"Time (sec)",
-				"Etat",
-				ORIGIN_X + 2 * getPlotterWidth(),
-		  		ORIGIN_Y,
-				getPlotterWidth(),
-				getPlotterHeight())) ;
-		simParams.put(FrigoModel.URI + " : " + FrigoModel.TEMPERATURE_PLOTTING_PARAM_NAME, new PlotterDescription(
-				"Frigo Model - Temperature",
-				"Time (sec)",
-				"Temperature (�C)",
-				ORIGIN_X + 2 * getPlotterWidth(),
-		  		ORIGIN_Y + getPlotterHeight(),
-		  		getPlotterWidth(),
-		  		getPlotterHeight())) ;
-		
-		this.asp.setSimulationRunParameters(simParams) ;
-		
-		this.runTask(
-				new AbstractComponent.AbstractTask() {
-					@Override
-					public void run() {
-						try {
-							asp.doStandAloneSimulation(0.0, 60000.0) ;
-						} catch (Exception e) {
-							throw new RuntimeException(e) ;
-						}
-					}
-				});
-		
+	public void execute() throws Exception {		
 		Thread.sleep(10L);
 		
 		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {

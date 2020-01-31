@@ -52,6 +52,12 @@ public class AspirateurCoupledModel extends CoupledModel {
 		return ret;
 	}
 
+	/**
+	 * Construit l'architecture de l'aspirateur en mettant 
+	 * en lien le modele de l'user et le modele de l'aspirateur
+	 * @return
+	 * @throws Exception
+	 */
 	public static Architecture build() throws Exception {
 		Map<String, AbstractAtomicModelDescriptor> atomicModelDescriptors = new HashMap<>();
 

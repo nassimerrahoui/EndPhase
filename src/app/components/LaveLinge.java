@@ -42,7 +42,7 @@ public class LaveLinge
 	extends AbstractCyPhyComponent 
 	implements EmbeddingComponentAccessI {
 
-	/** port sortant permettant a l'appareil de s'inscrire sur la liste des appareil du controleur */
+	/** port sortant permettant a l'appareil de s'inscrire sur la liste des apparails du controleur */
 	protected LaveLingeControleurOutPort controleur_OUTPORT;
 	
 	/** port sortant permettant au compteur de recupere la consommation du lave-linge */
@@ -65,7 +65,6 @@ public class LaveLinge
 	
 	protected LaveLingeSimulatorPlugin asp;
 	
-	/** TODO */
 	public static int ORIGIN_X = CVM.plotX;
 	public static int ORIGIN_Y = CVM.plotY;
 

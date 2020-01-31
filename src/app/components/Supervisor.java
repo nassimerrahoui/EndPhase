@@ -22,8 +22,10 @@ import fr.sorbonne_u.devs_simulation.models.events.EventI;
 import fr.sorbonne_u.devs_simulation.models.events.EventSink;
 import fr.sorbonne_u.devs_simulation.models.events.EventSource;
 import simulator.events.aspirateur.SendAspirateurConsommation;
+import simulator.events.frigo.SendFrigoConsommation;
 import simulator.models.aspirateur.AspirateurCoupledModel;
 import simulator.models.compteur.CompteurModel;
+import simulator.models.frigo.FrigoCoupledModel;
 import simulator.models.supervisor.SupervisorCoupledModel;
 
 /** Supervise l'architecture globale des modeles et les echanges d'evenements */
@@ -106,27 +108,39 @@ public class Supervisor extends AbstractComponent {
 	protected ComponentModelArchitecture createSILArchitecture() throws Exception {
 		Map<String, AbstractAtomicModelDescriptor> atomicModelDescriptors = new HashMap<>();
 
+		// import consommation/production du compteur
+		atomicModelDescriptors.put(CompteurModel.URI,
+				ComponentAtomicModelDescriptor.create(CompteurModel.URI,
+						(Class<? extends EventI>[]) new Class<?>[] { 
+							SendAspirateurConsommation.class,
+							SendFrigoConsommation.class}, 
+						null,
+						TimeUnit.SECONDS, this.modelURIs2componentURIs.get(CompteurModel.URI)));
 		// export consommation aspirateur
 		atomicModelDescriptors.put(AspirateurCoupledModel.URI,
 				ComponentAtomicModelDescriptor.create(AspirateurCoupledModel.URI,
 						null, (Class<? extends EventI>[]) new Class<?>[] { SendAspirateurConsommation.class }, 
 						TimeUnit.SECONDS,
 						this.modelURIs2componentURIs.get(AspirateurCoupledModel.URI)));
-		// import consommation aspirateur
-		atomicModelDescriptors.put(CompteurModel.URI,
-				ComponentAtomicModelDescriptor.create(CompteurModel.URI,
-						(Class<? extends EventI>[]) new Class<?>[] { SendAspirateurConsommation.class }, null,
-						TimeUnit.SECONDS, this.modelURIs2componentURIs.get(CompteurModel.URI)));
+		// export consommation frigo
+		atomicModelDescriptors.put(FrigoCoupledModel.URI,
+				ComponentAtomicModelDescriptor.create(FrigoCoupledModel.URI,
+						null, (Class<? extends EventI>[]) new Class<?>[] { SendFrigoConsommation.class }, 
+						TimeUnit.SECONDS,
+						this.modelURIs2componentURIs.get(FrigoCoupledModel.URI)));
 		
 		Map<String, CoupledModelDescriptor> coupledModelDescriptors = new HashMap<>();
 
 		Set<String> submodels = new HashSet<String>();
-		submodels.add(AspirateurCoupledModel.URI);
 		submodels.add(CompteurModel.URI);
+		submodels.add(AspirateurCoupledModel.URI);
+		submodels.add(FrigoCoupledModel.URI);
 
 		Map<EventSource, EventSink[]> connections = new HashMap<EventSource, EventSink[]>();
 		connections.put(new EventSource(AspirateurCoupledModel.URI, SendAspirateurConsommation.class),
 				new EventSink[] { new EventSink(CompteurModel.URI, SendAspirateurConsommation.class) });
+		connections.put(new EventSource(FrigoCoupledModel.URI, SendFrigoConsommation.class),
+				new EventSink[] { new EventSink(CompteurModel.URI, SendFrigoConsommation.class) });
 
 		coupledModelDescriptors.put(SupervisorCoupledModel.URI,
 				ComponentCoupledModelDescriptor.create(
