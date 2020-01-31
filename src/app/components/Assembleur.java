@@ -37,6 +37,7 @@ import fr.sorbonne_u.components.reflection.connectors.ReflectionConnector;
 import fr.sorbonne_u.components.reflection.interfaces.ReflectionI;
 import fr.sorbonne_u.components.reflection.ports.ReflectionOutboundPort;
 import simulator.models.aspirateur.AspirateurCoupledModel;
+import simulator.models.batterie.BatterieModel;
 import simulator.models.compteur.CompteurModel;
 import simulator.models.frigo.FrigoCoupledModel;
 import simulator.models.lavelinge.LaveLingeCoupledModel;
@@ -208,6 +209,8 @@ public class Assembleur extends AbstractComponent {
 						Integer.valueOf(8),
 						Integer.valueOf(8)});
 
+		hm.put(BatterieModel.URI, LISTE_REFLECTION_INPORT[5]);
+		
 		i++;
 		DynamicOutPort.doDisconnection();
 		

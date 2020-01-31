@@ -22,6 +22,7 @@ import fr.sorbonne_u.devs_simulation.models.events.EventSource;
 import fr.sorbonne_u.devs_simulation.models.events.ReexportedEvent;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import fr.sorbonne_u.devs_simulation.utils.StandardCoupledModelReport;
+import simulator.events.panneausolaire.SendPanneauSolaireProduction;
 import simulator.events.panneausolaire.SolarIntensity;
 import simulator.tic.TicEvent;
 import simulator.tic.TicModel;
@@ -72,6 +73,10 @@ public class PanneauSolaireCoupledModel extends CoupledModel {
 		submodels.add(TicModel.URI);
 		submodels.add(PanneauSolaireSensorModel.URI);
 		submodels.add(PanneauSolaireModel.URI);
+		
+		Map<Class<? extends EventI>,ReexportedEvent> reexported =
+				new HashMap<Class<? extends EventI>,ReexportedEvent>() ;
+		reexported.put(SendPanneauSolaireProduction.class, new ReexportedEvent(PanneauSolaireModel .URI, SendPanneauSolaireProduction.class)) ;
 
 		Map<EventSource, EventSink[]> connections = new HashMap<EventSource, EventSink[]>();
 		EventSource from2 = new EventSource(TicModel.URI, TicEvent.class);
@@ -83,7 +88,7 @@ public class PanneauSolaireCoupledModel extends CoupledModel {
 
 		coupledModelDescriptors.put(PanneauSolaireCoupledModel.URI,
 				new CoupledHIOA_Descriptor(PanneauSolaireCoupledModel.class, PanneauSolaireCoupledModel.URI, submodels,
-						null, null, connections, null, SimulationEngineCreationMode.COORDINATION_ENGINE, null, null,
+						null, reexported, connections, null, SimulationEngineCreationMode.COORDINATION_ENGINE, null, null,
 						null));
 
 		return new Architecture(PanneauSolaireCoupledModel.URI, atomicModelDescriptors, coupledModelDescriptors,

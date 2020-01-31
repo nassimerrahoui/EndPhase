@@ -22,10 +22,14 @@ import fr.sorbonne_u.devs_simulation.models.events.EventI;
 import fr.sorbonne_u.devs_simulation.models.events.EventSink;
 import fr.sorbonne_u.devs_simulation.models.events.EventSource;
 import simulator.events.aspirateur.SendAspirateurConsommation;
+import simulator.events.batterie.SendBatterieProduction;
 import simulator.events.frigo.SendFrigoConsommation;
+import simulator.events.panneausolaire.SendPanneauSolaireProduction;
 import simulator.models.aspirateur.AspirateurCoupledModel;
+import simulator.models.batterie.BatterieModel;
 import simulator.models.compteur.CompteurModel;
 import simulator.models.frigo.FrigoCoupledModel;
+import simulator.models.panneausolaire.PanneauSolaireCoupledModel;
 import simulator.models.supervisor.SupervisorCoupledModel;
 
 /** Supervise l'architecture globale des modeles et les echanges d'evenements */
@@ -128,6 +132,17 @@ public class Supervisor extends AbstractComponent {
 						null, (Class<? extends EventI>[]) new Class<?>[] { SendFrigoConsommation.class }, 
 						TimeUnit.SECONDS,
 						this.modelURIs2componentURIs.get(FrigoCoupledModel.URI)));
+		// export production batteire
+		atomicModelDescriptors.put(BatterieModel.URI,
+				ComponentAtomicModelDescriptor.create(BatterieModel.URI, null,
+						(Class<? extends EventI>[]) new Class<?>[] { SendBatterieProduction.class }, TimeUnit.SECONDS,
+						this.modelURIs2componentURIs.get(BatterieModel.URI)));
+		// export production panneau solaire
+		atomicModelDescriptors.put(PanneauSolaireCoupledModel.URI,
+				ComponentAtomicModelDescriptor.create(PanneauSolaireCoupledModel.URI, null,
+						(Class<? extends EventI>[]) new Class<?>[] { SendPanneauSolaireProduction.class }, TimeUnit.SECONDS,
+						this.modelURIs2componentURIs.get(PanneauSolaireCoupledModel.URI)));
+		
 		
 		Map<String, CoupledModelDescriptor> coupledModelDescriptors = new HashMap<>();
 
@@ -135,12 +150,18 @@ public class Supervisor extends AbstractComponent {
 		submodels.add(CompteurModel.URI);
 		submodels.add(AspirateurCoupledModel.URI);
 		submodels.add(FrigoCoupledModel.URI);
+		submodels.add(BatterieModel.URI);
+		submodels.add(PanneauSolaireCoupledModel.URI);
 
 		Map<EventSource, EventSink[]> connections = new HashMap<EventSource, EventSink[]>();
 		connections.put(new EventSource(AspirateurCoupledModel.URI, SendAspirateurConsommation.class),
 				new EventSink[] { new EventSink(CompteurModel.URI, SendAspirateurConsommation.class) });
 		connections.put(new EventSource(FrigoCoupledModel.URI, SendFrigoConsommation.class),
 				new EventSink[] { new EventSink(CompteurModel.URI, SendFrigoConsommation.class) });
+		connections.put(new EventSource(BatterieModel.URI, SendBatterieProduction.class),
+				new EventSink[] { new EventSink(CompteurModel.URI, SendBatterieProduction.class) });
+		connections.put(new EventSource(PanneauSolaireCoupledModel.URI, SendPanneauSolaireProduction.class),
+				new EventSink[] { new EventSink(CompteurModel.URI, SendPanneauSolaireProduction.class) });
 
 		coupledModelDescriptors.put(SupervisorCoupledModel.URI,
 				ComponentCoupledModelDescriptor.create(
@@ -161,9 +182,9 @@ public class Supervisor extends AbstractComponent {
 
 	public void dynamicExecute() throws Exception {
 		super.execute();
-
+			
 		this.logMessage("supervisor component begins execution.");
-		this.sp.createSimulator();		
+		this.sp.createSimulator();
 		Thread.sleep(1000L);
 		this.logMessage("supervisor component begins simulation.");
 		long start = System.currentTimeMillis();
@@ -172,5 +193,6 @@ public class Supervisor extends AbstractComponent {
 		long end = System.currentTimeMillis();
 		this.logMessage("supervisor component ends simulation. " + (end - start));
 		Thread.sleep(1000);
+		
 	}
 }

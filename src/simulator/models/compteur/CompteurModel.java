@@ -15,12 +15,17 @@ import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
 import fr.sorbonne_u.utils.PlotterDescription;
 import fr.sorbonne_u.utils.XYPlotter;
 import simulator.events.aspirateur.SendAspirateurConsommation;
+import simulator.events.batterie.SendBatterieProduction;
 import simulator.events.frigo.SendFrigoConsommation;
+import simulator.events.panneausolaire.SendPanneauSolaireProduction;
 
 @ModelExternalEvents(
 		imported = {
 				SendAspirateurConsommation.class,
-				SendFrigoConsommation.class })
+				SendFrigoConsommation.class,
+				SendBatterieProduction.class,
+				SendPanneauSolaireProduction.class})
+
 public class CompteurModel extends AtomicModel {
 
 	private static final long serialVersionUID = 1L;
@@ -116,8 +121,8 @@ public class CompteurModel extends AtomicModel {
 		super.userDefinedExternalTransition(elapsedTime);
 		ArrayList<EventI> current = this.getStoredEventAndReset();
 		
-		// ici, la consommation/production est stocke par type d'appareil (resp. type d'unite de production)
-		// il faudrait utiliser l'uri comme cle pour avoir plusieurs appareils/unite de production du meme type
+		// ici, la consommation/production est stockee par type d'appareil (resp. type d'unite de production)
+		// il faudrait utiliser l'uri comme cle pour avoir plusieurs appareils/uniteS de production du meme type
 		// nous avons simplifie volontairement les maps de stockage de consommation/production pour l'exemple
 		for (int i = 0 ; i < current.size() ; i++) {
 			if(current.get(i) instanceof SendAspirateurConsommation) {
@@ -130,6 +135,16 @@ public class CompteurModel extends AtomicModel {
 						((SendFrigoConsommation) current.get(i)).
 						getEventInformation()).value;
 				appareil_consommation.put(SendFrigoConsommation.class.getName(), conso);
+			} else if(current.get(i) instanceof SendBatterieProduction) {
+				double production = ((SendBatterieProduction.Reading)
+						((SendBatterieProduction) current.get(i)).
+						getEventInformation()).value;
+				unite_production.put(SendBatterieProduction.class.getName(), production);
+			} else if(current.get(i) instanceof SendPanneauSolaireProduction) {
+				double production = ((SendPanneauSolaireProduction.Reading)
+						((SendPanneauSolaireProduction) current.get(i)).
+						getEventInformation()).value;
+				unite_production.put(SendPanneauSolaireProduction.class.getName(), production);
 			}
 		}
 		
@@ -176,6 +191,7 @@ public class CompteurModel extends AtomicModel {
 	 */
 	public double getProductionGlobale() throws Exception {
 		double res = unite_production.values().stream().mapToDouble(i -> i).sum();
+		System.out.println(unite_production.values());
 		if(res > 0.0) return res;
 		else return 0.0;
 	}

@@ -26,7 +26,6 @@ import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
 import fr.sorbonne_u.devs_simulation.architectures.Architecture;
-import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
 import simulator.models.aspirateur.AspirateurCoupledModel;
 import simulator.models.aspirateur.AspirateurModel;
 import simulator.plugins.AspirateurSimulatorPlugin;
@@ -169,11 +168,6 @@ public class Aspirateur
 				catch (Exception e) { throw new RuntimeException(e); }
 			}
 		}, 4000, 1000, TimeUnit.MILLISECONDS);
-		
-		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 10L ;
-
-		//HashMap<String,Object> simParams = new HashMap<String,Object>() ;
-		//this.asp.setSimulationRunParameters(simParams) ;
 		
 		Thread.sleep(10L);
 		

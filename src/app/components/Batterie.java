@@ -31,8 +31,6 @@ import fr.sorbonne_u.devs_simulation.architectures.Architecture;
 import fr.sorbonne_u.devs_simulation.architectures.SimulationEngineCreationMode;
 import fr.sorbonne_u.devs_simulation.hioa.architectures.AtomicHIOA_Descriptor;
 import fr.sorbonne_u.devs_simulation.models.architectures.AbstractAtomicModelDescriptor;
-import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
-import fr.sorbonne_u.utils.PlotterDescription;
 import simulator.models.batterie.BatterieModel;
 import simulator.plugins.BatterieSimulatorPlugin;
 
@@ -150,35 +148,6 @@ public class Batterie extends AbstractCyPhyComponent implements EmbeddingCompone
 			}
 		}, 2000, 1000, TimeUnit.MILLISECONDS);
 		
-		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
-		
-		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 10L ;
-		
-		simParams.put(BatterieModel.URI + " : " + BatterieModel.COMPONENT_REF, this);
-		
-		simParams.put(BatterieModel.URI + " : " + BatterieModel.PRODUCTION_PLOTTING_PARAM_NAME, new PlotterDescription(
-				"Production Batterie", 
-				"Temps (sec)", 
-				"Production (Watt)", 
-				Batterie.ORIGIN_X + Batterie.getPlotterWidth(),
-				Batterie.ORIGIN_Y + 2 * Batterie.getPlotterHeight(),
-				Batterie.getPlotterWidth(),
-				Batterie.getPlotterHeight())) ;
-		
-		
-		this.asp.setSimulationRunParameters(simParams) ;
-		
-		this.runTask(
-				new AbstractComponent.AbstractTask() {
-					@Override
-					public void run() {
-						try {
-							asp.doStandAloneSimulation(0.0, 60000.0) ;
-						} catch (Exception e) {
-							throw new RuntimeException(e) ;
-						}
-					}
-		});
 		
 		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
 			@Override
