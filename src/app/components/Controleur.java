@@ -275,7 +275,6 @@ public class Controleur extends AbstractCyPhyComponent implements OrderManagerCo
 	 * @throws Exception 
 	 */
 	public void runningAndPrint() throws Exception {
-		this.logMessage("Decisions controleur...");
 		
 		double consommation = getConsommationGlobale();
 		double production = getProductionGlobale();
@@ -337,15 +336,14 @@ public class Controleur extends AbstractCyPhyComponent implements OrderManagerCo
 					break;
 			}
 			
-			niveauDeControle++;	
+			if(niveauDeControle < 3)
+				niveauDeControle++;	
 			
 			this.logMessage("Nouvelle decision : " + niveauDeControle);
 			
 		} else {
 			niveauDeControle = 1;
 		}
-		
-		this.logMessage("...");
 	}
 	
 	// ************* Cycle de vie du composant ************* 
@@ -365,11 +363,6 @@ public class Controleur extends AbstractCyPhyComponent implements OrderManagerCo
 		this.logMessage("Phase d'execution du controleur.");
 		
 		this.logMessage("Execution en cours...");
-		
-		/** TODO Traitement global deliberatif ??? 
-		 * en utilisant des synthese (historique, donnees)
-		 * donnees -> etat -> planification
-		 * */
 		
 		this.scheduleTask(new AbstractComponent.AbstractTask() {
 			@Override
@@ -404,7 +397,7 @@ public class Controleur extends AbstractCyPhyComponent implements OrderManagerCo
 			}
 		}, 3000, TimeUnit.MILLISECONDS);
 		
-		this.scheduleTask(new AbstractComponent.AbstractTask() {
+		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
 			@Override
 			public void run() {
 				try {
@@ -419,23 +412,14 @@ public class Controleur extends AbstractCyPhyComponent implements OrderManagerCo
 				}
 				catch (Exception e) { throw new RuntimeException(e); }
 			}
-		}, 3000, TimeUnit.MILLISECONDS);
+		}, 20000, 1000, TimeUnit.MILLISECONDS);
 		
-		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
+		HashMap<String, Object> simParams = new HashMap<String, Object>();
+		simParams.put(ControleurModel.URI + " : " + ControleurModel.COMPONENT_REF, this);
 		
-		this.asp.setSimulationRunParameters(simParams) ;
+		this.asp.setSimulationRunParameters(simParams);
 		
-		this.runTask(
-				new AbstractComponent.AbstractTask() {
-					@Override
-					public void run() {
-						try {
-							asp.doStandAloneSimulation(0.0, 60000.0) ;
-						} catch (Exception e) {
-							throw new RuntimeException(e) ;
-						}
-					}
-				});
+		this.asp.doStandAloneSimulation(0.0, 60000.0) ;
 	}
 	
 	@Override

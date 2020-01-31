@@ -48,7 +48,7 @@ public class BatterieModel extends AtomicHIOAwithEquations {
 	protected Value<Double> currentProduction = new Value<Double>(this, 0.0, 0); // Watts
 	protected EtatUniteProduction currentState;
 	
-	protected static final double ON_PRODUCTION = 150;
+	protected static final double ON_PRODUCTION = 500;
 	
 	protected XYPlotter powerPlotter;
 	protected EmbeddingComponentAccessI componentRef;

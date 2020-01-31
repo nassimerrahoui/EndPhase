@@ -192,7 +192,6 @@ public class Supervisor extends AbstractComponent {
 
 	public void dynamicExecute() throws Exception {
 		super.execute();
-		try {
 		this.logMessage("supervisor component begins execution.");
 		this.sp.createSimulator();
 		Thread.sleep(1000L);
@@ -203,9 +202,6 @@ public class Supervisor extends AbstractComponent {
 		long end = System.currentTimeMillis();
 		this.logMessage("supervisor component ends simulation. " + (end - start));
 		Thread.sleep(1000);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 		
 	}
 }

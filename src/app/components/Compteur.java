@@ -154,14 +154,6 @@ public class Compteur extends AbstractCyPhyComponent implements EmbeddingCompone
 		}
 	}
 	
-	/**
-	 * Met a jour la consommation/production electrique globale
-	 */
-	public void updateConsommationAndProduction() {
-		consommation_globale = appareil_consommation.values().stream().mapToDouble(i -> i).sum();
-		production_globale = unite_production.values().stream().mapToDouble(i -> i).sum();
-	}
-	
 	// ************* Cycle de vie du composant ************* 
 
 	@Override
@@ -182,10 +174,8 @@ public class Compteur extends AbstractCyPhyComponent implements EmbeddingCompone
 			@Override
 			public void run() {
 				try {
-					updateConsommationAndProduction();
-					
-					/** TODO get model state value pour consommation et production depuis le compteur */
-					
+					((Compteur) this.getTaskOwner()).consommation_globale = (double) ((Compteur) this.getTaskOwner()).asp.getModelStateValue(CompteurModel.URI, "consommation");
+					((Compteur) this.getTaskOwner()).production_globale = (double) ((Compteur) this.getTaskOwner()).asp.getModelStateValue(CompteurModel.URI, "production");					
 					((Compteur) this.getTaskOwner()).logMessage("Consommation globale : " + Math.round(consommation_globale));
 					((Compteur) this.getTaskOwner()).logMessage("Production globale : " + Math.round(production_globale));
 					Thread.sleep(10L);

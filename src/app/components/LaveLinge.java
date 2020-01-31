@@ -216,6 +216,7 @@ public class LaveLinge
 			@Override
 			public void run() {
 				try {
+					((LaveLinge) this.getTaskOwner()).consommation = (double) ((LaveLinge) this.getTaskOwner()).asp.getModelStateValue(LaveLingeModel.URI, "consommation");
 					((LaveLinge) this.getTaskOwner()).logMessage("Mode : " + etat);
 					((LaveLinge) this.getTaskOwner()).logMessage("Consommation : " + consommation);
 				} catch (Exception e) { e.printStackTrace(); }

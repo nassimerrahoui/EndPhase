@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import app.components.Controleur;
 import fr.sorbonne_u.devs_simulation.models.AtomicModel;
 import fr.sorbonne_u.devs_simulation.models.events.EventI;
 import fr.sorbonne_u.devs_simulation.models.time.Duration;
@@ -16,7 +17,7 @@ public class ControleurModel extends AtomicModel {
 	
 	public static final String URI = "ControleurModel";
 	public static final String COMPONENT_REF = "controleur-component-ref";
-	protected OrderManagerComponentAccessI componentRef;
+	protected Controleur componentRef;
 
 	public ControleurModel(String uri, TimeUnit simulatedTimeUnit, SimulatorI simulationEngine) throws Exception {
 		super(uri, simulatedTimeUnit, simulationEngine);
@@ -25,7 +26,8 @@ public class ControleurModel extends AtomicModel {
 	
 	@Override
 	public void setSimulationRunParameters(Map<String, Object> simParams) throws Exception {
-		this.componentRef = (OrderManagerComponentAccessI) simParams.get(COMPONENT_REF);
+		this.componentRef = (Controleur) simParams.get(URI + " : " + COMPONENT_REF);
+		System.out.println(this.componentRef);
 	}
 
 	
@@ -46,12 +48,12 @@ public class ControleurModel extends AtomicModel {
 
 	@Override
 	public void userDefinedInternalTransition(Duration elapsedTime) {
-		super.userDefinedInternalTransition(elapsedTime);
-
+		
 		try {
 			this.componentRef.controlTask(this.getCurrentStateTime().getSimulatedTime());
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+
 	}
 }

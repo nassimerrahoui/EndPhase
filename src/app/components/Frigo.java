@@ -205,7 +205,6 @@ public class Frigo
 			@Override
 			public void run() {
 				try {
-					((Frigo) this.getTaskOwner()).etat = (ModeFrigo) ((Frigo) this.getTaskOwner()).asp.getModelStateValue(FrigoModel.URI, "state");
 					((Frigo) this.getTaskOwner()).consommation = (double) ((Frigo) this.getTaskOwner()).asp.getModelStateValue(FrigoModel.URI, "consommation");
 					((Frigo) this.getTaskOwner()).refrigerateur_current_temperature = (double) ((Frigo) this.getTaskOwner()).asp.getModelStateValue(FrigoModel.URI, "temperature");
 					((Frigo) this.getTaskOwner()).logMessage("Mode : " + etat);

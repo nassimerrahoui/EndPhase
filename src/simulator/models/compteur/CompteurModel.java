@@ -49,8 +49,8 @@ public class CompteurModel extends AtomicModel {
 	/** Reference du composant associe au modele */
 	protected EmbeddingComponentAccessI componentRef;
 	
-	protected ConcurrentHashMap<String, Double> appareil_consommation;
-	protected ConcurrentHashMap<String, Double> unite_production;
+	protected ConcurrentHashMap<String, Double> appareil_consommation = new ConcurrentHashMap<>();
+	protected ConcurrentHashMap<String, Double> unite_production = new ConcurrentHashMap<>();
 	
 	
 	public CompteurModel(String uri, TimeUnit simulatedTimeUnit, SimulatorI simulationEngine) throws Exception {
@@ -75,8 +75,6 @@ public class CompteurModel extends AtomicModel {
 	public void initialiseState(Time initialTime) {
 		this.consommation_globale = 0.0;
 		this.production_globale = 0.0;
-		this.appareil_consommation = new ConcurrentHashMap<>();
-		this.unite_production = new ConcurrentHashMap<>();
 		
 		if(this.consommationPlotter != null) {
 			this.consommationPlotter.initialise();
