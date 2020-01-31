@@ -28,7 +28,6 @@ import fr.sorbonne_u.devs_simulation.architectures.Architecture;
 import fr.sorbonne_u.devs_simulation.architectures.SimulationEngineCreationMode;
 import fr.sorbonne_u.devs_simulation.models.architectures.AbstractAtomicModelDescriptor;
 import fr.sorbonne_u.devs_simulation.models.architectures.AtomicModelDescriptor;
-import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
 import simulator.models.compteur.CompteurModel;
 import simulator.plugins.CompteurSimulatorPlugin;
 
@@ -129,6 +128,7 @@ public class Compteur extends AbstractCyPhyComponent implements EmbeddingCompone
 	
 	/**
 	 * Met a jour la consommation electrique d'un appareil
+	 * si nous voulous utiliser une communication par ports pour la consommation
 	 * @param uri
 	 * @param consommation
 	 * @throws Exception
@@ -142,6 +142,7 @@ public class Compteur extends AbstractCyPhyComponent implements EmbeddingCompone
 
 	/**
 	 * Met a jour la production electrique d'une unite de production
+	 * si nous voulous utiliser une communication par ports pour la production
 	 * @param uri
 	 * @param production
 	 * @throws Exception
@@ -175,28 +176,22 @@ public class Compteur extends AbstractCyPhyComponent implements EmbeddingCompone
 	 * @throws Exception
 	 */
 	public void dynamicExecute() throws Exception {
-
-		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 10L ;
-		
-		//HashMap<String,Object> simParams = new HashMap<String,Object>() ;
-		//this.asp.setSimulationRunParameters(simParams) ;
-		
 		Thread.sleep(10L);
 		
 		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
 			@Override
 			public void run() {
 				try {
-					//((Compteur) this.getTaskOwner()).consommation_globale = (double) ((Compteur) this.getTaskOwner()).asp.getModelStateValue(CompteurModel.URI, "consommation");
-					//((Compteur) this.getTaskOwner()).production_globale = (double) ((Compteur) this.getTaskOwner()).asp.getModelStateValue(CompteurModel.URI, "production");
 					updateConsommationAndProduction();
+					
+					/** TODO get model state value pour consommation et production depuis le compteur */
 					
 					((Compteur) this.getTaskOwner()).logMessage("Consommation globale : " + Math.round(consommation_globale));
 					((Compteur) this.getTaskOwner()).logMessage("Production globale : " + Math.round(production_globale));
 					Thread.sleep(10L);
 				} catch (Exception e) { e.printStackTrace(); }
 			}
-		}, 2500, 1000, TimeUnit.MILLISECONDS);
+		}, 1000, 1000, TimeUnit.MILLISECONDS);
 		
 		execute();
 	}

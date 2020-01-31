@@ -96,10 +96,8 @@ public class AspirateurUserModel extends AtomicES_Model {
 
 	@Override
 	public void userDefinedInternalTransition(Duration elapsedTime) {
-		System.out.println("Internal Transition Aspi User");
 		Duration d;
 
-		//assert this.eventList.size() >= 1 ;
 		this.nextEvent = this.eventList.peek().getClass() ;
 		
 		if (this.nextEvent.equals(SwitchAspirateurOnSIL.class)) {

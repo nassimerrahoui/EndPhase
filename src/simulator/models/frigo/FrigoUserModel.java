@@ -1,26 +1,22 @@
 package simulator.models.frigo;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
 import org.apache.commons.math3.random.RandomDataGenerator;
+
+import app.components.Frigo;
 import app.util.ModeFrigo;
 import fr.sorbonne_u.devs_simulation.es.models.AtomicES_Model;
-import fr.sorbonne_u.devs_simulation.models.annotations.ModelExternalEvents;
 import fr.sorbonne_u.devs_simulation.models.events.EventI;
 import fr.sorbonne_u.devs_simulation.models.time.Duration;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
-import simulator.events.frigo.CloseRefrigerateurDoor;
-import simulator.events.frigo.OpenRefrigerateurDoor;
-import simulator.events.frigo.SwitchFrigoOff;
-import simulator.events.frigo.SwitchFrigoOn;
-
-@ModelExternalEvents(exported = { 
-		SwitchFrigoOn.class, 
-		SwitchFrigoOff.class, 
-		CloseRefrigerateurDoor.class, 
-		OpenRefrigerateurDoor.class })
+import simulator.events.frigo.CloseRefrigerateurDoorSIL;
+import simulator.events.frigo.OpenRefrigerateurDoorSIL;
+import simulator.events.frigo.SwitchFrigoOnSIL;
 
 public class FrigoUserModel extends AtomicES_Model{
 
@@ -35,6 +31,7 @@ public class FrigoUserModel extends AtomicES_Model{
 	protected Class<?> nextEvent;
 	protected final RandomDataGenerator rg;
 	protected ModeFrigo etat_frigo;
+	protected Frigo componentRef;
 	
 	
 	public FrigoUserModel(String uri, TimeUnit simulatedTimeUnit, SimulatorI simulationEngine) throws Exception {
@@ -42,6 +39,15 @@ public class FrigoUserModel extends AtomicES_Model{
 		this.rg = new RandomDataGenerator();
 
 		this.setLogger(new StandardLogger());
+	}
+	
+	public Frigo getComponentRef() {
+		return this.componentRef;
+	}
+	
+	@Override
+	public void setSimulationRunParameters(Map<String, Object> simParams) throws Exception {
+		this.componentRef = (Frigo) simParams.get(FrigoModel.URI + " : " + FrigoModel.COMPONENT_REF);
 	}
 	
 	@Override
@@ -61,7 +67,7 @@ public class FrigoUserModel extends AtomicES_Model{
 		Duration d2 = new Duration(2.0 * this.meanTimeBetweenUsages * this.rg.nextBeta(1.75, 1.75),
 				this.getSimulatedTimeUnit());
 		Time t = this.getCurrentStateTime().add(d1).add(d2);
-		this.scheduleEvent(new SwitchFrigoOn(t));
+		this.scheduleEvent(new SwitchFrigoOnSIL(t));
 
 		this.nextTimeAdvance = this.timeAdvance();
 		this.timeOfNextEvent = this.getCurrentStateTime().add(this.nextTimeAdvance);
@@ -83,41 +89,34 @@ public class FrigoUserModel extends AtomicES_Model{
 
 	@Override
 	public ArrayList<EventI> output() {
-
-		assert !this.eventList.isEmpty();
-
-		ArrayList<EventI> ret = super.output();
-
-		assert ret.size() == 1;
-		this.nextEvent = ret.get(0).getClass();
-
-		this.logMessage("FrigoUserModel::output() " + this.nextEvent.getCanonicalName());
-		return ret;
+		return null;
 	}
 	
 	@Override
 	public void userDefinedInternalTransition(Duration elapsedTime) {
 
 		Duration d;
-		if (this.nextEvent.equals(SwitchFrigoOn.class)) {
+		this.nextEvent = this.eventList.peek().getClass() ;
+		
+		if (this.nextEvent.equals(SwitchFrigoOnSIL.class)) {
 
 			d = new Duration(2.0 * this.rg.nextBeta(1.75, 1.75), this.getSimulatedTimeUnit());
 			Time t = this.getCurrentStateTime().add(d);
-			this.scheduleEvent(new OpenRefrigerateurDoor(t));
+			this.scheduleEvent(new OpenRefrigerateurDoorSIL(t));
 			
 			d = new Duration(this.interdayDelay, this.getSimulatedTimeUnit());
-			this.scheduleEvent(new SwitchFrigoOn(this.getCurrentStateTime().add(d)));
+			this.scheduleEvent(new SwitchFrigoOnSIL(this.getCurrentStateTime().add(d)));
 			
 			
-		} else if (this.nextEvent.equals(OpenRefrigerateurDoor.class)) {
+		} else if (this.nextEvent.equals(OpenRefrigerateurDoorSIL.class)) {
 
 			d = new Duration(2.0 * this.meanTimeAtOpenDoor * this.rg.nextBeta(1.75, 1.75), this.getSimulatedTimeUnit());
-			this.scheduleEvent(new CloseRefrigerateurDoor(this.getCurrentStateTime().add(d)));
+			this.scheduleEvent(new CloseRefrigerateurDoorSIL(this.getCurrentStateTime().add(d)));
 			
-		} else if (this.nextEvent.equals(CloseRefrigerateurDoor.class)) {
+		} else if (this.nextEvent.equals(CloseRefrigerateurDoorSIL.class)) {
 
 			d = new Duration(2.0 * this.meanTimeAtCloseDoor * this.rg.nextBeta(1.75, 1.75), this.getSimulatedTimeUnit());
-			this.scheduleEvent(new OpenRefrigerateurDoor(this.getCurrentStateTime().add(d)));
+			this.scheduleEvent(new OpenRefrigerateurDoorSIL(this.getCurrentStateTime().add(d)));
 		}
 	}
 }

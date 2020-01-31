@@ -24,10 +24,7 @@ import fr.sorbonne_u.devs_simulation.models.events.EventSource;
 import fr.sorbonne_u.devs_simulation.models.events.ReexportedEvent;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import fr.sorbonne_u.devs_simulation.utils.StandardCoupledModelReport;
-import simulator.events.frigo.CloseRefrigerateurDoor;
-import simulator.events.frigo.OpenRefrigerateurDoor;
-import simulator.events.frigo.SwitchFrigoOff;
-import simulator.events.frigo.SwitchFrigoOn;
+import simulator.events.frigo.SendFrigoConsommation;
 
 public class FrigoCoupledModel extends CoupledModel {
 
@@ -67,20 +64,10 @@ public class FrigoCoupledModel extends CoupledModel {
 		Set<String> submodels = new HashSet<String>();
 		submodels.add(FrigoModel.URI);
 		submodels.add(FrigoUserModel.URI);
-
-		Map<EventSource, EventSink[]> connections = new HashMap<EventSource, EventSink[]>();
-		EventSource from1 = new EventSource(FrigoUserModel.URI, SwitchFrigoOn.class);
-		EventSink[] to1 = new EventSink[] { new EventSink(FrigoModel.URI, SwitchFrigoOn.class) };
-		connections.put(from1, to1);
-		EventSource from2 = new EventSource(FrigoUserModel.URI, SwitchFrigoOff.class);
-		EventSink[] to2 = new EventSink[] { new EventSink(FrigoModel.URI, SwitchFrigoOff.class) };
-		connections.put(from2, to2);
-		EventSource from3 = new EventSource(FrigoUserModel.URI, CloseRefrigerateurDoor.class);
-		EventSink[] to3 = new EventSink[] { new EventSink(FrigoModel.URI, CloseRefrigerateurDoor.class) };
-		connections.put(from3, to3);
-		EventSource from4 = new EventSource(FrigoUserModel.URI, OpenRefrigerateurDoor.class);
-		EventSink[] to4 = new EventSink[] { new EventSink(FrigoModel.URI, OpenRefrigerateurDoor.class) };
-		connections.put(from4, to4);
+		
+		Map<Class<? extends EventI>,ReexportedEvent> reexported =
+				new HashMap<Class<? extends EventI>,ReexportedEvent>() ;
+		reexported.put(SendFrigoConsommation.class, new ReexportedEvent(FrigoModel.URI, SendFrigoConsommation.class)) ;
 
 		coupledModelDescriptors.put(
 				FrigoCoupledModel.URI,
@@ -89,8 +76,8 @@ public class FrigoCoupledModel extends CoupledModel {
 						FrigoCoupledModel.URI, 
 						submodels, 
 						null, 
-						null,
-						connections, 
+						reexported,
+						null, 
 						null, 
 						SimulationEngineCreationMode.COORDINATION_ENGINE, 
 						null, 

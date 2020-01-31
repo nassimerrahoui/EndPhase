@@ -3,13 +3,16 @@ package simulator.models.frigo;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
 import org.apache.commons.math3.random.RandomDataGenerator;
+
 import app.util.ModeFrigo;
 import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentAccessI;
+import fr.sorbonne_u.devs_simulation.hioa.annotations.ExportedVariable;
 import fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOAwithEquations;
+import fr.sorbonne_u.devs_simulation.hioa.models.vars.Value;
 import fr.sorbonne_u.devs_simulation.interfaces.SimulationReportI;
 import fr.sorbonne_u.devs_simulation.models.annotations.ModelExternalEvents;
-import fr.sorbonne_u.devs_simulation.models.events.Event;
 import fr.sorbonne_u.devs_simulation.models.events.EventI;
 import fr.sorbonne_u.devs_simulation.models.time.Duration;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
@@ -18,18 +21,12 @@ import fr.sorbonne_u.devs_simulation.utils.AbstractSimulationReport;
 import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
 import fr.sorbonne_u.utils.PlotterDescription;
 import fr.sorbonne_u.utils.XYPlotter;
-import simulator.events.frigo.AbstractFrigoEvent;
-import simulator.events.frigo.CloseRefrigerateurDoor;
-import simulator.events.frigo.OpenRefrigerateurDoor;
-import simulator.events.frigo.SwitchFrigoOff;
-import simulator.events.frigo.SwitchFrigoOn;
+import simulator.events.frigo.SendFrigoConsommation;
 
-@ModelExternalEvents(imported = { 
-		SwitchFrigoOn.class,
-		SwitchFrigoOff.class,
-		OpenRefrigerateurDoor.class,
-		CloseRefrigerateurDoor.class,
-})
+@ModelExternalEvents(
+		exported = {
+			SendFrigoConsommation.class
+		})
 
 public class FrigoModel extends AtomicHIOAwithEquations {
 
@@ -71,7 +68,9 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 	protected final RandomDataGenerator	rgNewVariationTemperature;
 	
 	/** Consommation actuelle du frigo */
-	protected double currentPower; // Watt
+	@ExportedVariable(type = Double.class)
+	protected Value<Double> currentPower = new Value<Double>(this, 0.0, 0); // Watts
+	
 	
 	/** Temperature actuelle du frigo */
 	protected double currentTemperature; // Degres celsius
@@ -99,7 +98,7 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 	public void setSimulationRunParameters(Map<String, Object> simParams) throws Exception {
 		
 		this.componentRef = (EmbeddingComponentAccessI) simParams.get(URI + " : " + COMPONENT_REF);
-
+		
 		PlotterDescription pd = (PlotterDescription) simParams.get(URI + " : " + POWER_PLOTTING_PARAM_NAME) ;
 		this.powerPlotter = new XYPlotter(pd);
 		this.powerPlotter.createSeries(SERIES_POWER);
@@ -116,7 +115,7 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 	@Override
 	public void initialiseState(Time initialTime) {
 		
-		this.currentPower = CONSOMMAION_REPOS;
+		this.currentPower.v = CONSOMMAION_REPOS;
 		this.currentState = ModeFrigo.LIGHT_OFF;	
 		this.currentTemperature = AMBIENT_TEMPERATURE;
 		this.compresseur = false;
@@ -145,8 +144,15 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 
 	@Override
 	public ArrayList<EventI> output() {
-		// the model does not export any event.
-		return null;
+		ArrayList<EventI> ret = new ArrayList<EventI>() ;
+		Time t = this.getCurrentStateTime().add(getNextTimeAdvance()) ;
+		try {
+			ret.add(new SendFrigoConsommation(t,
+					currentPower.v)) ;
+		} catch (Exception e) {
+			throw new RuntimeException(e) ;
+		}
+		return ret ;
 	}
 
 	@Override
@@ -169,18 +175,18 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 		this.statePlotter.addData(SERIES_MODE, this.getCurrentStateTime().getSimulatedTime(), this.getState().getMode());
 		this.temperaturePlotter.addData(SERIES_TEMPERATURE, this.getCurrentStateTime().getSimulatedTime(), this.getCurrentTemperature());
 
-		assert this.componentRef != null ;
+		assert this.componentRef != null;
 		
 		try { 
 			ModeFrigo m = (ModeFrigo) this.componentRef.getEmbeddingComponentStateValue(FrigoModel.URI + " : state");
 			if (m != this.currentState) {
 				switch(m)
 				{
-					case OFF : this.setState(ModeFrigo.OFF) ; break ;
-					case LIGHT_OFF : this.setState(ModeFrigo.LIGHT_OFF) ; break ;
+					case OFF : this.setState(ModeFrigo.OFF) ; break;
+					case LIGHT_OFF : this.setState(ModeFrigo.LIGHT_OFF) ; break;
 					case LIGHT_ON : this.setState(ModeFrigo.LIGHT_ON) ;
 				}
-				this.currentState = m ;
+				this.currentState = m;
 			}
 		}
 		catch (Exception e) { e.printStackTrace(); }
@@ -197,7 +203,7 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 				currentTemperature += variation_temperature;
 				delta_t--;
 			}
-			currentPower = 0.0;
+			currentPower.v = 0.0;
 			return;
 		}
 		
@@ -228,7 +234,7 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 				}
 			}
 			
-			currentPower = getConsommationFromTemperature(currentTemperature, temperature_cible);
+			currentPower.v = getConsommationFromTemperature(currentTemperature, temperature_cible);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -251,19 +257,7 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 
 	@Override
 	public void userDefinedExternalTransition(Duration elapsedTime) {
-		
-		ArrayList<EventI> currentEvents = this.getStoredEventAndReset();
-		assert currentEvents != null && currentEvents.size() == 1;
-		Event ce = (Event) currentEvents.get(0);
-		assert ce instanceof AbstractFrigoEvent;
-
-		ce.executeOn(this);
-		
-		this.powerPlotter.addData(SERIES_POWER, this.getCurrentStateTime().getSimulatedTime(), this.getConsommation());
-		this.statePlotter.addData(SERIES_MODE, this.getCurrentStateTime().getSimulatedTime(), this.getState().getMode());
-		this.temperaturePlotter.addData(SERIES_TEMPERATURE, this.getCurrentStateTime().getSimulatedTime(), this.getCurrentTemperature());
-
-		super.userDefinedExternalTransition(elapsedTime);
+		// No external imported event
 	}
 	
 	@Override
@@ -297,7 +291,7 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 	}
 
 	public double getConsommation() {
-		return this.currentPower;
+		return this.currentPower.v;
 	}
 	
 	public double getCurrentTemperature() {

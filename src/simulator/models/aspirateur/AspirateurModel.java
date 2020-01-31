@@ -94,13 +94,10 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 			Time t = this.getCurrentStateTime().add(getNextTimeAdvance()) ;
 			try {
 				ret.add(new SendAspirateurConsommation(t,
-						10)) ;
+						currentConsommation.v)) ;
 			} catch (Exception e) {
 				throw new RuntimeException(e) ;
 			}
-		
-			for(EventI e : ret)
-				System.out.println("event " + e);
 			
 			this.consumptionHasChanged = false ;
 			return ret ;
