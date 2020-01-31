@@ -3,24 +3,23 @@ package simulator.events.lavelinge;
 import fr.sorbonne_u.devs_simulation.models.AtomicModel;
 import fr.sorbonne_u.devs_simulation.models.events.EventI;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
-import simulator.models.lavelinge.LaveLingeModel;
 
 /**
  * Evenement permettant au modele qui le recoit de passer sa transition interne
  * (non utilise actuelement)
  *
  */
-public class SetInternalTransition extends AbstractLaveLingeEvent {
+public class SetInternalTransitionSIL extends SetInternalTransition {
 
 	private static final long serialVersionUID = 1L;
 
-	public SetInternalTransition(Time timeOfOccurrence) {
-		super(timeOfOccurrence, null);
+	public SetInternalTransitionSIL(Time timeOfOccurrence) {
+		super(timeOfOccurrence);
 	}
 	
 	@Override
 	public String eventAsString() {
-		return "LaveLinge::NextInternalTransition";
+		return "LaveLinge::NextInternalTransitionSIL";
 	}
 
 	@Override
@@ -30,7 +29,7 @@ public class SetInternalTransition extends AbstractLaveLingeEvent {
 
 	@Override
 	public void executeOn(AtomicModel model) {
-		assert model instanceof LaveLingeModel;
+		//
 	}
 
 }

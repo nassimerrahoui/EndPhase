@@ -4,9 +4,7 @@ import java.awt.DisplayMode;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
-
 import app.CVM;
 import app.interfaces.appareil.IAjoutAppareil;
 import app.interfaces.appareil.IConsommation;
@@ -30,8 +28,6 @@ import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
 import fr.sorbonne_u.devs_simulation.architectures.Architecture;
-import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
-import fr.sorbonne_u.utils.PlotterDescription;
 import simulator.models.lavelinge.LaveLingeCoupledModel;
 import simulator.models.lavelinge.LaveLingeModel;
 import simulator.plugins.LaveLingeSimulatorPlugin;
@@ -139,8 +135,7 @@ public class LaveLinge
 	 * @throws Exception
 	 */
 	public void setModeLaveLinge(ModeLaveLinge etat) throws Exception {
-		if(etat == ModeLaveLinge.OFF || etat == ModeLaveLinge.VEILLE)
-			this.etat = etat;
+		this.etat = etat;
 	}
 
 	/**
@@ -215,42 +210,12 @@ public class LaveLinge
 	
 	@Override
 	public void execute() throws Exception {
-		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 10L ;
-
-		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
-		simParams.put(LaveLingeModel.URI + " : " + LaveLingeModel.COMPONENT_REF, this);
-		
-		simParams.put(LaveLingeModel.URI + " : " + LaveLingeModel.POWER_PLOTTING_PARAM_NAME, new PlotterDescription(
-				"Consommation Lave-Linge", 
-				"Temps (sec)", 
-				"Consommation (Watt)", 
-				ORIGIN_X ,
-		  		ORIGIN_Y,
-		  		getPlotterWidth(),
-		  		getPlotterHeight())) ;
-		
-		this.asp.setSimulationRunParameters(simParams) ;
-
-		this.runTask(
-				new AbstractComponent.AbstractTask() {
-					@Override
-					public void run() {
-						try {
-							asp.doStandAloneSimulation(0.0, 60000.0) ;
-						} catch (Exception e) {
-							throw new RuntimeException(e) ;
-						}
-					}
-				});
-		
 		Thread.sleep(10L);
 		
 		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
 			@Override
 			public void run() {
 				try {
-					((LaveLinge) this.getTaskOwner()).etat = (ModeLaveLinge) ((LaveLinge) this.getTaskOwner()).asp.getModelStateValue(LaveLingeModel.URI, "state");
-					((LaveLinge) this.getTaskOwner()).consommation = (Double) ((LaveLinge) this.getTaskOwner()).asp.getModelStateValue(LaveLingeModel.URI, "consommation");
 					((LaveLinge) this.getTaskOwner()).logMessage("Mode : " + etat);
 					((LaveLinge) this.getTaskOwner()).logMessage("Consommation : " + consommation);
 				} catch (Exception e) { e.printStackTrace(); }

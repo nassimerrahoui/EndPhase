@@ -17,12 +17,14 @@ import fr.sorbonne_u.utils.XYPlotter;
 import simulator.events.aspirateur.SendAspirateurConsommation;
 import simulator.events.batterie.SendBatterieProduction;
 import simulator.events.frigo.SendFrigoConsommation;
+import simulator.events.lavelinge.SendLaveLingeConsommation;
 import simulator.events.panneausolaire.SendPanneauSolaireProduction;
 
 @ModelExternalEvents(
 		imported = {
 				SendAspirateurConsommation.class,
 				SendFrigoConsommation.class,
+				SendLaveLingeConsommation.class,
 				SendBatterieProduction.class,
 				SendPanneauSolaireProduction.class})
 
@@ -135,6 +137,11 @@ public class CompteurModel extends AtomicModel {
 						((SendFrigoConsommation) current.get(i)).
 						getEventInformation()).value;
 				appareil_consommation.put(SendFrigoConsommation.class.getName(), conso);
+			} else if(current.get(i) instanceof SendLaveLingeConsommation) {
+				double conso = ((SendLaveLingeConsommation.Reading)
+						((SendLaveLingeConsommation) current.get(i)).
+						getEventInformation()).value;
+				appareil_consommation.put(SendLaveLingeConsommation.class.getName(), conso);
 			} else if(current.get(i) instanceof SendBatterieProduction) {
 				double production = ((SendBatterieProduction.Reading)
 						((SendBatterieProduction) current.get(i)).
@@ -191,7 +198,6 @@ public class CompteurModel extends AtomicModel {
 	 */
 	public double getProductionGlobale() throws Exception {
 		double res = unite_production.values().stream().mapToDouble(i -> i).sum();
-		System.out.println(unite_production.values());
 		if(res > 0.0) return res;
 		else return 0.0;
 	}

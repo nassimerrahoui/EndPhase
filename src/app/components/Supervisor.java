@@ -24,11 +24,13 @@ import fr.sorbonne_u.devs_simulation.models.events.EventSource;
 import simulator.events.aspirateur.SendAspirateurConsommation;
 import simulator.events.batterie.SendBatterieProduction;
 import simulator.events.frigo.SendFrigoConsommation;
+import simulator.events.lavelinge.SendLaveLingeConsommation;
 import simulator.events.panneausolaire.SendPanneauSolaireProduction;
 import simulator.models.aspirateur.AspirateurCoupledModel;
 import simulator.models.batterie.BatterieModel;
 import simulator.models.compteur.CompteurModel;
 import simulator.models.frigo.FrigoCoupledModel;
+import simulator.models.lavelinge.LaveLingeCoupledModel;
 import simulator.models.panneausolaire.PanneauSolaireCoupledModel;
 import simulator.models.supervisor.SupervisorCoupledModel;
 
@@ -132,6 +134,11 @@ public class Supervisor extends AbstractComponent {
 						null, (Class<? extends EventI>[]) new Class<?>[] { SendFrigoConsommation.class }, 
 						TimeUnit.SECONDS,
 						this.modelURIs2componentURIs.get(FrigoCoupledModel.URI)));
+		// export consommation lave-linge
+				atomicModelDescriptors.put(LaveLingeCoupledModel.URI,
+						ComponentAtomicModelDescriptor.create(LaveLingeCoupledModel.URI, null,
+								(Class<? extends EventI>[]) new Class<?>[] { SendLaveLingeConsommation.class }, TimeUnit.SECONDS,
+								this.modelURIs2componentURIs.get(LaveLingeCoupledModel.URI)));
 		// export production batteire
 		atomicModelDescriptors.put(BatterieModel.URI,
 				ComponentAtomicModelDescriptor.create(BatterieModel.URI, null,
@@ -150,6 +157,7 @@ public class Supervisor extends AbstractComponent {
 		submodels.add(CompteurModel.URI);
 		submodels.add(AspirateurCoupledModel.URI);
 		submodels.add(FrigoCoupledModel.URI);
+		submodels.add(LaveLingeCoupledModel.URI);
 		submodels.add(BatterieModel.URI);
 		submodels.add(PanneauSolaireCoupledModel.URI);
 
@@ -158,6 +166,8 @@ public class Supervisor extends AbstractComponent {
 				new EventSink[] { new EventSink(CompteurModel.URI, SendAspirateurConsommation.class) });
 		connections.put(new EventSource(FrigoCoupledModel.URI, SendFrigoConsommation.class),
 				new EventSink[] { new EventSink(CompteurModel.URI, SendFrigoConsommation.class) });
+		connections.put(new EventSource(LaveLingeCoupledModel.URI, SendLaveLingeConsommation.class),
+				new EventSink[] { new EventSink(CompteurModel.URI, SendLaveLingeConsommation.class) });
 		connections.put(new EventSource(BatterieModel.URI, SendBatterieProduction.class),
 				new EventSink[] { new EventSink(CompteurModel.URI, SendBatterieProduction.class) });
 		connections.put(new EventSource(PanneauSolaireCoupledModel.URI, SendPanneauSolaireProduction.class),
@@ -182,7 +192,7 @@ public class Supervisor extends AbstractComponent {
 
 	public void dynamicExecute() throws Exception {
 		super.execute();
-			
+		try {
 		this.logMessage("supervisor component begins execution.");
 		this.sp.createSimulator();
 		Thread.sleep(1000L);
@@ -193,6 +203,9 @@ public class Supervisor extends AbstractComponent {
 		long end = System.currentTimeMillis();
 		this.logMessage("supervisor component ends simulation. " + (end - start));
 		Thread.sleep(1000);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 	}
 }

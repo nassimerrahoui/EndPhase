@@ -41,7 +41,7 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 	protected XYPlotter powerPlotter;
 	protected EmbeddingComponentAccessI componentRef;
 	
-	/** the last value emitted as a reading of the solar solarIntensity. */
+	/** dernier etat lu dans le composant */
 	protected ModeAspirateur lastState;
 	/** vrai si la consommation a changer */
 	protected boolean consumptionHasChanged ;
@@ -69,12 +69,6 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 		this.currentState = ModeAspirateur.OFF;	
 		this.powerPlotter.initialise();
 		this.powerPlotter.showPlotter();
-
-		try {
-			//this.setDebugLevel(1);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
 		
 		super.initialiseState(initialTime);
 	}
@@ -136,7 +130,7 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 				this.lastState = m ;
 			}
 			
-			//this.powerPlotter.addData(SERIES_POWER, this.getCurrentStateTime().getSimulatedTime(), this.getConsommation());
+			this.powerPlotter.addData(SERIES_POWER, this.getCurrentStateTime().getSimulatedTime(), this.getConsommation());
 		
 		} catch (Exception e) {
 			throw new RuntimeException(e) ;

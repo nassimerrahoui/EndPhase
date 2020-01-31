@@ -24,13 +24,7 @@ import fr.sorbonne_u.devs_simulation.models.events.EventSource;
 import fr.sorbonne_u.devs_simulation.models.events.ReexportedEvent;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import fr.sorbonne_u.devs_simulation.utils.StandardCoupledModelReport;
-import simulator.events.lavelinge.SetEssorage;
-import simulator.events.lavelinge.SetInternalTransition;
-import simulator.events.lavelinge.SetLavage;
-import simulator.events.lavelinge.SetLaveLingeVeille;
-import simulator.events.lavelinge.SetRincage;
-import simulator.events.lavelinge.SetSechage;
-import simulator.events.lavelinge.SwitchLaveLingeOff;
+import simulator.events.lavelinge.SendLaveLingeConsommation;
 import simulator.models.lavelinge.LaveLingeModel;
 import simulator.models.lavelinge.LaveLingePlanificationModel;
 
@@ -72,32 +66,14 @@ public class LaveLingeCoupledModel extends CoupledModel{
 		submodels.add(LaveLingeModel.URI);
 		submodels.add(LaveLingePlanificationModel.URI);
 
-		Map<EventSource, EventSink[]> connections = new HashMap<EventSource, EventSink[]>();
-		EventSource from1 = new EventSource(LaveLingePlanificationModel.URI, SwitchLaveLingeOff.class);
-		EventSink[] to1 = new EventSink[] { new EventSink(LaveLingeModel.URI, SwitchLaveLingeOff.class) };
-		connections.put(from1, to1);
-		EventSource from2 = new EventSource(LaveLingePlanificationModel.URI, SetLaveLingeVeille.class);
-		EventSink[] to2 = new EventSink[] { new EventSink(LaveLingeModel.URI, SetLaveLingeVeille.class) };
-		connections.put(from2, to2);
-		EventSource from3 = new EventSource(LaveLingePlanificationModel.URI, SetLavage.class);
-		EventSink[] to3 = new EventSink[] { new EventSink(LaveLingeModel.URI, SetLavage.class) };
-		connections.put(from3, to3);
-		EventSource from4 = new EventSource(LaveLingePlanificationModel.URI, SetRincage.class);
-		EventSink[] to4 = new EventSink[] { new EventSink(LaveLingeModel.URI, SetRincage.class) };
-		connections.put(from4, to4);
-		EventSource from5 = new EventSource(LaveLingePlanificationModel.URI, SetEssorage.class);
-		EventSink[] to5 = new EventSink[] { new EventSink(LaveLingeModel.URI, SetEssorage.class) };
-		connections.put(from5, to5);
-		EventSource from6 = new EventSource(LaveLingePlanificationModel.URI, SetSechage.class);
-		EventSink[] to6 = new EventSink[] { new EventSink(LaveLingeModel.URI, SetSechage.class) };
-		connections.put(from6, to6);
-		EventSource from7 = new EventSource(LaveLingePlanificationModel.URI, SetInternalTransition.class);
-		EventSink[] to7 = new EventSink[] { new EventSink(LaveLingeModel.URI, SetInternalTransition.class) };
-		connections.put(from7, to7);
-
+		Map<Class<? extends EventI>,ReexportedEvent> reexported =
+				new HashMap<Class<? extends EventI>,ReexportedEvent>() ;
+		reexported.put(SendLaveLingeConsommation.class, new ReexportedEvent(LaveLingeModel.URI, SendLaveLingeConsommation.class)) ;
+		
+		
 		coupledModelDescriptors.put(LaveLingeCoupledModel.URI,
 				new CoupledHIOA_Descriptor(LaveLingeCoupledModel.class, LaveLingeCoupledModel.URI, submodels, null,
-						null, connections, null, SimulationEngineCreationMode.COORDINATION_ENGINE, null, null, null));
+						reexported, null, null, SimulationEngineCreationMode.COORDINATION_ENGINE, null, null, null));
 
 		return new Architecture(LaveLingeCoupledModel.URI, atomicModelDescriptors, coupledModelDescriptors,
 				TimeUnit.SECONDS);

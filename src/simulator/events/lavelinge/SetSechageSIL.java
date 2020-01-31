@@ -4,23 +4,19 @@ import app.util.ModeLaveLinge;
 import fr.sorbonne_u.devs_simulation.models.AtomicModel;
 import fr.sorbonne_u.devs_simulation.models.events.EventI;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
-import simulator.models.lavelinge.LaveLingeModel;
+import simulator.models.lavelinge.LaveLingePlanificationModel;
 
-/**
- * Evenement permettant d'ameliorer le modele du lave-linge (non utilise actuellement)
- *
- */
-public class SetTemperatureEau extends AbstractLaveLingeEvent {
+public class SetSechageSIL extends SetSechage {
 
 	private static final long serialVersionUID = 1L;
 
-	public SetTemperatureEau(Time timeOfOccurrence) {
-		super(timeOfOccurrence, null);
+	public SetSechageSIL(Time timeOfOccurrence) {
+		super(timeOfOccurrence);
 	}
 	
 	@Override
 	public String eventAsString() {
-		return "LaveLinge::SwitchSetTemperature";
+		return "LaveLinge::SwitchSetSechageSIL";
 	}
 
 	@Override
@@ -30,8 +26,12 @@ public class SetTemperatureEau extends AbstractLaveLingeEvent {
 
 	@Override
 	public void executeOn(AtomicModel model) {
-		assert model instanceof LaveLingeModel;
-		((LaveLingeModel) model).setState(ModeLaveLinge.CHAUFFER_EAU);
+		LaveLingePlanificationModel m = (LaveLingePlanificationModel)model;
+		try {
+			((LaveLingePlanificationModel) m).getComponentRef().setModeLaveLinge(ModeLaveLinge.SECHAGE);
+		} catch (Exception e) {
+			throw new RuntimeException(e) ;
+		}
 	}
 
 }
