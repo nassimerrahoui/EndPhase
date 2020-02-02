@@ -5,6 +5,10 @@ import app.util.TypeAppareil;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 
+/**
+ * @author Willy Nassim
+ */
+
 public class AspirateurControleurOutPort extends AbstractOutboundPort implements IAjoutAppareil {
 
 	private static final long serialVersionUID = 1L;

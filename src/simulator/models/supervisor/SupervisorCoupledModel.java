@@ -11,6 +11,10 @@ import fr.sorbonne_u.devs_simulation.models.events.EventSource;
 import fr.sorbonne_u.devs_simulation.models.events.ReexportedEvent;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 
+/**
+ * @author Willy Nassim
+ */
+
 public class SupervisorCoupledModel extends CoupledModel {
 	private static final long serialVersionUID = 1L;
 	/** URI of the unique instance of this class (in this example). */

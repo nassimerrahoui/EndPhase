@@ -7,6 +7,10 @@ import fr.sorbonne_u.devs_simulation.interfaces.ModelDescriptionI;
 import fr.sorbonne_u.utils.PlotterDescription;
 import simulator.models.batterie.BatterieModel;
 
+/**
+ * @author Willy Nassim
+ */
+
 public class BatterieSimulatorPlugin extends AtomicSimulatorPlugin {
 	private static final long serialVersionUID = 1L;
 	

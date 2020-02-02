@@ -4,6 +4,10 @@ import app.interfaces.production.IAjoutUniteProduction;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 
+/**
+ * @author Willy Nassim
+ */
+
 public class PanneauControleurOutPort extends AbstractOutboundPort implements IAjoutUniteProduction {
 
 	private static final long serialVersionUID = 1L;

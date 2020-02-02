@@ -18,6 +18,10 @@ import simulator.events.frigo.CloseRefrigerateurDoorSIL;
 import simulator.events.frigo.OpenRefrigerateurDoorSIL;
 import simulator.events.frigo.SwitchFrigoOnSIL;
 
+/**
+ * @author Willy Nassim
+ */
+
 public class FrigoUserModel extends AtomicES_Model{
 
 	private static final long serialVersionUID = 1L;

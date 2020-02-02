@@ -28,6 +28,10 @@ import simulator.events.lavelinge.SendLaveLingeConsommation;
 import simulator.models.lavelinge.LaveLingeModel;
 import simulator.models.lavelinge.LaveLingePlanificationModel;
 
+/**
+ * @author Willy Nassim
+ */
+
 public class LaveLingeCoupledModel extends CoupledModel{
 	private static final long serialVersionUID = 1L;
 	/** URI of the unique instance of this class (in this example). */

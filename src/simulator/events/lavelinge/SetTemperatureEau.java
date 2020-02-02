@@ -9,6 +9,8 @@ import simulator.models.lavelinge.LaveLingeModel;
 /**
  * Evenement permettant d'ameliorer le modele du lave-linge (non utilise actuellement)
  *
+ * @author Willy Nassim
+ *
  */
 public class SetTemperatureEau extends AbstractLaveLingeEvent {
 

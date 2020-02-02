@@ -8,6 +8,8 @@ import fr.sorbonne_u.devs_simulation.models.time.Time;
  * Evenement permettant au modele qui le recoit de passer sa transition interne
  * (non utilise actuelement)
  *
+ * @author Willy Nassim
+ *
  */
 public class SetInternalTransitionSIL extends SetInternalTransition {
 

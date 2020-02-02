@@ -8,6 +8,10 @@ import app.util.TemperatureLaveLinge;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 
+/**
+ * @author Willy Nassim
+ */
+
 public class ControleurLaveLingeOutPort extends AbstractOutboundPort implements IControleLaveLinge {
 
 	private static final long serialVersionUID = 1L;

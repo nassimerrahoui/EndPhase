@@ -18,6 +18,9 @@ import simulator.events.aspirateur.SwitchAspirateurOnSIL;
 import java.util.ArrayList;
 import java.util.Map;
 
+/**
+ * @author Willy Nassim
+ */
 
 public class AspirateurUserModel extends AtomicES_Model {
 

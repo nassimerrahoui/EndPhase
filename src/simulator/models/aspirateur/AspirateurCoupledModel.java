@@ -26,6 +26,10 @@ import simulator.events.aspirateur.SendAspirateurConsommation;
 import java.util.HashMap;
 import java.util.HashSet;
 
+/**
+ * @author Willy Nassim
+ */
+
 public class AspirateurCoupledModel extends CoupledModel {
 	
 	private static final long serialVersionUID = 1L;

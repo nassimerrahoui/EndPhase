@@ -5,13 +5,12 @@ import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 
 import java.util.concurrent.TimeUnit;
 
-public interface			TicModelFactoryI
-extends		AtomicModelFactoryI
-{
-	public TicModelFactoryI	createTicModelAndSetDelay(
-		String modelURI,
-		TimeUnit simulatedTimeUnit,
-		SimulatorI simulationEngine,
-		double delay) ;
+/**
+ * @author Willy Nassim
+ */
+
+public interface TicModelFactoryI extends AtomicModelFactoryI {
+	public TicModelFactoryI createTicModelAndSetDelay(String modelURI, TimeUnit simulatedTimeUnit,
+			SimulatorI simulationEngine, double delay);
 }
 //----------------------------------------------------------------------------

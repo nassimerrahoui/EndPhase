@@ -11,6 +11,11 @@ import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
 
+
+/**
+ * @author Willy Nassim
+ */
+
 public class LaveLingeInPort extends AbstractInboundPort implements ILaveLinge {
 
 	private static final long serialVersionUID = 1L;

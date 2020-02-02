@@ -20,6 +20,10 @@ import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
 import simulator.events.panneausolaire.SolarIntensity;
 import simulator.tic.TicEvent;
 
+/**
+ * @author Willy Nassim
+ */
+
 @ModelExternalEvents(imported = { TicEvent.class }, exported = { SolarIntensity.class })
 public class PanneauSolaireSensorModel extends AtomicHIOAwithEquations {
 

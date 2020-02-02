@@ -6,6 +6,10 @@ import fr.sorbonne_u.devs_simulation.models.events.EventI;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
 import simulator.models.lavelinge.LaveLingeModel;
 
+/**
+ * @author Willy Nassim
+ */
+
 public class SetEssorage extends AbstractLaveLingeEvent {
 
 	private static final long serialVersionUID = 1L;

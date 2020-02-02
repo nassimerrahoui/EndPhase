@@ -20,6 +20,10 @@ import simulator.events.frigo.SendFrigoConsommation;
 import simulator.events.lavelinge.SendLaveLingeConsommation;
 import simulator.events.panneausolaire.SendPanneauSolaireProduction;
 
+/**
+ * @author Willy Nassim
+ */
+
 @ModelExternalEvents(
 		imported = {
 				SendAspirateurConsommation.class,

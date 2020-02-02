@@ -22,6 +22,9 @@ import simulator.events.lavelinge.SetRincageSIL;
 import simulator.events.lavelinge.SetSechageSIL;
 import simulator.events.lavelinge.SwitchLaveLingeOffSIL;
 
+/**
+ * @author Willy Nassim
+ */
 
 public class LaveLingePlanificationModel extends AtomicES_Model{
 	private static final long serialVersionUID = 1L;

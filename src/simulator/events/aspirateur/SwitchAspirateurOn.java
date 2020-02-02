@@ -6,6 +6,10 @@ import fr.sorbonne_u.devs_simulation.models.events.EventI;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
 import simulator.models.aspirateur.AspirateurModel;
 
+/**
+ * @author Willy Nassim
+ */
+
 public class SwitchAspirateurOn extends AbstractAspirateurEvent {
 
 	private static final long serialVersionUID = 1L;

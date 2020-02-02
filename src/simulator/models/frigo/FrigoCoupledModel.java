@@ -26,6 +26,10 @@ import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import fr.sorbonne_u.devs_simulation.utils.StandardCoupledModelReport;
 import simulator.events.frigo.SendFrigoConsommation;
 
+/**
+ * @author Willy Nassim
+ */
+
 public class FrigoCoupledModel extends CoupledModel {
 
 	private static final long serialVersionUID = 1L;

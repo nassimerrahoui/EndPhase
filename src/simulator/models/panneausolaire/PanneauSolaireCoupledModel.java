@@ -30,6 +30,10 @@ import simulator.tic.TicModel;
 import java.util.HashMap;
 import java.util.HashSet;
 
+/**
+ * @author Willy Nassim
+ */
+
 public class PanneauSolaireCoupledModel extends CoupledModel {
 
 	private static final long serialVersionUID = 1L;

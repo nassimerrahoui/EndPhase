@@ -22,6 +22,10 @@ import fr.sorbonne_u.utils.XYPlotter;
 import simulator.events.panneausolaire.SendPanneauSolaireProduction;
 import simulator.events.panneausolaire.SolarIntensity;
 
+/**
+ * @author Willy Nassim
+ */
+
 @ModelExternalEvents(imported = { SolarIntensity.class }, 
 					exported = {SendPanneauSolaireProduction.class})
 

@@ -10,6 +10,10 @@ import fr.sorbonne_u.devs_simulation.models.events.EventI;
 import fr.sorbonne_u.devs_simulation.models.time.Duration;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 
+/**
+ * @author Willy Nassim
+ */
+
 public class ControleurModel extends AtomicModel {
 
 	private static final long serialVersionUID = 1L;

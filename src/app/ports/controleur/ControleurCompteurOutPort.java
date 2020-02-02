@@ -4,6 +4,10 @@ import app.interfaces.controleur.IControleCompteur;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 
+/**
+ * @author Willy Nassim
+ */
+
 public class ControleurCompteurOutPort extends AbstractOutboundPort implements IControleCompteur {
 
 	private static final long serialVersionUID = 1L;

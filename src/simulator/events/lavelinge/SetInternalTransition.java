@@ -9,6 +9,8 @@ import simulator.models.lavelinge.LaveLingeModel;
  * Evenement permettant au modele qui le recoit de passer sa transition interne
  * (non utilise actuelement)
  *
+ * @author Willy Nassim
+ *
  */
 public class SetInternalTransition extends AbstractLaveLingeEvent {
 

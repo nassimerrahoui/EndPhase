@@ -8,6 +8,9 @@ import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
 
+/**
+ * @author Willy Nassim
+ */
 public class AspirateurInPort extends AbstractInboundPort implements IAspirateur {
 
 	private static final long serialVersionUID = 1L;

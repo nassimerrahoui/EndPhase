@@ -21,6 +21,10 @@ import fr.sorbonne_u.utils.PlotterDescription;
 import fr.sorbonne_u.utils.XYPlotter;
 import simulator.events.lavelinge.SendLaveLingeConsommation;
 
+/**
+ * @author Willy Nassim
+ */
+
 @ModelExternalEvents(
 		exported = {
 			SendLaveLingeConsommation.class
