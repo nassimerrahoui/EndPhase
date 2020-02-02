@@ -71,7 +71,6 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 	@ExportedVariable(type = Double.class)
 	protected Value<Double> currentPower = new Value<Double>(this, 0.0, 0); // Watts
 	
-	
 	/** Temperature actuelle du frigo */
 	protected double currentTemperature; // Degres celsius
 	
@@ -241,7 +240,7 @@ public class FrigoModel extends AtomicHIOAwithEquations {
 		}
 	}
 	
-	
+	/** Calcul de la consommation en fonction de la temperature */
 	protected double getConsommationFromTemperature(double temperature, double temperature_cible) {
 		if(temperature - temperature_cible >= LIMIT && !compresseur) {
 			compresseur = true;

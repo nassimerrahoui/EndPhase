@@ -35,14 +35,24 @@ import simulator.plugins.CompteurSimulatorPlugin;
 @RequiredInterfaces(required = { })
 public class Compteur extends AbstractCyPhyComponent implements EmbeddingComponentAccessI {
 
+	/** map des appareils et leur consommation 
+	 *  seulement utilise pour l'etape 1 du projet */
 	protected ConcurrentHashMap<String, Double> appareil_consommation = new ConcurrentHashMap<>();
+	
+	/** map des unites de production et leur production 
+	 *  seulement utilise pour l'etape 1 du projet */
 	protected ConcurrentHashMap<String, Double> unite_production = new ConcurrentHashMap<>();
+	
+	/** Plugin pour interagir avec le modele du compteur */
 	protected CompteurSimulatorPlugin asp;
 	
 	public static int ORIGIN_X = CVM.plotX ;
 	public static int ORIGIN_Y = CVM.plotY ;
 	
+	/** consommation globale de tous les appareils */
 	protected double consommation_globale;
+	
+	/** production globale de toutes les unites de production */
 	protected double production_globale;
 
 	protected Compteur(
@@ -113,7 +123,9 @@ public class Compteur extends AbstractCyPhyComponent implements EmbeddingCompone
 	 * @throws Exception
 	 */
 	public double envoyerConsommationGlobale() throws Exception {
-		return appareil_consommation.values().stream().mapToDouble(i -> i).sum();
+		//premier return utilise pour l'etape 1
+		//return appareil_consommation.values().stream().mapToDouble(i -> i).sum();
+		return consommation_globale;
 	}
 
 	/**
@@ -123,12 +135,15 @@ public class Compteur extends AbstractCyPhyComponent implements EmbeddingCompone
 	 * @throws Exception
 	 */
 	public double envoyerProductionGlobale() throws Exception {
-		return unite_production.values().stream().mapToDouble(i -> i).sum();
+		//premier return utilise pour l'etape 1
+		//return unite_production.values().stream().mapToDouble(i -> i).sum();
+		return production_globale;
 	}
 	
 	/**
 	 * Met a jour la consommation electrique d'un appareil
 	 * si nous voulous utiliser une communication par ports pour la consommation
+	 *  (méthode utilise seulement a l'etape 1 du projet)
 	 * @param uri
 	 * @param consommation
 	 * @throws Exception
@@ -143,6 +158,7 @@ public class Compteur extends AbstractCyPhyComponent implements EmbeddingCompone
 	/**
 	 * Met a jour la production electrique d'une unite de production
 	 * si nous voulous utiliser une communication par ports pour la production
+	 *  (méthode utilise seulement a l'etape 1 du projet)
 	 * @param uri
 	 * @param production
 	 * @throws Exception
@@ -160,7 +176,6 @@ public class Compteur extends AbstractCyPhyComponent implements EmbeddingCompone
 	public void start() throws ComponentStartException {
 		super.start();
 		this.logMessage("Demarrage du compteur...");
-		this.logMessage("Phase d'execution du compteur.");
 	}
 	
 	/**
@@ -170,6 +185,7 @@ public class Compteur extends AbstractCyPhyComponent implements EmbeddingCompone
 	public void dynamicExecute() throws Exception {
 		Thread.sleep(10L);
 		
+		this.logMessage("Recuperation de la consommation/production depuis la simulation...");
 		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
 			@Override
 			public void run() {
@@ -182,8 +198,6 @@ public class Compteur extends AbstractCyPhyComponent implements EmbeddingCompone
 				} catch (Exception e) { e.printStackTrace(); }
 			}
 		}, 1000, 1000, TimeUnit.MILLISECONDS);
-		
-		execute();
 	}
 	
 	@Override

@@ -98,6 +98,9 @@ public class FrigoUserModel extends AtomicES_Model{
 		Duration d;
 		this.nextEvent = this.eventList.peek().getClass() ;
 		
+		// Ordre direct d'execution des evenements sur le composant
+		// LIGHT_ON (PORTE OUVERTE) -> LIGHT_OFF (PORTE FERMEE) -> LIGHT_ON (PORTE OUVERTE)
+		
 		if (this.nextEvent.equals(SwitchFrigoOnSIL.class)) {
 
 			d = new Duration(2.0 * this.rg.nextBeta(1.75, 1.75), this.getSimulatedTimeUnit());

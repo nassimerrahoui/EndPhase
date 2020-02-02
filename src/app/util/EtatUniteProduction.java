@@ -1,9 +1,9 @@
 package app.util;
 
 /**
- * Liste les etat possible d'une unite de production
+ * Liste les etats possibled d'une unite de production
  * ON = l'unite de production est allumee
- * OFF = l'unite de production est eteint
+ * OFF = l'unite de production est eteinte
  * @author Willy Nassim
  *
  */

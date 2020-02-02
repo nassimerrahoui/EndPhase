@@ -38,13 +38,10 @@ import simulator.models.supervisor.SupervisorCoupledModel;
 @OfferedInterfaces(offered = { IComposantDynamique.class })
 public class Supervisor extends AbstractComponent {
 
-	/** the supervisor plug-in attached to this component. */
+	/** Plug-in pour interagir avec le modele du superviseur*/
 	protected SupervisorPlugin sp;
 	
-	/**
-	 * maps from URIs of models to URIs of the reflection inbound ports of the
-	 * components that hold them.
-	 */
+	/** map associant les URIs des modeles aux URIs des ports entrants reflection des composants qui les tiennent */
 	protected Map<String, String> modelURIs2componentURIs;
 
 	protected Supervisor(Map<String, String> modelURIs2componentURIs)
@@ -107,9 +104,6 @@ public class Supervisor extends AbstractComponent {
 	}
 
 	
-	/**
-	 * create the SIL simulation architecture supervised by this component.
-	 */
 	@SuppressWarnings("unchecked")
 	protected ComponentModelArchitecture createSILArchitecture() throws Exception {
 		Map<String, AbstractAtomicModelDescriptor> atomicModelDescriptors = new HashMap<>();

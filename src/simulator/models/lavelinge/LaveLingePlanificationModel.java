@@ -31,8 +31,9 @@ public class LaveLingePlanificationModel extends AtomicES_Model{
 	protected double meanTimeBetweenUsages;
 	protected double meanTimeExecuteTask;
 	protected final RandomDataGenerator rg;
+	
+	/** etat du lave-linge */
 	protected ModeLaveLinge etat_lavelinge;
-	protected static final double NB_STOP_BETWEEN_ROTATIONS = 10; // non utilise, devrait etre utilise pour un modele plus realiste
 	
 	/** delai dans lequel la planification d'un mode va se declencher */
 	protected double delai;
@@ -56,7 +57,7 @@ public class LaveLingePlanificationModel extends AtomicES_Model{
 	@Override
 	public void initialiseState(Time initialTime) {
 		this.initialDelay = 10.0;
-		this.meanTimeBetweenUsages = 50.0;
+		this.meanTimeBetweenUsages = 100.0;
 		this.meanTimeExecuteTask = 20.0;
 		this.delai = 0.0;
 		this.rg.reSeedSecure();
@@ -92,6 +93,11 @@ public class LaveLingePlanificationModel extends AtomicES_Model{
 	
 	@Override
 	public void userDefinedInternalTransition(Duration elapsedTime) {
+		
+		// ici on recupere la liste de planification des etat pour notre cycle
+		// chaque etat dans la liste sera planifie dans un delai donne
+		// l'ordre dans lequel les etat ont ete ajoute dans la liste est important
+		// car elle determine l'ordre du cycle
 		try {
 			@SuppressWarnings("unchecked")
 			ArrayList<ModeLaveLinge> planification = (ArrayList<ModeLaveLinge>) componentRef.getEmbeddingComponentStateValue(LaveLingeModel.URI + " : planification");
@@ -132,8 +138,8 @@ public class LaveLingePlanificationModel extends AtomicES_Model{
 		}
 		
 		// event de transition si aucun etat est planifie
-		 d = new Duration((this.delai + this.meanTimeBetweenUsages * i), this.getSimulatedTimeUnit());
-		 this.scheduleEvent(new SetInternalTransitionSIL(this.getCurrentStateTime().add(d)));
+		d = new Duration((this.delai + this.meanTimeBetweenUsages * i), this.getSimulatedTimeUnit());
+		this.scheduleEvent(new SetInternalTransitionSIL(this.getCurrentStateTime().add(d)));
 		
 		planification_etats = new ArrayList<>();
 		

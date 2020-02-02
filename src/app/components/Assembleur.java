@@ -55,10 +55,16 @@ import simulator.models.supervisor.SupervisorCoupledModel;
 
 public class Assembleur extends AbstractComponent {
 
+	/** Port permettant de lancer dynamiquement les autres composants */
 	protected DynamicComponentCreationOutboundPort DynamicOutPort;
 	
+	/** Liste des uri de chaque composant generes par l'assembleur */
 	protected String[] LISTE_REFLECTION_INPORT;
+	
+	/** Liste des uris de jvm */
 	protected String[] LISTE_JVM_URI;
+	
+	/** Liste des uri  de chaque port entrant pour lancer une execution dynamique */
 	protected String[] launch_uri_inport;
 	
 	/** map uri pour superviseur */
@@ -448,6 +454,7 @@ public class Assembleur extends AbstractComponent {
 		
 	}
 	
+	/** execution dynamique des composants */
 	public void launch() throws Exception {
 		
 		AssembleurOutPort AssembleurOutPort = new AssembleurOutPort(this);

@@ -12,7 +12,6 @@ import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 
 public class ControleurModel extends AtomicModel {
 
-
 	private static final long serialVersionUID = 1L;
 	
 	public static final String URI = "ControleurModel";
@@ -23,13 +22,10 @@ public class ControleurModel extends AtomicModel {
 		super(uri, simulatedTimeUnit, simulationEngine);
 	}
 
-	
 	@Override
 	public void setSimulationRunParameters(Map<String, Object> simParams) throws Exception {
 		this.componentRef = (Controleur) simParams.get(URI + " : " + COMPONENT_REF);
-		System.out.println(this.componentRef);
 	}
-
 	
 	@Override
 	public Duration timeAdvance() {
@@ -49,6 +45,9 @@ public class ControleurModel extends AtomicModel {
 	@Override
 	public void userDefinedInternalTransition(Duration elapsedTime) {
 		
+		assert this.componentRef != null;
+		
+		// lance la methode de controle sur le controleur
 		try {
 			this.componentRef.controlTask(this.getCurrentStateTime().getSimulatedTime());
 		} catch (Exception e) {

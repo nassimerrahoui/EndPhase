@@ -53,6 +53,10 @@ import simulator.plugins.ControleurSimulatorPlugin;
 		IControlePanneau.class,
 		IControleBatterie.class })
 
+/**
+ * Ce composant effectue differentes actions sur l'ensemble des appareils/unites de productions.
+ *
+ */
 public class Controleur extends AbstractCyPhyComponent implements OrderManagerComponentAccessI{
 	
 	protected ControleurFrigoOutPort frigo_OUTPORT;
@@ -62,11 +66,25 @@ public class Controleur extends AbstractCyPhyComponent implements OrderManagerCo
 	protected ControleurBatterieOutPort batterie_OUTPORT;
 	protected ControleurCompteurOutPort compteur_OUTPORT;
 
+	/** Liste des unites de productions du systeme */
 	protected Vector<String> unitesProduction = new Vector<>();
+	
+	/** Map contenant l'indice de priorite pour chaque appareil 
+	 *  uri -> priorite */
 	protected HashMap<String, TypeAppareil> appareils_priority = new HashMap<>();
+	
+	/** Map contenant la classe d'appareil pour chaque appareil
+	 *  uri -> class appareil */
 	protected HashMap<String, String> appareils_className = new HashMap<>();
+	
+	/**
+	 * En fonction de ce niveau, le controleur effectue des actions de regulations
+	 * afin de stabiliser le rapport production/consommation
+	 * Son but est de toujours garder une consommation inferieure ou egale a la production
+	 */
 	protected int niveauDeControle = 1;
 	
+	/** Plugin pour interagir avec le model du controleur */
 	protected ControleurSimulatorPlugin	asp ;
 
 	protected Controleur(
@@ -301,6 +319,7 @@ public class Controleur extends AbstractCyPhyComponent implements OrderManagerCo
 							});
 						}
 					}
+					this.logMessage("Extinction de l'aspirateur...");
 					break;
 					
 				case 2 :
@@ -322,6 +341,7 @@ public class Controleur extends AbstractCyPhyComponent implements OrderManagerCo
 							});
 						}
 					}
+					this.logMessage("Extinction du lave-linge...");
 					break;
 					
 				case 3 :
@@ -333,14 +353,15 @@ public class Controleur extends AbstractCyPhyComponent implements OrderManagerCo
 							} catch (Exception e) { throw new RuntimeException(e); }
 						}
 					});
+					this.logMessage("Allumage de la batterie...");
 					break;
 			}
 			
-			if(niveauDeControle < 3)
-				niveauDeControle++;	
-			
-			this.logMessage("Nouvelle decision : " + niveauDeControle);
-			
+			if(niveauDeControle <= 3) {
+				niveauDeControle++;
+				this.logMessage("Stabilisation...");
+			}
+
 		} else {
 			niveauDeControle = 1;
 		}
@@ -359,49 +380,50 @@ public class Controleur extends AbstractCyPhyComponent implements OrderManagerCo
 	 * @throws Exception
 	 */
 	public void dynamicExecute() throws Exception {
+		this.logMessage("Début scénario...");
 		
-		this.logMessage("Phase d'execution du controleur.");
-		
-		this.logMessage("Execution en cours...");
-		
-		this.scheduleTask(new AbstractComponent.AbstractTask() {
+		this.logMessage("Allumge du panneau solaire");
+		this.runTask(new AbstractComponent.AbstractTask() {
 			@Override
 			public void run() {
 				try { ((Controleur) this.getTaskOwner()).envoyerEtatPanneauSolaire(EtatUniteProduction.ON); }
 				catch (Exception e) { throw new RuntimeException(e); }
 			}
-		}, 3000, TimeUnit.MILLISECONDS);
+		});
 		
-		this.scheduleTask(new AbstractComponent.AbstractTask() {
-			@Override
-			public void run() {
-				try { ((Controleur) this.getTaskOwner()).envoyerEtatBatterie(EtatUniteProduction.ON); }
-				catch (Exception e) { throw new RuntimeException(e); }
-			}
-		}, 3000, TimeUnit.MILLISECONDS);
-		
+		this.logMessage("Allumge du frigo");
 		this.scheduleTask(new AbstractComponent.AbstractTask() {
 			@Override
 			public void run() {
 				try { ((Controleur) this.getTaskOwner()).envoyerEtatFrigo(ModeFrigo.LIGHT_OFF); }
 				catch (Exception e) { throw new RuntimeException(e); }
 			}
-		}, 3000, TimeUnit.MILLISECONDS);
+		}, 4000, TimeUnit.MILLISECONDS);
 		
-		
+		this.logMessage("Allumge de l'aspirateur");
 		this.scheduleTask(new AbstractComponent.AbstractTask() {
 			@Override
 			public void run() {
 				try { ((Controleur) this.getTaskOwner()).envoyerEtatAspirateur(ModeAspirateur.PERFORMANCE_REDUITE); }
 				catch (Exception e) { throw new RuntimeException(e); }
 			}
-		}, 3000, TimeUnit.MILLISECONDS);
+		}, 6000, TimeUnit.MILLISECONDS);
 		
+		this.logMessage("Reglage temperature cible pour le refrigerateur");
+		this.scheduleTask(new AbstractComponent.AbstractTask() {
+			@Override
+			public void run() {
+				try { ((Controleur) this.getTaskOwner()).envoyerTemperature_Refrigerateur(3.5); }
+				catch (Exception e) { throw new RuntimeException(e); }
+			}
+		}, 6000, TimeUnit.MILLISECONDS);
+		
+		this.logMessage("Planification du lave-ling");
 		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
 			@Override
 			public void run() {
 				try {
-					((Controleur) this.getTaskOwner()).envoyerTemperature_Refrigerateur(3.5);
+					
 					ArrayList<ModeLaveLinge> p = new ArrayList<>();
 					p.add(ModeLaveLinge.LAVAGE);
 					p.add(ModeLaveLinge.RINCAGE);
@@ -412,7 +434,7 @@ public class Controleur extends AbstractCyPhyComponent implements OrderManagerCo
 				}
 				catch (Exception e) { throw new RuntimeException(e); }
 			}
-		}, 20000, 1000, TimeUnit.MILLISECONDS);
+		}, 8000, 20000, TimeUnit.MILLISECONDS);
 		
 		HashMap<String, Object> simParams = new HashMap<String, Object>();
 		simParams.put(ControleurModel.URI + " : " + ControleurModel.COMPONENT_REF, this);

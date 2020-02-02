@@ -38,6 +38,7 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 	@ExportedVariable(type = Double.class)
 	protected Value<Double> currentConsommation = new Value<Double>(this, 0.0, 0); // Watts
 	protected ModeAspirateur currentState;
+	
 	protected XYPlotter powerPlotter;
 	protected EmbeddingComponentAccessI componentRef;
 	
@@ -118,7 +119,11 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 			this.powerPlotter.addData(SERIES_POWER, this.getCurrentStateTime().getSimulatedTime(), this.getConsommation());
 			
 			assert	this.componentRef != null ;
+			
 			ModeAspirateur m = (ModeAspirateur) this.componentRef.getEmbeddingComponentStateValue(AspirateurModel.URI + " : state");
+			
+			// Si le nouvel etat differe du precedent, on met a jour l'etat du composant 
+			// pour changer la valeur de consommation envoyee au compteur
 			if (m != this.lastState) {
 				switch(m)
 				{

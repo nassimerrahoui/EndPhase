@@ -44,6 +44,7 @@ public class LaveLingeModel extends AtomicHIOAwithEquations{
 	protected Value<Double> currentPower = new Value<Double>(this, 0.0, 0); // Watts
 	protected ModeLaveLinge currentState;
 	protected TemperatureLaveLinge currentTemperature; // degres celsius
+	
 	protected XYPlotter powerPlotter;
 	
 	protected EmbeddingComponentAccessI componentRef;
@@ -143,7 +144,10 @@ public class LaveLingeModel extends AtomicHIOAwithEquations{
 			this.powerPlotter.addData(SERIES_POWER, this.getCurrentStateTime().getSimulatedTime(), this.getConsommation());
 			
 			assert	this.componentRef != null ;
+			
 			ModeLaveLinge m = (ModeLaveLinge) this.componentRef.getEmbeddingComponentStateValue(LaveLingeModel.URI + " : state");
+			
+			// Recuperation de l'etat depuis le composant pour changer la consommation envoye au compteur
 			if (m != this.lastState) {
 				switch(m)
 				{

@@ -32,6 +32,7 @@ public class AspirateurUserModel extends AtomicES_Model {
 	protected double meanTimeOff;
 	protected Class<?> nextEvent;
 	protected final RandomDataGenerator rg;
+
 	protected ModeAspirateur etat_aspirateur;
 	protected Aspirateur componentRef;
 
@@ -99,6 +100,9 @@ public class AspirateurUserModel extends AtomicES_Model {
 		Duration d;
 
 		this.nextEvent = this.eventList.peek().getClass() ;
+		
+		// Ordre direct d'execution des evenements sur le composant
+		// ON -> PerfromanceReduite -> PerformanceMaximale -> OFF -> ON
 		
 		if (this.nextEvent.equals(SwitchAspirateurOnSIL.class)) {
 			

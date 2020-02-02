@@ -52,13 +52,19 @@ public class LaveLinge
 	
 	protected ArrayList<ModeLaveLinge> planification_etats;
 	
+	/** heure pour la planification */
 	protected int heure;
+	
+	/** minutes pour la planification */
 	protected int minutes;
 	
 	/** Consommation en Watts par l'appareil */
 	protected Double consommation;
+	
+	/** Temperature pour le cycle */
 	protected TemperatureLaveLinge temperature;
 	
+	/** Plugin pour interagir avec le modele du lave-linge */
 	protected LaveLingeSimulatorPlugin asp;
 	
 	public static int ORIGIN_X = CVM.plotX;
@@ -121,6 +127,7 @@ public class LaveLinge
 
 	/**
 	 * Envoie la consommation au compteur
+	 * (utilise seulement pour l'etape 1)
 	 * @param uri
 	 * @param consommation
 	 * @throws Exception
@@ -167,8 +174,7 @@ public class LaveLinge
 	 * Gerer et afficher ce qui se passe pendant un mode
 	 */
 	public void runningAndPrint() {
-		this.logMessage("Mode actuel : " + etat.name());
-		this.logMessage("...");
+		// unused
 	}
 	
 	// ************* Cycle de vie du composant ************* 
@@ -184,34 +190,10 @@ public class LaveLinge
 	 * @throws Exception
 	 */
 	public void dynamicExecute() throws Exception {
-		
 		this.logMessage("Phase d'execution du lave-linge.");
 		
-		this.logMessage("Execution en cours...");
-		
-		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
-			@Override
-			public void run() {
-				try { ((LaveLinge) this.getTaskOwner()).runningAndPrint(); } 
-				catch (Exception e) { throw new RuntimeException(e); }
-			}
-		}, 2000, 5000, TimeUnit.MILLISECONDS);
-		
-		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
-			@Override
-			public void run() {
-				try { ((LaveLinge) this.getTaskOwner()).envoyerConsommation(URI.LAVELINGE_URI.getURI(), consommation); } 
-				catch (Exception e) { throw new RuntimeException(e); }
-			}
-		}, 2500, 1000, TimeUnit.MILLISECONDS);
-		
-		execute();
-	}
-	
-	@Override
-	public void execute() throws Exception {
 		Thread.sleep(10L);
-		
+		this.logMessage("Recuperation de la consommation depuis le modele...");
 		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
 			@Override
 			public void run() {
@@ -222,6 +204,7 @@ public class LaveLinge
 				} catch (Exception e) { e.printStackTrace(); }
 			}
 		}, 2500, 1000, TimeUnit.MILLISECONDS);
+
 	}
 	
 	@Override

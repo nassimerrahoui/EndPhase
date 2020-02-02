@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import app.util.EtatUniteProduction;
 import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentAccessI;
+import fr.sorbonne_u.devs_simulation.hioa.annotations.ExportedVariable;
 import fr.sorbonne_u.devs_simulation.hioa.annotations.ImportedVariable;
 import fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOAwithEquations;
 import fr.sorbonne_u.devs_simulation.hioa.models.vars.Value;
@@ -32,9 +33,9 @@ public class PanneauSolaireModel extends AtomicHIOAwithEquations {
 	public static final String INTENSITY_PLOTTING_PARAM_NAME = "solarIntensity";
 	
 	private static final String SERIES_INTENSITY = "solarIntensity";
-	protected Value<Double> currentEnergy = new Value<Double>(this, 0.0, 0); // Watts
 	protected EtatUniteProduction currentState;
-	
+	@ExportedVariable(type = Double.class)
+	protected Value<Double> currentEnergy = new Value<Double>(this, 0.0, 0); // Watts
 	@ImportedVariable(type = Double.class)
 	protected Value<Double> currentSolarIntensity = new Value<Double>(this, 0.0, 0);
 	
@@ -119,7 +120,6 @@ public class PanneauSolaireModel extends AtomicHIOAwithEquations {
 	public void userDefinedExternalTransition(Duration elapsedTime) {
 		
 		ArrayList<EventI> current = this.getStoredEventAndReset();
-		assert current != null;
 		assert componentRef != null;
 
 		for (int i = 0 ; i < current.size() ; i++) {
@@ -129,7 +129,8 @@ public class PanneauSolaireModel extends AtomicHIOAwithEquations {
 											getEventInformation()).value;
 			}
 		}
-		
+
+		// Recuperation de l'etat du composant pour changer la production envoye au compteur
 		try {
 			this.setState((EtatUniteProduction) componentRef.getEmbeddingComponentStateValue(URI + " : state"));
 		} catch (Exception e) {

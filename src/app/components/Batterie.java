@@ -6,7 +6,6 @@ import java.awt.GraphicsEnvironment;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
 import app.CVM;
 import app.interfaces.assembleur.IComposantDynamique;
 import app.interfaces.production.IAjoutUniteProduction;
@@ -106,6 +105,7 @@ public class Batterie extends AbstractCyPhyComponent implements EmbeddingCompone
 
 	/**
 	 * Envoie la production au compteur
+	 * (méthode utilise seulement a l'etape 1 du projet)
 	 * @param uri
 	 * @param consommation
 	 * @throws Exception
@@ -138,29 +138,17 @@ public class Batterie extends AbstractCyPhyComponent implements EmbeddingCompone
 	public void dynamicExecute() throws Exception {
 		this.logMessage("Phase d'execution de la batterie.");
 		
-		this.logMessage("Execution en cours...");
-		
-		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
-			@Override
-			public void run() {
-				try { ((Batterie) this.getTaskOwner()).envoyerProduction(URI.BATTERIE_URI.getURI(), production); } 
-				catch (Exception e) { throw new RuntimeException(e); }
-			}
-		}, 2000, 1000, TimeUnit.MILLISECONDS);
-		
-		
 		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
 			@Override
 			public void run() {
 				try {
 					((Batterie) this.getTaskOwner()).production = (double) ((Batterie) this.getTaskOwner()).asp.getModelStateValue(BatterieModel.URI, "energy");
-					((Batterie) this.getTaskOwner()).logMessage("Production : " + Math.round(production));
+					((Batterie) this.getTaskOwner()).logMessage("Mode : " + etat);
+					((Batterie) this.getTaskOwner()).logMessage("Production : " + production);
 					Thread.sleep(10L);
 				} catch (Exception e) { e.printStackTrace(); }
 			}
-		}, 2000, 1000, TimeUnit.MILLISECONDS);
-		
-		execute();
+		}, 1000, 1000, TimeUnit.MILLISECONDS);
 	}
 	
 	@Override

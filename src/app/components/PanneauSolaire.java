@@ -49,6 +49,7 @@ public class PanneauSolaire
 	/** Production en Watts par l'unite de production */
 	protected double production;
 	
+	/** Plugin pour interagir avec le model panneau solaire */
 	protected PanneauSolaireSimulatorPlugin asp;
 	
 	public static int ORIGIN_X = CVM.plotX;
@@ -105,6 +106,7 @@ public class PanneauSolaire
 
 	/**
 	 * Envoie la production au compteur
+	 * (méthode utilise seulement a l'etape 1 du projet)
 	 * @param uri
 	 * @param consommation
 	 * @throws Exception
@@ -138,22 +140,7 @@ public class PanneauSolaire
 		
 		this.logMessage("Phase d'execution du panneau solaire.");
 		
-		this.logMessage("Execution en cours...");
-		
-		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
-			@Override
-			public void run() {
-				try { ((PanneauSolaire) this.getTaskOwner()).envoyerProduction(URI.PANNEAUSOLAIRE_URI.getURI(), production); } 
-				catch (Exception e) { throw new RuntimeException(e); }
-			}
-		}, 2000, 1000, TimeUnit.MILLISECONDS);
-		
-		execute();
-	}
-	
-	@Override
-	public void execute() throws Exception {
-		
+		this.logMessage("Recuperation de la production depuis le modele...");
 		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
 			@Override
 			public void run() {
@@ -164,7 +151,7 @@ public class PanneauSolaire
 					((PanneauSolaire) this.getTaskOwner()).logMessage("Production : " + production);
 				} catch (Exception e) { e.printStackTrace(); }
 			}
-		}, 4000, 1000, TimeUnit.MILLISECONDS);
+		}, 1000, 1000, TimeUnit.MILLISECONDS);
 	}
 
 	@Override

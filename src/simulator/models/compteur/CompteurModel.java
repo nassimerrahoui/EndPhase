@@ -43,7 +43,10 @@ public class CompteurModel extends AtomicModel {
 	protected XYPlotter consommationPlotter;
 	protected XYPlotter productionPlotter;
 	
+	/** consommation globale des appareils */
 	protected double consommation_globale;
+	
+	/** production globale des unites de production */
 	protected double production_globale;
 	
 	/** Reference du composant associe au modele */
@@ -51,7 +54,6 @@ public class CompteurModel extends AtomicModel {
 	
 	protected ConcurrentHashMap<String, Double> appareil_consommation = new ConcurrentHashMap<>();
 	protected ConcurrentHashMap<String, Double> unite_production = new ConcurrentHashMap<>();
-	
 	
 	public CompteurModel(String uri, TimeUnit simulatedTimeUnit, SimulatorI simulationEngine) throws Exception {
 		super(uri, simulatedTimeUnit, simulationEngine);

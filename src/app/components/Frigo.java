@@ -48,15 +48,22 @@ public class Frigo
 	/** Etat actuel de l'appareil */
 	protected ModeFrigo etat;
 
+	/** temperature actuelle du refrigerateur */
 	protected double  refrigerateur_current_temperature;
+	
+	/** temperature actuelle du congelateur (non implemente actuellement) */
 	protected double  congelateur_current_temperature;
 	
-	protected double congelateur_temperature_cible;
+	/** temperature cible de refrigerateur */
 	protected double refrigerateur_temperature_cible;
+	
+	/** temperature cible de congelateur (non implemente actuellement) */
+	protected double congelateur_temperature_cible;
 
 	/** Consommation en Watts par l'appareil */
 	protected double consommation;
 	
+	/** Plugin pour interagir avec le model du simulator */
 	protected FrigoSimulatorPlugin asp;
 	
 	public static int ORIGIN_X = CVM.plotX ;
@@ -153,11 +160,9 @@ public class Frigo
 		this.congelateur_temperature_cible = temperature;
 	}
 
-	/**
-	 * Actions du frigo pendant l'execution
-	 */
+	/** Actions du frigo pendant l'execution */
 	protected void runningAndPrint() {
-
+		// unused
 	}
 	
 	// ************* Cycle de vie du composant ************* 
@@ -173,34 +178,10 @@ public class Frigo
 	 * @throws Exception
 	 */
 	public void dynamicExecute() throws Exception {
-		
 		this.logMessage("Phase d'execution du frigo.");
 		
-		this.logMessage("Execution en cours...");
-		
-		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
-			@Override
-			public void run() {
-				try { ((Frigo) this.getTaskOwner()).runningAndPrint(); } 
-				catch (Exception e) { throw new RuntimeException(e); }
-			}
-		}, 2000, 4000, TimeUnit.MILLISECONDS);
-		
-		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
-			@Override
-			public void run() {
-				try { ((Frigo) this.getTaskOwner()).envoyerConsommation(URI.FRIGO_URI.getURI(), consommation); } 
-				catch (Exception e) { throw new RuntimeException(e); }
-			}
-		}, 2500, 1000, TimeUnit.MILLISECONDS);
-		
-		execute();
-	}
-	
-	@Override
-	public void execute() throws Exception {		
 		Thread.sleep(10L);
-		
+		this.logMessage("Recuperation de la consommation depuis le modele...");
 		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
 			@Override
 			public void run() {

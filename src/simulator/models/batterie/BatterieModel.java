@@ -48,6 +48,7 @@ public class BatterieModel extends AtomicHIOAwithEquations {
 	protected Value<Double> currentProduction = new Value<Double>(this, 0.0, 0); // Watts
 	protected EtatUniteProduction currentState;
 	
+	/** Production lorsque que la batterie est en mode ON */
 	protected static final double ON_PRODUCTION = 500;
 	
 	protected XYPlotter powerPlotter;
@@ -75,13 +76,6 @@ public class BatterieModel extends AtomicHIOAwithEquations {
 		this.currentState = EtatUniteProduction.ON;	
 		this.powerPlotter.initialise();
 		this.powerPlotter.showPlotter();
-
-		try {
-			//this.setDebugLevel(1);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		
 		super.initialiseState(initialTime);
 	}
 
@@ -119,13 +113,15 @@ public class BatterieModel extends AtomicHIOAwithEquations {
 
 	@Override
 	public void userDefinedInternalTransition(Duration elapsedTime) {
-		if (this.componentRef != null) {
-			try {
-				this.setState((EtatUniteProduction) componentRef.getEmbeddingComponentStateValue(URI + " : state"));
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new RuntimeException(e);
-			}
+		
+		assert this.componentRef != null;
+		
+		/** Recupere le mode de la batterie depuis le composant pour changer la production en fonction du mode */
+		try {
+			this.setState((EtatUniteProduction) componentRef.getEmbeddingComponentStateValue(URI + " : state"));
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		
 		super.userDefinedInternalTransition(elapsedTime);

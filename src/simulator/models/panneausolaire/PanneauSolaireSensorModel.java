@@ -58,11 +58,13 @@ public class PanneauSolaireSensorModel extends AtomicHIOAwithEquations {
 	protected double lastReadingTime;
 	/** history of readings, for the simulation report. */
 	protected final Vector<SolarIntensity> readings;
-
+	protected final RandomDataGenerator	rgNewSolarIntensity;
+	
+	/** intensite solaire capte par le sensor du panneau solaire */
 	@ExportedVariable(type = Double.class)
 	protected Value<Double> solarIntensity = new Value<Double>(this, 0.0, 0);
-	protected static final double KILO_WATT_CRETE = 2.0;
-	protected final RandomDataGenerator	rgNewSolarIntensity;
+	
+	/** Nombre de tic pour modeliser le moment de la journee et varier l'intensite solaire */
 	protected int nb_tic;
 	
 	public PanneauSolaireSensorModel(String uri, TimeUnit simulatedTimeUnit, SimulatorI simulationEngine)
@@ -88,7 +90,7 @@ public class PanneauSolaireSensorModel extends AtomicHIOAwithEquations {
 	@Override
 	public Duration timeAdvance() {
 		if (this.triggerReading) {
-			// immediate internal event when a reading is triggered.
+			// genere un event interne directement lorsqu'une lecture est declanche
 			return Duration.zero(this.getSimulatedTimeUnit());
 		} else {
 			return Duration.one(this.getSimulatedTimeUnit());
@@ -120,7 +122,7 @@ public class PanneauSolaireSensorModel extends AtomicHIOAwithEquations {
 	}
 	
 	protected double generateSolarIntensity() {
-		// Generate a random solar intensity using the Beta distribution 
+		// Genere une intensite solaire aleatoire suivant la bete distribution
 		double newSolarIntensity = solarIntensity.v;
 		if(nb_tic < 8 || nb_tic >= 40) {
 			newSolarIntensity = 0.0;
