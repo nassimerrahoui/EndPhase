@@ -18,6 +18,10 @@ import fr.sorbonne_u.utils.PlotterDescription;
 import fr.sorbonne_u.utils.XYPlotter;
 import simulator.events.aspirateur.SendAspirateurConsommation;
 
+/**
+ * @author Willy Nassim
+ */
+
 @ModelExternalEvents(
 		exported = {
 			SendAspirateurConsommation.class
@@ -38,10 +42,11 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 	@ExportedVariable(type = Double.class)
 	protected Value<Double> currentConsommation = new Value<Double>(this, 0.0, 0); // Watts
 	protected ModeAspirateur currentState;
+	
 	protected XYPlotter powerPlotter;
 	protected EmbeddingComponentAccessI componentRef;
 	
-	/** the last value emitted as a reading of the solar solarIntensity. */
+	/** dernier etat lu dans le composant */
 	protected ModeAspirateur lastState;
 	/** vrai si la consommation a changer */
 	protected boolean consumptionHasChanged ;
@@ -69,12 +74,6 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 		this.currentState = ModeAspirateur.OFF;	
 		this.powerPlotter.initialise();
 		this.powerPlotter.showPlotter();
-
-		try {
-			//this.setDebugLevel(1);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
 		
 		super.initialiseState(initialTime);
 	}
@@ -106,7 +105,6 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 			return null ;
 		}
 		
-//		return null;
 	}
 
 	@Override
@@ -125,7 +123,11 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 			this.powerPlotter.addData(SERIES_POWER, this.getCurrentStateTime().getSimulatedTime(), this.getConsommation());
 			
 			assert	this.componentRef != null ;
+			
 			ModeAspirateur m = (ModeAspirateur) this.componentRef.getEmbeddingComponentStateValue(AspirateurModel.URI + " : state");
+			
+			// Si le nouvel etat differe du precedent, on met a jour l'etat du composant 
+			// pour changer la valeur de consommation envoyee au compteur
 			if (m != this.lastState) {
 				switch(m)
 				{
@@ -137,7 +139,7 @@ public class AspirateurModel extends AtomicHIOAwithEquations {
 				this.lastState = m ;
 			}
 			
-			//this.powerPlotter.addData(SERIES_POWER, this.getCurrentStateTime().getSimulatedTime(), this.getConsommation());
+			this.powerPlotter.addData(SERIES_POWER, this.getCurrentStateTime().getSimulatedTime(), this.getConsommation());
 		
 		} catch (Exception e) {
 			throw new RuntimeException(e) ;

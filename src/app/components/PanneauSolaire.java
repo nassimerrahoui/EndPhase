@@ -3,7 +3,6 @@ package app.components;
 import java.awt.DisplayMode;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
-import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 import app.CVM;
@@ -27,14 +26,18 @@ import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
 import fr.sorbonne_u.devs_simulation.architectures.Architecture;
-import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
-import fr.sorbonne_u.utils.PlotterDescription;
 import simulator.models.panneausolaire.PanneauSolaireCoupledModel;
 import simulator.models.panneausolaire.PanneauSolaireModel;
 import simulator.plugins.PanneauSolaireSimulatorPlugin;
 
+
+/**
+ * @author Willy Nassim
+ */
+
 @OfferedInterfaces(offered = { IPanneau.class, IComposantDynamique.class })
 @RequiredInterfaces(required = { IAjoutUniteProduction.class, IProduction.class })
+
 public class PanneauSolaire 
 	extends AbstractCyPhyComponent 
 	implements EmbeddingComponentAccessI {
@@ -51,6 +54,7 @@ public class PanneauSolaire
 	/** Production en Watts par l'unite de production */
 	protected double production;
 	
+	/** Plugin pour interagir avec le model panneau solaire */
 	protected PanneauSolaireSimulatorPlugin asp;
 	
 	public static int ORIGIN_X = CVM.plotX;
@@ -107,8 +111,9 @@ public class PanneauSolaire
 
 	/**
 	 * Envoie la production au compteur
+	 * (méthode utilise seulement a l'etape 1 du projet)
 	 * @param uri
-	 * @param consommation
+	 * @param production
 	 * @throws Exception
 	 */
 	public void envoyerProduction(String uri, double production) throws Exception {
@@ -140,51 +145,7 @@ public class PanneauSolaire
 		
 		this.logMessage("Phase d'execution du panneau solaire.");
 		
-		this.logMessage("Execution en cours...");
-		
-		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
-			@Override
-			public void run() {
-				try { ((PanneauSolaire) this.getTaskOwner()).envoyerProduction(URI.PANNEAUSOLAIRE_URI.getURI(), production); } 
-				catch (Exception e) { throw new RuntimeException(e); }
-			}
-		}, 2000, 1000, TimeUnit.MILLISECONDS);
-		
-		execute();
-	}
-	
-	@Override
-	public void execute() throws Exception {
-		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 10L ;
-
-		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
-		simParams.put(PanneauSolaireModel.URI + " : " + PanneauSolaireModel.COMPONENT_REF, this);
-		
-		simParams.put(PanneauSolaireModel.URI + " : " + PanneauSolaireModel.INTENSITY_PLOTTING_PARAM_NAME, new PlotterDescription(
-				"Ensoleilement Panneau Solaire", 
-				"Temps (sec)", 
-				"Rayonnement (KWC)", 
-				ORIGIN_X + 2 * getPlotterWidth(),
-		  		ORIGIN_Y + 2 * getPlotterHeight(),
-		  		getPlotterWidth(),
-		  		getPlotterHeight())) ;
-		
-		this.asp.setSimulationRunParameters(simParams) ;
-
-		this.runTask(
-				new AbstractComponent.AbstractTask() {
-					@Override
-					public void run() {
-						try {
-							asp.doStandAloneSimulation(0.0, 60000.0) ;
-						} catch (Exception e) {
-							throw new RuntimeException(e) ;
-						}
-					}
-				});
-		
-		Thread.sleep(10L);
-		
+		this.logMessage("Recuperation de la production depuis le modele...");
 		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
 			@Override
 			public void run() {
@@ -195,7 +156,7 @@ public class PanneauSolaire
 					((PanneauSolaire) this.getTaskOwner()).logMessage("Production : " + production);
 				} catch (Exception e) { e.printStackTrace(); }
 			}
-		}, 4000, 1000, TimeUnit.MILLISECONDS);
+		}, 1000, 1000, TimeUnit.MILLISECONDS);
 	}
 
 	@Override

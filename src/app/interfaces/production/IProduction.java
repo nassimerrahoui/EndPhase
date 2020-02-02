@@ -11,7 +11,6 @@ public interface IProduction extends RequiredI {
 	
 	/**
 	 * Envoie la production electrique d'une unite de production au compteur
-	 * @return
 	 * @throws Exception
 	 */
 	public void envoyerProduction(String uri, double production) throws Exception;

@@ -6,6 +6,10 @@ import fr.sorbonne_u.devs_simulation.models.events.EventI;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
 import simulator.models.frigo.FrigoUserModel;
 
+/**
+ * @author Willy Nassim
+ */
+
 public class CloseRefrigerateurDoorSIL extends CloseRefrigerateurDoor {
 
 	private static final long serialVersionUID = 1L;

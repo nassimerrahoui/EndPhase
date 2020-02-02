@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import app.util.EtatUniteProduction;
 import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentAccessI;
+import fr.sorbonne_u.devs_simulation.hioa.annotations.ExportedVariable;
 import fr.sorbonne_u.devs_simulation.hioa.annotations.ImportedVariable;
 import fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOAwithEquations;
 import fr.sorbonne_u.devs_simulation.hioa.models.vars.Value;
@@ -18,9 +19,15 @@ import fr.sorbonne_u.devs_simulation.utils.AbstractSimulationReport;
 import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
 import fr.sorbonne_u.utils.PlotterDescription;
 import fr.sorbonne_u.utils.XYPlotter;
+import simulator.events.panneausolaire.SendPanneauSolaireProduction;
 import simulator.events.panneausolaire.SolarIntensity;
 
-@ModelExternalEvents(imported = { SolarIntensity.class })
+/**
+ * @author Willy Nassim
+ */
+
+@ModelExternalEvents(imported = { SolarIntensity.class }, 
+					exported = {SendPanneauSolaireProduction.class})
 
 public class PanneauSolaireModel extends AtomicHIOAwithEquations {
 
@@ -30,9 +37,9 @@ public class PanneauSolaireModel extends AtomicHIOAwithEquations {
 	public static final String INTENSITY_PLOTTING_PARAM_NAME = "solarIntensity";
 	
 	private static final String SERIES_INTENSITY = "solarIntensity";
-	protected double currentEnergy;
 	protected EtatUniteProduction currentState;
-	
+	@ExportedVariable(type = Double.class)
+	protected Value<Double> currentEnergy = new Value<Double>(this, 0.0, 0); // Watts
 	@ImportedVariable(type = Double.class)
 	protected Value<Double> currentSolarIntensity = new Value<Double>(this, 0.0, 0);
 	
@@ -78,15 +85,23 @@ public class PanneauSolaireModel extends AtomicHIOAwithEquations {
 
 	@Override
 	protected void initialiseVariables(Time startTime) {
-		this.currentEnergy = 0.0;
+		this.currentEnergy.v = 0.0;
 		this.intensityPlotter.addData(SERIES_INTENSITY, this.getCurrentStateTime().getSimulatedTime(), this.getEnergy());
 		super.initialiseVariables(startTime);
 	}
 
 	@Override
 	public ArrayList<EventI> output() {
-		// the model does not export any event.
-		return null;
+		ArrayList<EventI> ret = new ArrayList<EventI>() ;
+		Time t = this.getCurrentStateTime().add(getNextTimeAdvance()) ;
+		try {
+			ret.add(new SendPanneauSolaireProduction(t,
+					currentEnergy.v)) ;
+		} catch (Exception e) {
+			throw new RuntimeException(e) ;
+		}
+		
+		return ret ;
 	}
 
 	@Override
@@ -109,8 +124,8 @@ public class PanneauSolaireModel extends AtomicHIOAwithEquations {
 	public void userDefinedExternalTransition(Duration elapsedTime) {
 		
 		ArrayList<EventI> current = this.getStoredEventAndReset();
-		assert current != null;
-		
+		assert componentRef != null;
+
 		for (int i = 0 ; i < current.size() ; i++) {
 			if (current.get(i) instanceof SolarIntensity) {
 				this.currentSolarIntensity.v = ((SolarIntensity.Reading) 
@@ -118,21 +133,16 @@ public class PanneauSolaireModel extends AtomicHIOAwithEquations {
 											getEventInformation()).value;
 			}
 		}
+
+		// Recuperation de l'etat du composant pour changer la production envoye au compteur
+		try {
+			this.setState((EtatUniteProduction) componentRef.getEmbeddingComponentStateValue(URI + " : state"));
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
 		
 		this.intensityPlotter.addData(SERIES_INTENSITY, this.getCurrentStateTime().getSimulatedTime(), this.getEnergy());
-		
-
-		/** TODO */
-		setState(EtatUniteProduction.ON);
-//		assert current != null && current.size() == 1;
-//		
-//		Event e = (Event) current.get(0);
-//		
-//		this.intensityPlotter.addData(SERIES_INTENSITY, this.getCurrentStateTime().getSimulatedTime(), this.getEnergy());
-//		
-//		e.executeOn(this);
-//		
-//		this.intensityPlotter.addData(SERIES_INTENSITY, this.getCurrentStateTime().getSimulatedTime(), this.getEnergy());
 
 		super.userDefinedExternalTransition(elapsedTime);
 	}
@@ -155,10 +165,10 @@ public class PanneauSolaireModel extends AtomicHIOAwithEquations {
 		this.currentState = s;
 		switch (s) {
 		case OFF:
-			this.currentEnergy = 0.0;
+			this.currentEnergy.v = 0.0;
 			break;
 		case ON:
-			this.currentEnergy = currentSolarIntensity.v * 20;
+			this.currentEnergy.v = currentSolarIntensity.v * 20;
 			break;
 		default:
 			// cannot happen
@@ -171,6 +181,6 @@ public class PanneauSolaireModel extends AtomicHIOAwithEquations {
 	}
 
 	public double getEnergy() {
-		return this.currentEnergy;
+		return this.currentEnergy.v;
 	}
 }

@@ -5,6 +5,10 @@ import app.util.URI;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cvm.AbstractDistributedCVM;
 
+/**
+ * @author Willy Nassim
+ */
+
 public class DistributedCVM extends AbstractDistributedCVM {
 
 	public DistributedCVM(String[] args, int xLayout, int yLayout) throws Exception {

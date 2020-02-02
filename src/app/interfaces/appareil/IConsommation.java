@@ -11,7 +11,6 @@ public interface IConsommation extends RequiredI {
 	
 	/**
 	 * Envoie la consommation electrique d'un appareil au compteur
-	 * @return
 	 * @throws Exception
 	 */
 	public void envoyerConsommation(String uri, double consommation) throws Exception;

@@ -32,6 +32,6 @@ public interface ILaveLinge extends OfferedI {
 	 * Permet de definir la temperature des prochains lavages
 	 * @param temperature
 	 */
-	public void setTemperature(TemperatureLaveLinge tl) throws Exception;
+	public void setTemperature(TemperatureLaveLinge temperature) throws Exception;
 	
 }

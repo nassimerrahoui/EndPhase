@@ -3,33 +3,28 @@ package simulator.models.lavelinge;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
 import org.apache.commons.math3.random.RandomDataGenerator;
+
+import app.components.LaveLinge;
 import app.util.ModeLaveLinge;
-import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentAccessI;
 import fr.sorbonne_u.devs_simulation.es.models.AtomicES_Model;
-import fr.sorbonne_u.devs_simulation.models.annotations.ModelExternalEvents;
 import fr.sorbonne_u.devs_simulation.models.events.EventI;
 import fr.sorbonne_u.devs_simulation.models.time.Duration;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
-import simulator.events.lavelinge.SetEssorage;
-import simulator.events.lavelinge.SetInternalTransition;
-import simulator.events.lavelinge.SetLavage;
-import simulator.events.lavelinge.SetLaveLingeVeille;
-import simulator.events.lavelinge.SetRincage;
-import simulator.events.lavelinge.SetSechage;
-import simulator.events.lavelinge.SwitchLaveLingeOff;
+import simulator.events.lavelinge.SetEssorageSIL;
+import simulator.events.lavelinge.SetInternalTransitionSIL;
+import simulator.events.lavelinge.SetLavageSIL;
+import simulator.events.lavelinge.SetLaveLingeVeilleSIL;
+import simulator.events.lavelinge.SetRincageSIL;
+import simulator.events.lavelinge.SetSechageSIL;
+import simulator.events.lavelinge.SwitchLaveLingeOffSIL;
 
-@ModelExternalEvents(exported = { 
-		SetEssorage.class,
-		SetLavage.class,
-		SetLaveLingeVeille.class,
-		SetRincage.class,
-		SetSechage.class,
-		SwitchLaveLingeOff.class,
-		SetInternalTransition.class
-})
+/**
+ * @author Willy Nassim
+ */
 
 public class LaveLingePlanificationModel extends AtomicES_Model{
 	private static final long serialVersionUID = 1L;
@@ -39,15 +34,16 @@ public class LaveLingePlanificationModel extends AtomicES_Model{
 	protected double meanTimeBetweenUsages;
 	protected double meanTimeExecuteTask;
 	protected final RandomDataGenerator rg;
-	protected ModeLaveLinge etat_lavelinge;
-	protected static final double NB_STOP_BETWEEN_ROTATIONS = 10; // non utilise, devrait etre utilise pour un modele plus realiste
 	
-	// delai dans lequel la planification d'un mode va se declencher
+	/** etat du lave-linge */
+	protected ModeLaveLinge etat_lavelinge;
+	
+	/** delai dans lequel la planification d'un mode va se declencher */
 	protected double delai;
 	
 	protected ArrayList<ModeLaveLinge> planification_etats;
 	
-	protected EmbeddingComponentAccessI componentRef;
+	protected LaveLinge componentRef;
 	
 	
 	public LaveLingePlanificationModel(String uri, TimeUnit simulatedTimeUnit, SimulatorI simulationEngine) throws Exception {
@@ -57,11 +53,15 @@ public class LaveLingePlanificationModel extends AtomicES_Model{
 		this.setLogger(new StandardLogger());
 	}
 	
+	public LaveLinge getComponentRef() {
+		return this.componentRef;
+	}
+	
 	@Override
 	public void initialiseState(Time initialTime) {
 		this.initialDelay = 10.0;
-		this.meanTimeBetweenUsages = 500.0;
-		this.meanTimeExecuteTask = 200.0;
+		this.meanTimeBetweenUsages = 100.0;
+		this.meanTimeExecuteTask = 20.0;
 		this.delai = 0.0;
 		this.rg.reSeedSecure();
 
@@ -70,7 +70,7 @@ public class LaveLingePlanificationModel extends AtomicES_Model{
 		this.etat_lavelinge = ModeLaveLinge.OFF;
 		Duration d1 = new Duration(this.initialDelay, this.getSimulatedTimeUnit());
 		Time t = this.getCurrentStateTime().add(d1);
-		this.scheduleEvent(new SetLaveLingeVeille(t));
+		this.scheduleEvent(new SetLaveLingeVeilleSIL(t));
 
 		this.nextTimeAdvance = this.timeAdvance();
 		this.timeOfNextEvent = this.getCurrentStateTime().add(this.nextTimeAdvance);
@@ -79,7 +79,7 @@ public class LaveLingePlanificationModel extends AtomicES_Model{
 	
 	@Override
 	public void setSimulationRunParameters(Map<String, Object> simParams) throws Exception {
-		this.componentRef = (EmbeddingComponentAccessI) simParams.get(LaveLingeModel.URI + " : " + LaveLingeModel.COMPONENT_REF);
+		this.componentRef = (LaveLinge) simParams.get(LaveLingeModel.URI + " : " + LaveLingeModel.COMPONENT_REF);
 	}
 	
 	@Override
@@ -91,20 +91,19 @@ public class LaveLingePlanificationModel extends AtomicES_Model{
 
 	@Override
 	public ArrayList<EventI> output() {
-
-		assert !this.eventList.isEmpty();
-
-		ArrayList<EventI> ret = super.output();
-
-		return ret;
+		return null;
 	}
 	
 	@Override
 	public void userDefinedInternalTransition(Duration elapsedTime) {
+		
+		// ici on recupere la liste de planification des etat pour notre cycle
+		// chaque etat dans la liste sera planifie dans un delai donne
+		// l'ordre dans lequel les etat ont ete ajoute dans la liste est important
+		// car elle determine l'ordre du cycle
 		try {
 			@SuppressWarnings("unchecked")
 			ArrayList<ModeLaveLinge> planification = (ArrayList<ModeLaveLinge>) componentRef.getEmbeddingComponentStateValue(LaveLingeModel.URI + " : planification");
-			
 			if(planification_etats.isEmpty() && planification != null) {
 				this.delai = (double) componentRef.getEmbeddingComponentStateValue(LaveLingeModel.URI + " : delai");
 				planification_etats = planification;
@@ -120,17 +119,17 @@ public class LaveLingePlanificationModel extends AtomicES_Model{
 			Time t = this.getCurrentStateTime().add(d2);
 
 			if(mode == ModeLaveLinge.LAVAGE)
-				this.scheduleEvent(new SetLavage(t));
+				this.scheduleEvent(new SetLavageSIL(t));
 			else if (mode == ModeLaveLinge.RINCAGE)
-				this.scheduleEvent(new SetRincage(t));
+				this.scheduleEvent(new SetRincageSIL(t));
 			else if (mode == ModeLaveLinge.ESSORAGE)
-				this.scheduleEvent(new SetEssorage(t));
+				this.scheduleEvent(new SetEssorageSIL(t));
 			else if (mode == ModeLaveLinge.SECHAGE)
-				this.scheduleEvent(new SetSechage(t));
+				this.scheduleEvent(new SetSechageSIL(t));
 			else if (mode == ModeLaveLinge.VEILLE)
-				this.scheduleEvent(new SetLaveLingeVeille(t));
+				this.scheduleEvent(new SetLaveLingeVeilleSIL(t));
 			else if (mode == ModeLaveLinge.OFF)
-				this.scheduleEvent(new SwitchLaveLingeOff(t));
+				this.scheduleEvent(new SwitchLaveLingeOffSIL(t));
 		
 			i++;
 		}
@@ -138,13 +137,15 @@ public class LaveLingePlanificationModel extends AtomicES_Model{
 		// event de mise en arret si aucune planification n'a ete faite
 		if(i > 1) {
 			d = new Duration((this.delai + this.meanTimeExecuteTask * (i+1) ), this.getSimulatedTimeUnit());
-			this.scheduleEvent(new SetLaveLingeVeille(this.getCurrentStateTime().add(d)));
+			this.scheduleEvent(new SetLaveLingeVeilleSIL(this.getCurrentStateTime().add(d)));
 		}
 		
 		// event de transition si aucun etat est planifie
 		d = new Duration((this.delai + this.meanTimeBetweenUsages * i), this.getSimulatedTimeUnit());
-		this.scheduleEvent(new SetInternalTransition(this.getCurrentStateTime().add(d)));
+		this.scheduleEvent(new SetInternalTransitionSIL(this.getCurrentStateTime().add(d)));
 		
 		planification_etats = new ArrayList<>();
+		
+		super.userDefinedInternalTransition(elapsedTime);
 	}
 }

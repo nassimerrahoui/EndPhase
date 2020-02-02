@@ -5,6 +5,13 @@ import fr.sorbonne_u.devs_simulation.models.events.EventI;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
 import simulator.models.lavelinge.LaveLingeModel;
 
+/**
+ * Evenement permettant au modele qui le recoit de passer sa transition interne
+ * (non utilise actuelement)
+ *
+ * @author Willy Nassim
+ *
+ */
 public class SetInternalTransition extends AbstractLaveLingeEvent {
 
 	private static final long serialVersionUID = 1L;

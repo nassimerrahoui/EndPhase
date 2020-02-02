@@ -37,6 +37,7 @@ import fr.sorbonne_u.components.reflection.connectors.ReflectionConnector;
 import fr.sorbonne_u.components.reflection.interfaces.ReflectionI;
 import fr.sorbonne_u.components.reflection.ports.ReflectionOutboundPort;
 import simulator.models.aspirateur.AspirateurCoupledModel;
+import simulator.models.batterie.BatterieModel;
 import simulator.models.compteur.CompteurModel;
 import simulator.models.frigo.FrigoCoupledModel;
 import simulator.models.lavelinge.LaveLingeCoupledModel;
@@ -47,6 +48,7 @@ import simulator.models.supervisor.SupervisorCoupledModel;
  * Ce composant permet de creer l'ensembles des autres composants tels que : 
  * les appareils, les unites de production, le controleur et le compteur.
  * Il va egalement les connecter et les lancer.
+ * @author Nassim Willy
  */
 @RequiredInterfaces(required = { DynamicComponentCreationI.class, 
 								IAssembleur.class,
@@ -54,10 +56,16 @@ import simulator.models.supervisor.SupervisorCoupledModel;
 
 public class Assembleur extends AbstractComponent {
 
+	/** Port permettant de lancer dynamiquement les autres composants */
 	protected DynamicComponentCreationOutboundPort DynamicOutPort;
 	
+	/** Liste des uri de chaque composant generes par l'assembleur */
 	protected String[] LISTE_REFLECTION_INPORT;
+	
+	/** Liste des uris de jvm */
 	protected String[] LISTE_JVM_URI;
+	
+	/** Liste des uri  de chaque port entrant pour lancer une execution dynamique */
 	protected String[] launch_uri_inport;
 	
 	/** map uri pour superviseur */
@@ -208,6 +216,8 @@ public class Assembleur extends AbstractComponent {
 						Integer.valueOf(8),
 						Integer.valueOf(8)});
 
+		hm.put(BatterieModel.URI, LISTE_REFLECTION_INPORT[5]);
+		
 		i++;
 		DynamicOutPort.doDisconnection();
 		
@@ -445,6 +455,7 @@ public class Assembleur extends AbstractComponent {
 		
 	}
 	
+	/** execution dynamique des composants */
 	public void launch() throws Exception {
 		
 		AssembleurOutPort AssembleurOutPort = new AssembleurOutPort(this);

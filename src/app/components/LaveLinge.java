@@ -4,9 +4,7 @@ import java.awt.DisplayMode;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
-
 import app.CVM;
 import app.interfaces.appareil.IAjoutAppareil;
 import app.interfaces.appareil.IConsommation;
@@ -30,11 +28,13 @@ import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
 import fr.sorbonne_u.devs_simulation.architectures.Architecture;
-import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
-import fr.sorbonne_u.utils.PlotterDescription;
 import simulator.models.lavelinge.LaveLingeCoupledModel;
 import simulator.models.lavelinge.LaveLingeModel;
 import simulator.plugins.LaveLingeSimulatorPlugin;
+
+/**
+ * @author Willy Nassim
+ */
 
 @OfferedInterfaces(offered = { ILaveLinge.class, IComposantDynamique.class })
 @RequiredInterfaces(required = { IAjoutAppareil.class, IConsommation.class })
@@ -56,13 +56,19 @@ public class LaveLinge
 	
 	protected ArrayList<ModeLaveLinge> planification_etats;
 	
+	/** heure pour la planification */
 	protected int heure;
+	
+	/** minutes pour la planification */
 	protected int minutes;
 	
 	/** Consommation en Watts par l'appareil */
 	protected Double consommation;
+	
+	/** Temperature pour le cycle */
 	protected TemperatureLaveLinge temperature;
 	
+	/** Plugin pour interagir avec le modele du lave-linge */
 	protected LaveLingeSimulatorPlugin asp;
 	
 	public static int ORIGIN_X = CVM.plotX;
@@ -125,6 +131,7 @@ public class LaveLinge
 
 	/**
 	 * Envoie la consommation au compteur
+	 * (utilise seulement pour l'etape 1)
 	 * @param uri
 	 * @param consommation
 	 * @throws Exception
@@ -139,8 +146,7 @@ public class LaveLinge
 	 * @throws Exception
 	 */
 	public void setModeLaveLinge(ModeLaveLinge etat) throws Exception {
-		if(etat == ModeLaveLinge.OFF || etat == ModeLaveLinge.VEILLE)
-			this.etat = etat;
+		this.etat = etat;
 	}
 
 	/**
@@ -172,8 +178,7 @@ public class LaveLinge
 	 * Gerer et afficher ce qui se passe pendant un mode
 	 */
 	public void runningAndPrint() {
-		this.logMessage("Mode actuel : " + etat.name());
-		this.logMessage("...");
+		// unused
 	}
 	
 	// ************* Cycle de vie du composant ************* 
@@ -189,73 +194,21 @@ public class LaveLinge
 	 * @throws Exception
 	 */
 	public void dynamicExecute() throws Exception {
-		
 		this.logMessage("Phase d'execution du lave-linge.");
 		
-		this.logMessage("Execution en cours...");
-		
-		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
-			@Override
-			public void run() {
-				try { ((LaveLinge) this.getTaskOwner()).runningAndPrint(); } 
-				catch (Exception e) { throw new RuntimeException(e); }
-			}
-		}, 2000, 5000, TimeUnit.MILLISECONDS);
-		
-		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
-			@Override
-			public void run() {
-				try { ((LaveLinge) this.getTaskOwner()).envoyerConsommation(URI.LAVELINGE_URI.getURI(), consommation); } 
-				catch (Exception e) { throw new RuntimeException(e); }
-			}
-		}, 2500, 1000, TimeUnit.MILLISECONDS);
-		
-		execute();
-	}
-	
-	@Override
-	public void execute() throws Exception {
-		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 10L ;
-
-		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
-		simParams.put(LaveLingeModel.URI + " : " + LaveLingeModel.COMPONENT_REF, this);
-		
-		simParams.put(LaveLingeModel.URI + " : " + LaveLingeModel.POWER_PLOTTING_PARAM_NAME, new PlotterDescription(
-				"Consommation Lave-Linge", 
-				"Temps (sec)", 
-				"Consommation (Watt)", 
-				ORIGIN_X ,
-		  		ORIGIN_Y,
-		  		getPlotterWidth(),
-		  		getPlotterHeight())) ;
-		
-		this.asp.setSimulationRunParameters(simParams) ;
-
-		this.runTask(
-				new AbstractComponent.AbstractTask() {
-					@Override
-					public void run() {
-						try {
-							asp.doStandAloneSimulation(0.0, 60000.0) ;
-						} catch (Exception e) {
-							throw new RuntimeException(e) ;
-						}
-					}
-				});
-		
 		Thread.sleep(10L);
-		
+		this.logMessage("Recuperation de la consommation depuis le modele...");
 		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
 			@Override
 			public void run() {
 				try {
-					((LaveLinge) this.getTaskOwner()).etat = (ModeLaveLinge) ((LaveLinge) this.getTaskOwner()).asp.getModelStateValue(LaveLingeModel.URI, "state");
-					((LaveLinge) this.getTaskOwner()).consommation = (Double) ((LaveLinge) this.getTaskOwner()).asp.getModelStateValue(LaveLingeModel.URI, "consommation");
+					((LaveLinge) this.getTaskOwner()).consommation = (double) ((LaveLinge) this.getTaskOwner()).asp.getModelStateValue(LaveLingeModel.URI, "consommation");
 					((LaveLinge) this.getTaskOwner()).logMessage("Mode : " + etat);
 					((LaveLinge) this.getTaskOwner()).logMessage("Consommation : " + consommation);
 				} catch (Exception e) { e.printStackTrace(); }
 			}
 		}, 2500, 1000, TimeUnit.MILLISECONDS);
+
 	}
 	
 	@Override

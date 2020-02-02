@@ -4,6 +4,11 @@ import app.interfaces.assembleur.IAssembleur;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 
+
+/**
+ * @author Willy Nassim
+ */
+
 public class AssembleurOutPort extends AbstractOutboundPort implements IAssembleur {
 
 	private static final long serialVersionUID = 1L;

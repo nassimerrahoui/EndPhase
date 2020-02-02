@@ -6,9 +6,13 @@ import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
 
+/**
+ * @author Willy Nassim
+ */
+
 public class CVM extends AbstractCVM {
 	
-	public static final int plotX = 340; //480;
+	public static final int plotX = 340; //480; // 480 pour ecran ppti et 340 pour ecran 13 pouces
 	public static final int plotY = 20;
 
 	public CVM() throws Exception { 

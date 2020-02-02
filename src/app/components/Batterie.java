@@ -6,7 +6,6 @@ import java.awt.GraphicsEnvironment;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
 import app.CVM;
 import app.interfaces.assembleur.IComposantDynamique;
 import app.interfaces.production.IAjoutUniteProduction;
@@ -31,10 +30,12 @@ import fr.sorbonne_u.devs_simulation.architectures.Architecture;
 import fr.sorbonne_u.devs_simulation.architectures.SimulationEngineCreationMode;
 import fr.sorbonne_u.devs_simulation.hioa.architectures.AtomicHIOA_Descriptor;
 import fr.sorbonne_u.devs_simulation.models.architectures.AbstractAtomicModelDescriptor;
-import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
-import fr.sorbonne_u.utils.PlotterDescription;
 import simulator.models.batterie.BatterieModel;
 import simulator.plugins.BatterieSimulatorPlugin;
+
+/**
+ * @author Willy Nassim
+ */
 
 @OfferedInterfaces(offered = { IBatterie.class, IComposantDynamique.class })
 @RequiredInterfaces(required = { IAjoutUniteProduction.class, IProduction.class })
@@ -108,8 +109,9 @@ public class Batterie extends AbstractCyPhyComponent implements EmbeddingCompone
 
 	/**
 	 * Envoie la production au compteur
+	 * (méthode utilise seulement a l'etape 1 du projet)
 	 * @param uri
-	 * @param consommation
+	 * @param production
 	 * @throws Exception
 	 */
 	public void envoyerProduction(String uri, double production) throws Exception {
@@ -140,58 +142,17 @@ public class Batterie extends AbstractCyPhyComponent implements EmbeddingCompone
 	public void dynamicExecute() throws Exception {
 		this.logMessage("Phase d'execution de la batterie.");
 		
-		this.logMessage("Execution en cours...");
-		
-		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
-			@Override
-			public void run() {
-				try { ((Batterie) this.getTaskOwner()).envoyerProduction(URI.BATTERIE_URI.getURI(), production); } 
-				catch (Exception e) { throw new RuntimeException(e); }
-			}
-		}, 2000, 1000, TimeUnit.MILLISECONDS);
-		
-		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
-		
-		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 10L ;
-		
-		simParams.put(BatterieModel.URI + " : " + BatterieModel.COMPONENT_REF, this);
-		
-		simParams.put(BatterieModel.URI + " : " + BatterieModel.PRODUCTION_PLOTTING_PARAM_NAME, new PlotterDescription(
-				"Production Batterie", 
-				"Temps (sec)", 
-				"Production (Watt)", 
-				Batterie.ORIGIN_X + Batterie.getPlotterWidth(),
-				Batterie.ORIGIN_Y + 2 * Batterie.getPlotterHeight(),
-				Batterie.getPlotterWidth(),
-				Batterie.getPlotterHeight())) ;
-		
-		
-		this.asp.setSimulationRunParameters(simParams) ;
-		
-		this.runTask(
-				new AbstractComponent.AbstractTask() {
-					@Override
-					public void run() {
-						try {
-							asp.doStandAloneSimulation(0.0, 60000.0) ;
-						} catch (Exception e) {
-							throw new RuntimeException(e) ;
-						}
-					}
-		});
-		
 		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
 			@Override
 			public void run() {
 				try {
 					((Batterie) this.getTaskOwner()).production = (double) ((Batterie) this.getTaskOwner()).asp.getModelStateValue(BatterieModel.URI, "energy");
-					((Batterie) this.getTaskOwner()).logMessage("Production : " + Math.round(production));
+					((Batterie) this.getTaskOwner()).logMessage("Mode : " + etat);
+					((Batterie) this.getTaskOwner()).logMessage("Production : " + production);
 					Thread.sleep(10L);
 				} catch (Exception e) { e.printStackTrace(); }
 			}
-		}, 2000, 1000, TimeUnit.MILLISECONDS);
-		
-		execute();
+		}, 1000, 1000, TimeUnit.MILLISECONDS);
 	}
 	
 	@Override

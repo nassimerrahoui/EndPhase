@@ -10,7 +10,8 @@ import fr.sorbonne_u.components.ports.PortI;
 @OfferedInterfaces(offered = { IComposantDynamique.class })
 
 /**
- * Le coordinateur est utilise par le supervisor pour coordonnées les echanges d'evenement entre les architectures
+ * Le coordinateur est utilise par le supervisor pour coordonnees les echanges d'evenement entre les architectures
+ * @author Willy Nassim
  *
  */
 public class Coordinator extends AbstractCyPhyComponent {

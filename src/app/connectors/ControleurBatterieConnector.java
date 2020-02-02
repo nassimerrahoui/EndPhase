@@ -5,6 +5,10 @@ import app.interfaces.production.IBatterie;
 import app.util.EtatUniteProduction;
 import fr.sorbonne_u.components.connectors.AbstractConnector;
 
+/**
+ * @author Willy Nassim
+ */
+
 public class ControleurBatterieConnector extends AbstractConnector implements IControleBatterie {
 
 	@Override

@@ -15,12 +15,23 @@ import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
 import fr.sorbonne_u.utils.PlotterDescription;
 import fr.sorbonne_u.utils.XYPlotter;
 import simulator.events.aspirateur.SendAspirateurConsommation;
+import simulator.events.batterie.SendBatterieProduction;
 import simulator.events.frigo.SendFrigoConsommation;
+import simulator.events.lavelinge.SendLaveLingeConsommation;
+import simulator.events.panneausolaire.SendPanneauSolaireProduction;
+
+/**
+ * @author Willy Nassim
+ */
 
 @ModelExternalEvents(
 		imported = {
 				SendAspirateurConsommation.class,
-				SendFrigoConsommation.class })
+				SendFrigoConsommation.class,
+				SendLaveLingeConsommation.class,
+				SendBatterieProduction.class,
+				SendPanneauSolaireProduction.class})
+
 public class CompteurModel extends AtomicModel {
 
 	private static final long serialVersionUID = 1L;
@@ -36,15 +47,17 @@ public class CompteurModel extends AtomicModel {
 	protected XYPlotter consommationPlotter;
 	protected XYPlotter productionPlotter;
 	
+	/** consommation globale des appareils */
 	protected double consommation_globale;
+	
+	/** production globale des unites de production */
 	protected double production_globale;
 	
 	/** Reference du composant associe au modele */
 	protected EmbeddingComponentAccessI componentRef;
 	
-	protected ConcurrentHashMap<String, Double> appareil_consommation;
-	protected ConcurrentHashMap<String, Double> unite_production;
-	
+	protected ConcurrentHashMap<String, Double> appareil_consommation = new ConcurrentHashMap<>();
+	protected ConcurrentHashMap<String, Double> unite_production = new ConcurrentHashMap<>();
 	
 	public CompteurModel(String uri, TimeUnit simulatedTimeUnit, SimulatorI simulationEngine) throws Exception {
 		super(uri, simulatedTimeUnit, simulationEngine);
@@ -68,8 +81,6 @@ public class CompteurModel extends AtomicModel {
 	public void initialiseState(Time initialTime) {
 		this.consommation_globale = 0.0;
 		this.production_globale = 0.0;
-		this.appareil_consommation = new ConcurrentHashMap<>();
-		this.unite_production = new ConcurrentHashMap<>();
 		
 		if(this.consommationPlotter != null) {
 			this.consommationPlotter.initialise();
@@ -116,8 +127,8 @@ public class CompteurModel extends AtomicModel {
 		super.userDefinedExternalTransition(elapsedTime);
 		ArrayList<EventI> current = this.getStoredEventAndReset();
 		
-		// ici, la consommation/production est stocke par type d'appareil (resp. type d'unite de production)
-		// il faudrait utiliser l'uri comme cle pour avoir plusieurs appareils/unite de production du meme type
+		// ici, la consommation/production est stockee par type d'appareil (resp. type d'unite de production)
+		// il faudrait utiliser l'uri comme cle pour avoir plusieurs appareils/uniteS de production du meme type
 		// nous avons simplifie volontairement les maps de stockage de consommation/production pour l'exemple
 		for (int i = 0 ; i < current.size() ; i++) {
 			if(current.get(i) instanceof SendAspirateurConsommation) {
@@ -130,6 +141,21 @@ public class CompteurModel extends AtomicModel {
 						((SendFrigoConsommation) current.get(i)).
 						getEventInformation()).value;
 				appareil_consommation.put(SendFrigoConsommation.class.getName(), conso);
+			} else if(current.get(i) instanceof SendLaveLingeConsommation) {
+				double conso = ((SendLaveLingeConsommation.Reading)
+						((SendLaveLingeConsommation) current.get(i)).
+						getEventInformation()).value;
+				appareil_consommation.put(SendLaveLingeConsommation.class.getName(), conso);
+			} else if(current.get(i) instanceof SendBatterieProduction) {
+				double production = ((SendBatterieProduction.Reading)
+						((SendBatterieProduction) current.get(i)).
+						getEventInformation()).value;
+				unite_production.put(SendBatterieProduction.class.getName(), production);
+			} else if(current.get(i) instanceof SendPanneauSolaireProduction) {
+				double production = ((SendPanneauSolaireProduction.Reading)
+						((SendPanneauSolaireProduction) current.get(i)).
+						getEventInformation()).value;
+				unite_production.put(SendPanneauSolaireProduction.class.getName(), production);
 			}
 		}
 		

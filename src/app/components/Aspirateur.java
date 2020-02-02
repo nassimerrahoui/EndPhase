@@ -26,7 +26,6 @@ import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
 import fr.sorbonne_u.devs_simulation.architectures.Architecture;
-import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
 import simulator.models.aspirateur.AspirateurCoupledModel;
 import simulator.models.aspirateur.AspirateurModel;
 import simulator.plugins.AspirateurSimulatorPlugin;
@@ -34,7 +33,11 @@ import simulator.plugins.AspirateurSimulatorPlugin;
 @OfferedInterfaces(offered = { IAspirateur.class, IComposantDynamique.class })
 @RequiredInterfaces(required = { IAjoutAppareil.class, IConsommation.class })
 
-
+/**
+ * 
+ * @author Nassim Willy
+ *
+ */
 public class Aspirateur 
 	extends AbstractCyPhyComponent 
 	implements EmbeddingComponentAccessI {
@@ -45,7 +48,7 @@ public class Aspirateur
 	/** port sortant permettant au compteur de recupere la consommation de l'aspirateur */
 	protected AspirateurCompteurOutPort consommation_OUTPORT;
 
-	/** Gestion de priorite pour les decisions du controleur*/
+	/** Gestion de priorite pour les decisions du controleur */
 	protected TypeAppareil type;
 	
 	/** Etat actuel de l'appareil */
@@ -54,6 +57,7 @@ public class Aspirateur
 	/** Consommation en Watts par l'appareil */
 	protected Double consommation;
 	
+	/** Plugin pour interagir avec le model de l'aspirateur */
 	protected AspirateurSimulatorPlugin asp;
 	
 	public static int ORIGIN_X = CVM.plotX;
@@ -133,7 +137,7 @@ public class Aspirateur
 	 * Gerer et afficher ce qui se passe pendant un mode
 	 */
 	public void runningAndPrint() {
-		/** TODO */
+		// unused
 	}
 	
 	// ************* Cycle de vie du composant ************* 
@@ -149,34 +153,10 @@ public class Aspirateur
 	 * @throws Exception
 	 */
 	public void dynamicExecute() throws Exception {
-
 		this.logMessage("Phase d'execution de l'aspirateur.");
 		
-		this.logMessage("Execution en cours...");
-		
-		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
-			@Override
-			public void run() {
-				try { ((Aspirateur) this.getTaskOwner()).runningAndPrint(); } 
-				catch (Exception e) { throw new RuntimeException(e); }
-			}
-		}, 2000, 1000, TimeUnit.MILLISECONDS);
-		
-		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
-			@Override
-			public void run() {
-				try { ((Aspirateur) this.getTaskOwner()).envoyerConsommation(URI.ASPIRATEUR_URI.getURI(), consommation); } 
-				catch (Exception e) { throw new RuntimeException(e); }
-			}
-		}, 4000, 1000, TimeUnit.MILLISECONDS);
-		
-		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 10L ;
-
-		//HashMap<String,Object> simParams = new HashMap<String,Object>() ;
-		//this.asp.setSimulationRunParameters(simParams) ;
-		
 		Thread.sleep(10L);
-		
+		this.logMessage("Recuperation de la consommation depuis le modele...");
 		this.scheduleTaskWithFixedDelay(new AbstractComponent.AbstractTask() {
 			@Override
 			public void run() {

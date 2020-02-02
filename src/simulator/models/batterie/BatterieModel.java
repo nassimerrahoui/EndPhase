@@ -6,7 +6,9 @@ import java.util.concurrent.TimeUnit;
 import app.util.EtatUniteProduction;
 import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentAccessI;
 import fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOAwithEquations;
+import fr.sorbonne_u.devs_simulation.hioa.models.vars.Value;
 import fr.sorbonne_u.devs_simulation.interfaces.SimulationReportI;
+import fr.sorbonne_u.devs_simulation.models.annotations.ModelExternalEvents;
 import fr.sorbonne_u.devs_simulation.models.events.EventI;
 import fr.sorbonne_u.devs_simulation.models.time.Duration;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
@@ -15,24 +17,19 @@ import fr.sorbonne_u.devs_simulation.utils.AbstractSimulationReport;
 import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
 import fr.sorbonne_u.utils.PlotterDescription;
 import fr.sorbonne_u.utils.XYPlotter;
+import simulator.events.batterie.SendBatterieProduction;
 
+/**
+ * @author Willy Nassim
+ */
+
+@ModelExternalEvents(
+		exported = {
+			SendBatterieProduction.class
+		})
 
 public class BatterieModel extends AtomicHIOAwithEquations {
 
-	private static final long serialVersionUID = 1L;
-	public static final String URI = "BatterieModel";
-	public static final String COMPONENT_REF = "batterie-component-ref";
-	public static final String PRODUCTION_PLOTTING_PARAM_NAME = "energy production";
-	
-	private static final String SERIES_PRODUCTION = "production";
-	protected double currentProduction;
-	protected EtatUniteProduction currentState;
-	
-	protected static final double ON_PRODUCTION = 150;
-	
-	protected XYPlotter powerPlotter;
-	protected EmbeddingComponentAccessI componentRef;
-	
 	public static class BatterieStateReport extends AbstractSimulationReport {
 		private static final long serialVersionUID = 1L;
 
@@ -45,7 +42,22 @@ public class BatterieModel extends AtomicHIOAwithEquations {
 			return "BatterieStateReport(" + this.getModelURI() + ")";
 		}
 	}
-
+	
+	private static final long serialVersionUID = 1L;
+	public static final String URI = "BatterieModel";
+	public static final String COMPONENT_REF = "batterie-component-ref";
+	public static final String PRODUCTION_PLOTTING_PARAM_NAME = "energy production";
+	
+	private static final String SERIES_PRODUCTION = "production";
+	protected Value<Double> currentProduction = new Value<Double>(this, 0.0, 0); // Watts
+	protected EtatUniteProduction currentState;
+	
+	/** Production lorsque que la batterie est en mode ON */
+	protected static final double ON_PRODUCTION = 500;
+	
+	protected XYPlotter powerPlotter;
+	protected EmbeddingComponentAccessI componentRef;
+	
 	public BatterieModel(String uri, TimeUnit simulatedTimeUnit, SimulatorI simulationEngine) throws Exception {
 		
 		super(uri, simulatedTimeUnit, simulationEngine);
@@ -64,17 +76,10 @@ public class BatterieModel extends AtomicHIOAwithEquations {
 
 	@Override
 	public void initialiseState(Time initialTime) {
-		this.currentProduction = 0.0;
+		this.currentProduction.v = 0.0;
 		this.currentState = EtatUniteProduction.ON;	
 		this.powerPlotter.initialise();
 		this.powerPlotter.showPlotter();
-
-		try {
-			//this.setDebugLevel(1);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		
 		super.initialiseState(initialTime);
 	}
 
@@ -87,8 +92,18 @@ public class BatterieModel extends AtomicHIOAwithEquations {
 
 	@Override
 	public ArrayList<EventI> output() {
-		// the model does not export any event.
-		return null;
+		ArrayList<EventI> ret = new ArrayList<EventI>() ;
+		Time t = this.getCurrentStateTime().add(getNextTimeAdvance()) ;
+		
+		try {
+			ret.add(new SendBatterieProduction(t, currentProduction.v));
+			
+		} catch (Exception e) {
+			throw new RuntimeException(e) ;
+		}
+		
+		return ret ;
+		
 	}
 
 	@Override
@@ -102,14 +117,15 @@ public class BatterieModel extends AtomicHIOAwithEquations {
 
 	@Override
 	public void userDefinedInternalTransition(Duration elapsedTime) {
-		if (this.componentRef != null) {
-			try {
-				this.setState((EtatUniteProduction) componentRef.getEmbeddingComponentStateValue(URI + " : state"));
-				this.logMessage("batterie energy = " + componentRef.getEmbeddingComponentStateValue(URI + " : energy"));
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new RuntimeException(e);
-			}
+		
+		assert this.componentRef != null;
+		
+		/** Recupere le mode de la batterie depuis le composant pour changer la production en fonction du mode */
+		try {
+			this.setState((EtatUniteProduction) componentRef.getEmbeddingComponentStateValue(URI + " : state"));
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		
 		super.userDefinedInternalTransition(elapsedTime);
@@ -144,10 +160,10 @@ public class BatterieModel extends AtomicHIOAwithEquations {
 		this.currentState = s;
 		switch (s) {
 		case OFF:
-			this.currentProduction = 0.0;
+			this.currentProduction.v = 0.0;
 			break;
 		case ON:
-			this.currentProduction = ON_PRODUCTION;
+			this.currentProduction.v = ON_PRODUCTION;
 			break;
 		default:
 			// cannot happen
@@ -160,6 +176,6 @@ public class BatterieModel extends AtomicHIOAwithEquations {
 	}
 
 	public double getEnergy() {
-		return this.currentProduction;
+		return this.currentProduction.v;
 	}
 }

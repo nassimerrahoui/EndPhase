@@ -5,6 +5,10 @@ import app.interfaces.controleur.IControleFrigo;
 import app.util.ModeFrigo;
 import fr.sorbonne_u.components.connectors.AbstractConnector;
 
+/**
+ * @author Willy Nassim
+ */
+
 public class ControleurFrigoConnector extends AbstractConnector implements IControleFrigo {
 
 	@Override

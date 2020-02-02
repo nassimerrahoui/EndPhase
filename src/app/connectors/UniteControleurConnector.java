@@ -4,6 +4,10 @@ import app.interfaces.controleur.IControleur;
 import app.interfaces.production.IAjoutUniteProduction;
 import fr.sorbonne_u.components.connectors.AbstractConnector;
 
+/**
+ * @author Willy Nassim
+ */
+
 public class UniteControleurConnector extends AbstractConnector implements IAjoutUniteProduction {
 
 	@Override
