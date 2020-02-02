@@ -30,6 +30,10 @@ import simulator.models.frigo.FrigoCoupledModel;
 import simulator.models.frigo.FrigoModel;
 import simulator.plugins.FrigoSimulatorPlugin;
 
+/**
+ * @author Willy Nassim
+ */
+
 @OfferedInterfaces(offered = { IFrigo.class, IComposantDynamique.class })
 @RequiredInterfaces(required = { IAjoutAppareil.class, IConsommation.class })
 public class Frigo	

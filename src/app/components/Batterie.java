@@ -33,6 +33,10 @@ import fr.sorbonne_u.devs_simulation.models.architectures.AbstractAtomicModelDes
 import simulator.models.batterie.BatterieModel;
 import simulator.plugins.BatterieSimulatorPlugin;
 
+/**
+ * @author Willy Nassim
+ */
+
 @OfferedInterfaces(offered = { IBatterie.class, IComposantDynamique.class })
 @RequiredInterfaces(required = { IAjoutUniteProduction.class, IProduction.class })
 public class Batterie extends AbstractCyPhyComponent implements EmbeddingComponentAccessI{

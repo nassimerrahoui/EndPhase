@@ -4,6 +4,10 @@ import app.interfaces.appareil.IConsommation;
 import app.interfaces.compteur.ICompteur;
 import fr.sorbonne_u.components.connectors.AbstractConnector;
 
+/**
+ * @author Willy Nassim
+ */
+
 public class AppareilCompteurConnector extends AbstractConnector implements IConsommation {
 
 	@Override

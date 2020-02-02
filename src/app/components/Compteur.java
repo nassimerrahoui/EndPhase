@@ -31,6 +31,10 @@ import fr.sorbonne_u.devs_simulation.models.architectures.AtomicModelDescriptor;
 import simulator.models.compteur.CompteurModel;
 import simulator.plugins.CompteurSimulatorPlugin;
 
+/**
+ * @author Willy Nassim
+ */
+
 @OfferedInterfaces(offered = { ICompteurControleur.class, ICompteur.class, IComposantDynamique.class })
 @RequiredInterfaces(required = { })
 public class Compteur extends AbstractCyPhyComponent implements EmbeddingComponentAccessI {

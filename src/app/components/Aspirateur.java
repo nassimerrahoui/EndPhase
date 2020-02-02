@@ -33,7 +33,11 @@ import simulator.plugins.AspirateurSimulatorPlugin;
 @OfferedInterfaces(offered = { IAspirateur.class, IComposantDynamique.class })
 @RequiredInterfaces(required = { IAjoutAppareil.class, IConsommation.class })
 
-
+/**
+ * 
+ * @author Nassim Willy
+ *
+ */
 public class Aspirateur 
 	extends AbstractCyPhyComponent 
 	implements EmbeddingComponentAccessI {

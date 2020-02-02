@@ -48,6 +48,7 @@ import simulator.models.supervisor.SupervisorCoupledModel;
  * Ce composant permet de creer l'ensembles des autres composants tels que : 
  * les appareils, les unites de production, le controleur et le compteur.
  * Il va egalement les connecter et les lancer.
+ * @author Nassim Willy
  */
 @RequiredInterfaces(required = { DynamicComponentCreationI.class, 
 								IAssembleur.class,

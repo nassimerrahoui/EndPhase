@@ -32,6 +32,10 @@ import simulator.models.lavelinge.LaveLingeCoupledModel;
 import simulator.models.lavelinge.LaveLingeModel;
 import simulator.plugins.LaveLingeSimulatorPlugin;
 
+/**
+ * @author Willy Nassim
+ */
+
 @OfferedInterfaces(offered = { ILaveLinge.class, IComposantDynamique.class })
 @RequiredInterfaces(required = { IAjoutAppareil.class, IConsommation.class })
 public class LaveLinge 

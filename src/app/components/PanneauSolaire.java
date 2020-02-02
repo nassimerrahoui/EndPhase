@@ -30,6 +30,11 @@ import simulator.models.panneausolaire.PanneauSolaireCoupledModel;
 import simulator.models.panneausolaire.PanneauSolaireModel;
 import simulator.plugins.PanneauSolaireSimulatorPlugin;
 
+
+/**
+ * @author Willy Nassim
+ */
+
 @OfferedInterfaces(offered = { IPanneau.class, IComposantDynamique.class })
 @RequiredInterfaces(required = { IAjoutUniteProduction.class, IProduction.class })
 

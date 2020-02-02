@@ -5,6 +5,10 @@ import app.interfaces.controleur.IControleAspirateur;
 import app.util.ModeAspirateur;
 import fr.sorbonne_u.components.connectors.AbstractConnector;
 
+/**
+ * @author Willy Nassim
+ */
+
 public class ControleurAspirateurConnector extends AbstractConnector implements IControleAspirateur {
 
 	@Override

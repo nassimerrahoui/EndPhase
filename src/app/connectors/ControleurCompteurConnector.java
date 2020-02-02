@@ -4,6 +4,10 @@ import app.interfaces.compteur.ICompteurControleur;
 import app.interfaces.controleur.IControleCompteur;
 import fr.sorbonne_u.components.connectors.AbstractConnector;
 
+/**
+ * @author Willy Nassim
+ */
+
 public class ControleurCompteurConnector extends AbstractConnector implements IControleCompteur {
 
 	@Override

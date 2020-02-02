@@ -5,6 +5,10 @@ import app.interfaces.controleur.IControleur;
 import app.util.TypeAppareil;
 import fr.sorbonne_u.components.connectors.AbstractConnector;
 
+/**
+ * @author Willy Nassim
+ */
+
 public class AppareilControleurConnector extends AbstractConnector implements IAjoutAppareil {
 
 	@Override

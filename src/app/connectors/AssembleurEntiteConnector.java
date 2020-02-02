@@ -4,6 +4,10 @@ import app.interfaces.assembleur.IAssembleur;
 import app.interfaces.assembleur.IComposantDynamique;
 import fr.sorbonne_u.components.connectors.AbstractConnector;
 
+/**
+ * @author Willy Nassim
+ */
+
 public class AssembleurEntiteConnector extends AbstractConnector implements IAssembleur {
 
 	@Override

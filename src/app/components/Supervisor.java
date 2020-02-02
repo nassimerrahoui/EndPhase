@@ -34,6 +34,10 @@ import simulator.models.lavelinge.LaveLingeCoupledModel;
 import simulator.models.panneausolaire.PanneauSolaireCoupledModel;
 import simulator.models.supervisor.SupervisorCoupledModel;
 
+/**
+ * @author Willy Nassim
+ */
+
 /** Supervise l'architecture globale des modeles et les echanges d'evenements */
 @OfferedInterfaces(offered = { IComposantDynamique.class })
 public class Supervisor extends AbstractComponent {

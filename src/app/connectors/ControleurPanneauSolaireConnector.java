@@ -5,6 +5,10 @@ import app.interfaces.production.IPanneau;
 import app.util.EtatUniteProduction;
 import fr.sorbonne_u.components.connectors.AbstractConnector;
 
+/**
+ * @author Willy Nassim
+ */
+
 public class ControleurPanneauSolaireConnector extends AbstractConnector implements IControlePanneau {
 
 	@Override

@@ -55,6 +55,7 @@ import simulator.plugins.ControleurSimulatorPlugin;
 
 /**
  * Ce composant effectue differentes actions sur l'ensemble des appareils/unites de productions.
+ * @author Willy Nassim
  *
  */
 public class Controleur extends AbstractCyPhyComponent implements OrderManagerComponentAccessI{

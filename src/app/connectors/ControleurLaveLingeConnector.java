@@ -8,6 +8,10 @@ import app.util.ModeLaveLinge;
 import app.util.TemperatureLaveLinge;
 import fr.sorbonne_u.components.connectors.AbstractConnector;
 
+/**
+ * @author Willy Nassim
+ */
+
 public class ControleurLaveLingeConnector extends AbstractConnector implements IControleLaveLinge {
 
 	@Override
