@@ -33,6 +33,6 @@ public interface IControleLaveLinge extends RequiredI {
 	 * Permet de definir la temperature des prochains lavages
 	 * @param temperature
 	 */
-	public void envoyerTemperature(TemperatureLaveLinge tl) throws Exception;
+	public void envoyerTemperature(TemperatureLaveLinge temperature) throws Exception;
 	
 }

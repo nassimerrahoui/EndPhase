@@ -113,7 +113,7 @@ public class PanneauSolaire
 	 * Envoie la production au compteur
 	 * (méthode utilise seulement a l'etape 1 du projet)
 	 * @param uri
-	 * @param consommation
+	 * @param production
 	 * @throws Exception
 	 */
 	public void envoyerProduction(String uri, double production) throws Exception {

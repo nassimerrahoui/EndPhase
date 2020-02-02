@@ -12,14 +12,12 @@ public interface ICompteur extends OfferedI {
 	
 	/**
 	 * Recupere la consommation de l'appareil
-	 * @return
 	 * @throws Exception
 	 */
 	public void setAppareilConsommation(String uri, double consommation) throws Exception;
 	
 	/**
 	 * Recupere la production d'energie de l'unite de production
-	 * @return
 	 * @throws Exception
 	 */
 	public void setUniteProduction(String uri, double production) throws Exception;

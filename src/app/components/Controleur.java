@@ -71,11 +71,11 @@ public class Controleur extends AbstractCyPhyComponent implements OrderManagerCo
 	protected Vector<String> unitesProduction = new Vector<>();
 	
 	/** Map contenant l'indice de priorite pour chaque appareil 
-	 *  uri -> priorite */
+	 *  uri vers priorite */
 	protected HashMap<String, TypeAppareil> appareils_priority = new HashMap<>();
 	
 	/** Map contenant la classe d'appareil pour chaque appareil
-	 *  uri -> class appareil */
+	 *  uri vers class appareil */
 	protected HashMap<String, String> appareils_className = new HashMap<>();
 	
 	/**
