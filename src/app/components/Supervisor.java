@@ -117,7 +117,10 @@ public class Supervisor extends AbstractComponent {
 				ComponentAtomicModelDescriptor.create(CompteurModel.URI,
 						(Class<? extends EventI>[]) new Class<?>[] { 
 							SendAspirateurConsommation.class,
-							SendFrigoConsommation.class}, 
+							SendFrigoConsommation.class,
+							SendLaveLingeConsommation.class,
+							SendBatterieProduction.class,
+							SendPanneauSolaireProduction.class}, 
 						null,
 						TimeUnit.SECONDS, this.modelURIs2componentURIs.get(CompteurModel.URI)));
 		// export consommation aspirateur

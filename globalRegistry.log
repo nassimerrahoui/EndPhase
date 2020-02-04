@@ -1,0 +1,314 @@
+1580839631464|Registry up and running!
+1580839650991|GlobalRegistry processing put DYNAMIC_ASSEMBLEUR_URI rmi=localhost
+1580839651095|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionI-e8ffe986-eee9-4703-baea-4f243f73e347 rmi=localhost
+1580839651095|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionI-5efc54c2-af0d-4e1c-a59f-2cd3134a6826 rmi=localhost
+1580839651095|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionI-fa2c5bb1-e9fb-4841-b501-159bd469d019 rmi=localhost
+1580839651136|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionI-ee0770d0-0957-456c-ae31-40b529ea1bfd rmi=localhost
+1580839651147|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionI-62de3fbd-af82-410b-a34c-9f0caf0f4f94 rmi=localhost
+1580839651153|All connected!
+1580839651159|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionI-32a9ec42-7acb-4c93-b16b-e3aaf1bf40d6 rmi=localhost
+1580839651159|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionI-e727a136-5767-4af1-83b0-04c31feaa895 rmi=localhost
+1580839651171|GlobalRegistry processing put JVM_ASPIRATEUR_URI-dcc rmi=localhost
+1580839651176|GlobalRegistry processing put JVM_BATTERIE_URI-dcc rmi=localhost
+1580839651183|GlobalRegistry processing put JVM_PANNEAUSOLAIRE_URI-dcc rmi=localhost
+1580839651215|GlobalRegistry processing put JVM_COMPTEUR_URI-dcc rmi=localhost
+1580839651223|GlobalRegistry processing put JVM_CONTROLEUR_URI-dcc rmi=localhost
+1580839651227|GlobalRegistry processing put JVM_LAVELINGE_URI-dcc rmi=localhost
+1580839651235|GlobalRegistry processing put JVM_FRIGO_URI-dcc rmi=localhost
+1580839651283|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionI-5749fa5b-c51b-4692-bb1a-56a2ef86f76c rmi=localhost
+1580839651331|GlobalRegistry processing put JVM_DYNAMIC_ASSEMBLEUR_URI-dcc rmi=localhost
+1580839651559|GlobalRegistry processing lookup JVM_CONTROLEUR_URI-dcc
+1580839651647|GlobalRegistry processing put CONTROLEUR_URI rmi=localhost
+1580839651727|GlobalRegistry processing put CONTROLEUR_OP_FRIGO_URI rmi=localhost
+1580839651819|GlobalRegistry processing put CONTROLEUR_OP_LAVELINGE_URI rmi=localhost
+1580839651911|GlobalRegistry processing put CONTROLEUR_OP_ASPIRATEUR_URI rmi=localhost
+1580839652003|GlobalRegistry processing put CONTROLEUR_OP_PANNEAUSOLAIRE_URI rmi=localhost
+1580839652091|GlobalRegistry processing put CONTROLEUR_OP_BATTERIE_URI rmi=localhost
+1580839652179|GlobalRegistry processing put CONTROLEUR_OP_COMPTEUR_URI rmi=localhost
+1580839652271|GlobalRegistry processing put app.interfaces.controleur.IControleur-f241dccd-4e17-4730-8fcd-f4966bf0e1b2 rmi=localhost
+1580839652363|GlobalRegistry processing put app.interfaces.assembleur.IComposantDynamique-d3595703-31f2-451b-bab2-1f9e50fe4af5 rmi=localhost
+1580839652487|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorCI-3dc25251-6d75-440a-8280-cdb7e8a307f4 rmi=localhost
+1580839652579|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SupervisorNotificationCI-ce2d5073-7cc2-4340-9700-15442e1df4cb rmi=localhost
+1580839652679|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorPluginManagementCI-b2e530fc-8965-4888-8225-4ea45175a2ed rmi=localhost
+1580839652775|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.ParentNotificationCI-80eb2646-dfd4-41dd-b057-1b3f5b5b9c88 rmi=localhost
+1580839652871|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.EventsExchangingCI-98a1aff9-4ee6-4e54-968f-7a130a654b8f rmi=localhost
+1580839652959|GlobalRegistry processing lookup JVM_FRIGO_URI-dcc
+1580839653031|GlobalRegistry processing put FRIGO_URI rmi=localhost
+1580839653091|GlobalRegistry processing put FRIGO_CONTROLEUR_OP_URI rmi=localhost
+1580839653179|GlobalRegistry processing put FRIGO_COMPTEUR_OP_URI rmi=localhost
+1580839653271|GlobalRegistry processing put app.interfaces.appareil.IFrigo-d7a98796-ca8a-47a7-abf8-310a60b18a6b rmi=localhost
+1580839653363|GlobalRegistry processing put app.interfaces.assembleur.IComposantDynamique-647ee7d9-15e6-4c6f-8d0c-e483d5a39c06 rmi=localhost
+1580839653487|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorCI-4cd0cab0-0753-40c9-aa89-ad5487c7f1a6 rmi=localhost
+1580839653579|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SupervisorNotificationCI-424b0a71-54ae-451c-9f85-f40e4c6d7407 rmi=localhost
+1580839653671|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorPluginManagementCI-9d6a08c2-8b3c-480a-86be-1df9b4086005 rmi=localhost
+1580839653763|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.ParentNotificationCI-7a64c8e2-ec72-4d82-88cb-07d34c28504f rmi=localhost
+1580839653855|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.EventsExchangingCI-c982a2ea-c837-43b7-bc93-c20562d2ad5a rmi=localhost
+1580839653951|GlobalRegistry processing lookup JVM_LAVELINGE_URI-dcc
+1580839654015|GlobalRegistry processing put LAVELINGE_URI rmi=localhost
+1580839654075|GlobalRegistry processing put LAVELINGE_CONTROLEUR_OP_URI rmi=localhost
+1580839654163|GlobalRegistry processing put LAVELINGE_COMPTEUR_OP_URI rmi=localhost
+1580839654255|GlobalRegistry processing put app.interfaces.appareil.ILaveLinge-78bc51cd-ffa7-47d9-bb95-87532af9bdb4 rmi=localhost
+1580839654343|GlobalRegistry processing put app.interfaces.assembleur.IComposantDynamique-37a24627-3126-4679-a8b6-2528cf9add22 rmi=localhost
+1580839654467|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorCI-465fa02a-fa75-4280-9390-4adc94c2b0d7 rmi=localhost
+1580839654559|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SupervisorNotificationCI-888c9920-6433-49d3-98cf-b4d8b81876b7 rmi=localhost
+1580839654651|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorPluginManagementCI-09203ad5-7d72-42b0-88e0-e5c50dc6ac0a rmi=localhost
+1580839654743|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.ParentNotificationCI-71cc96d4-24a9-4f4a-95b7-8c471b5dae60 rmi=localhost
+1580839654835|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.EventsExchangingCI-e9b13d66-3add-48e3-8c2c-b495c7135377 rmi=localhost
+1580839654931|GlobalRegistry processing lookup JVM_ASPIRATEUR_URI-dcc
+1580839654995|GlobalRegistry processing put ASPIRATEUR_URI rmi=localhost
+1580839655055|GlobalRegistry processing put ASPIRATEUR_CONTROLEUR_OP_URI rmi=localhost
+1580839655143|GlobalRegistry processing put ASPIRATEUR_COMPTEUR_OP_URI rmi=localhost
+1580839655235|GlobalRegistry processing put app.interfaces.appareil.IAspirateur-03c030e9-ee05-4d6d-9808-d6b77c1a2395 rmi=localhost
+1580839655327|GlobalRegistry processing put app.interfaces.assembleur.IComposantDynamique-3a4203c6-a4ce-4cf4-8220-286f08793f74 rmi=localhost
+1580839655451|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorCI-6449106b-0cda-4861-ab65-ef5acbc5d324 rmi=localhost
+1580839655543|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SupervisorNotificationCI-056d064c-0629-45fb-86a3-5bce4c101808 rmi=localhost
+1580839655639|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorPluginManagementCI-56e1bfaa-fa58-48f4-bc20-553ed5e1ba43 rmi=localhost
+1580839655731|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.ParentNotificationCI-785fe9ea-f4ba-4b0f-bad5-4bf3333258db rmi=localhost
+1580839655823|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.EventsExchangingCI-5f5bbb4d-4b35-4425-8f80-7cd048f7d58b rmi=localhost
+1580839655935|GlobalRegistry processing lookup JVM_PANNEAUSOLAIRE_URI-dcc
+1580839656007|GlobalRegistry processing put PANNEAUSOLAIRE_URI rmi=localhost
+1580839656067|GlobalRegistry processing put PANNEAUSOLAIRE_CONTROLEUR_OP_URI rmi=localhost
+1580839656155|GlobalRegistry processing put PANNEAUSOLAIRE_COMPTEUR_OP_URI rmi=localhost
+1580839656247|GlobalRegistry processing put app.interfaces.production.IPanneau-cff8f70c-525d-4599-a794-2dbe3785ede6 rmi=localhost
+1580839656339|GlobalRegistry processing put app.interfaces.assembleur.IComposantDynamique-1a8da38d-84c2-46d2-8af5-740d22808b1c rmi=localhost
+1580839656471|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorCI-ce94a684-267f-48f2-ad93-e09d9745e7e6 rmi=localhost
+1580839656519|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SupervisorNotificationCI-cb30fd69-d81f-4e57-93ab-3080e95299e3 rmi=localhost
+1580839656611|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorPluginManagementCI-93692e0d-4d41-420b-98d7-c753eee8fb6a rmi=localhost
+1580839656703|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.ParentNotificationCI-bc3a8a29-a41d-4694-894b-7d3568627de3 rmi=localhost
+1580839656799|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.EventsExchangingCI-83c9cd96-ea0f-4cbd-b0be-d52bcf5aee17 rmi=localhost
+1580839656899|GlobalRegistry processing lookup JVM_BATTERIE_URI-dcc
+1580839656963|GlobalRegistry processing put BATTERIE_URI rmi=localhost
+1580839657027|GlobalRegistry processing put BATTERIE_CONTROLEUR_OP_URI rmi=localhost
+1580839657115|GlobalRegistry processing put BATTERIE_COMPTEUR_OP_URI rmi=localhost
+1580839657207|GlobalRegistry processing put app.interfaces.production.IBatterie-2d6fa677-fb7e-4955-a5f6-1fb1af68a8dc rmi=localhost
+1580839657295|GlobalRegistry processing put app.interfaces.assembleur.IComposantDynamique-e013e038-dec7-4095-aa3f-3e39d81fe274 rmi=localhost
+1580839657415|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorCI-0af25e10-46c3-48c3-8b7a-f973c4013864 rmi=localhost
+1580839657507|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SupervisorNotificationCI-2268df07-95a8-4feb-a4e4-6637460aeacf rmi=localhost
+1580839657603|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorPluginManagementCI-5e2e4dc4-0a23-427e-8b62-7399f57a2859 rmi=localhost
+1580839657703|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.ParentNotificationCI-f5bc6182-2372-42af-8760-6828a3edbe1d rmi=localhost
+1580839657799|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.EventsExchangingCI-23bcdad0-4ee1-464a-83d2-7a99223396e9 rmi=localhost
+1580839657891|GlobalRegistry processing lookup JVM_COMPTEUR_URI-dcc
+1580839657955|GlobalRegistry processing put COMPTEUR_URI rmi=localhost
+1580839658019|GlobalRegistry processing put app.interfaces.compteur.ICompteur-d6257c22-6191-4d74-9880-3c6f34f41723 rmi=localhost
+1580839658111|GlobalRegistry processing put app.interfaces.compteur.ICompteurControleur-9b8065ad-df57-46f8-871a-9e92a91b5f92 rmi=localhost
+1580839658199|GlobalRegistry processing put app.interfaces.assembleur.IComposantDynamique-62da6ec7-b194-47ca-912c-ea21e048d677 rmi=localhost
+1580839658451|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorCI-75e5fd3e-b5f8-4b0d-a991-465214551567 rmi=localhost
+1580839658499|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SupervisorNotificationCI-88ca0f78-4155-4a20-bb71-67f59753ac95 rmi=localhost
+1580839658591|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorPluginManagementCI-a81a5fc9-bec8-45b8-84ea-9b330b008ce2 rmi=localhost
+1580839658683|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.ParentNotificationCI-460309e7-8e01-4483-94d4-8de262ff7b80 rmi=localhost
+1580839658775|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.EventsExchangingCI-7417fc33-f9f6-4f16-a38a-e53bfdad80fa rmi=localhost
+1580839658871|GlobalRegistry processing put COORDINATOR_URI rmi=localhost
+1580839658963|GlobalRegistry processing put app.interfaces.assembleur.IComposantDynamique-225d3a69-2a0c-410e-968a-deff76b77e02 rmi=localhost
+1580839659063|GlobalRegistry processing put SUPERVISOR_URI rmi=localhost
+1580839659155|GlobalRegistry processing put app.interfaces.assembleur.IComposantDynamique-940759a2-0e6a-40b1-8455-236fa12c04a1 rmi=localhost
+1580839659263|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SupervisorNotificationCI-d749b235-eb76-4529-8ad6-34cde7a7d8b4 rmi=localhost
+1580839659355|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SupervisorPluginManagementCI-160b3d27-7f34-4970-92fc-d41ce484c6e2 rmi=localhost
+1580839659451|GlobalRegistry processing lookup FRIGO_URI
+1580839659495|GlobalRegistry processing lookup LAVELINGE_URI
+1580839659587|GlobalRegistry processing lookup ASPIRATEUR_URI
+1580839659679|GlobalRegistry processing lookup PANNEAUSOLAIRE_URI
+1580839659767|GlobalRegistry processing lookup BATTERIE_URI
+1580839659855|GlobalRegistry processing lookup COMPTEUR_URI
+1580839659947|GlobalRegistry processing lookup CONTROLEUR_URI
+1580839660035|GlobalRegistry processing lookup COORDINATOR_URI
+1580839660123|GlobalRegistry processing lookup SUPERVISOR_URI
+1580839660211|GlobalRegistry processing lookup CONTROLEUR_URI
+1580839660419|GlobalRegistry processing lookup app.interfaces.appareil.IFrigo-d7a98796-ca8a-47a7-abf8-310a60b18a6b
+1580839660483|GlobalRegistry processing lookup app.interfaces.appareil.ILaveLinge-78bc51cd-ffa7-47d9-bb95-87532af9bdb4
+1580839660579|GlobalRegistry processing lookup app.interfaces.appareil.IAspirateur-03c030e9-ee05-4d6d-9808-d6b77c1a2395
+1580839660675|GlobalRegistry processing lookup app.interfaces.production.IPanneau-cff8f70c-525d-4599-a794-2dbe3785ede6
+1580839660771|GlobalRegistry processing lookup app.interfaces.production.IBatterie-2d6fa677-fb7e-4955-a5f6-1fb1af68a8dc
+1580839660867|GlobalRegistry processing lookup app.interfaces.compteur.ICompteurControleur-9b8065ad-df57-46f8-871a-9e92a91b5f92
+1580839660959|GlobalRegistry processing lookup COMPTEUR_URI
+1580839661003|GlobalRegistry processing lookup FRIGO_URI
+1580839661199|GlobalRegistry processing lookup app.interfaces.compteur.ICompteur-d6257c22-6191-4d74-9880-3c6f34f41723
+1580839661259|GlobalRegistry processing lookup LAVELINGE_URI
+1580839661431|GlobalRegistry processing lookup app.interfaces.compteur.ICompteur-d6257c22-6191-4d74-9880-3c6f34f41723
+1580839661487|GlobalRegistry processing lookup ASPIRATEUR_URI
+1580839661643|GlobalRegistry processing lookup app.interfaces.compteur.ICompteur-d6257c22-6191-4d74-9880-3c6f34f41723
+1580839661695|GlobalRegistry processing lookup PANNEAUSOLAIRE_URI
+1580839661859|GlobalRegistry processing lookup app.interfaces.compteur.ICompteur-d6257c22-6191-4d74-9880-3c6f34f41723
+1580839661923|GlobalRegistry processing lookup BATTERIE_URI
+1580839662079|GlobalRegistry processing lookup app.interfaces.compteur.ICompteur-d6257c22-6191-4d74-9880-3c6f34f41723
+1580839662135|GlobalRegistry processing lookup CONTROLEUR_URI
+1580839662179|GlobalRegistry processing lookup FRIGO_URI
+1580839662271|GlobalRegistry processing lookup app.interfaces.controleur.IControleur-f241dccd-4e17-4730-8fcd-f4966bf0e1b2
+1580839662319|GlobalRegistry processing lookup LAVELINGE_URI
+1580839662363|GlobalRegistry processing lookup app.interfaces.controleur.IControleur-f241dccd-4e17-4730-8fcd-f4966bf0e1b2
+1580839662411|GlobalRegistry processing lookup ASPIRATEUR_URI
+1580839662455|GlobalRegistry processing lookup app.interfaces.controleur.IControleur-f241dccd-4e17-4730-8fcd-f4966bf0e1b2
+1580839662503|GlobalRegistry processing lookup PANNEAUSOLAIRE_URI
+1580839662551|GlobalRegistry processing lookup app.interfaces.controleur.IControleur-f241dccd-4e17-4730-8fcd-f4966bf0e1b2
+1580839662599|GlobalRegistry processing lookup BATTERIE_URI
+1580839662643|GlobalRegistry processing lookup app.interfaces.controleur.IControleur-f241dccd-4e17-4730-8fcd-f4966bf0e1b2
+1580839662699|GlobalRegistry processing put app.interfaces.assembleur.IAssembleur-63206064-bcd7-45e4-8880-45f037cec442 rmi=localhost
+1580839662743|GlobalRegistry processing lookup app.interfaces.assembleur.IComposantDynamique-647ee7d9-15e6-4c6f-8d0c-e483d5a39c06
+1580839662831|GlobalRegistry processing lookup app.interfaces.assembleur.IComposantDynamique-37a24627-3126-4679-a8b6-2528cf9add22
+1580839662927|GlobalRegistry processing lookup app.interfaces.assembleur.IComposantDynamique-3a4203c6-a4ce-4cf4-8220-286f08793f74
+1580839663015|GlobalRegistry processing lookup app.interfaces.assembleur.IComposantDynamique-1a8da38d-84c2-46d2-8af5-740d22808b1c
+1580839663103|GlobalRegistry processing lookup app.interfaces.assembleur.IComposantDynamique-e013e038-dec7-4095-aa3f-3e39d81fe274
+1580839663195|GlobalRegistry processing lookup app.interfaces.assembleur.IComposantDynamique-62da6ec7-b194-47ca-912c-ea21e048d677
+1580839663283|GlobalRegistry processing lookup app.interfaces.assembleur.IComposantDynamique-d3595703-31f2-451b-bab2-1f9e50fe4af5
+1580839663371|GlobalRegistry processing lookup app.interfaces.assembleur.IComposantDynamique-225d3a69-2a0c-410e-968a-deff76b77e02
+1580839663463|GlobalRegistry processing lookup app.interfaces.assembleur.IComposantDynamique-940759a2-0e6a-40b1-8455-236fa12c04a1
+1580839663551|GlobalRegistry processing remove app.interfaces.assembleur.IAssembleur-63206064-bcd7-45e4-8880-45f037cec442
+1580839663567|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionI-6f4c5063-8c3e-4129-9bd5-9473b33ad9f2 rmi=localhost
+1580839663615|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorCI-582240d8-42b6-44aa-b2c6-2318046965b9 rmi=localhost
+1580839663703|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SupervisorNotificationCI-d149bdea-1f32-4ef7-ac1f-4aac81fdbcdc rmi=localhost
+1580839663791|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorPluginManagementCI-eb6347f8-a971-4f85-ac80-93b140bb09e8 rmi=localhost
+1580839663879|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.ParentNotificationCI-847eb53a-55b9-4132-8ae8-e39a2eb98399 rmi=localhost
+1580839663975|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.ParentNotificationCI-b504d1ef-10ec-4cbd-82e2-a0f333a51ec3 rmi=localhost
+1580839664067|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorPluginManagementCI-d986d881-2b85-480d-8823-5e22170dec37 rmi=localhost
+1580839664155|GlobalRegistry processing remove fr.sorbonne_u.components.reflection.interfaces.ReflectionI-6f4c5063-8c3e-4129-9bd5-9473b33ad9f2
+1580839664247|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionI-37e04639-0bbe-4d71-a333-523c6dadf86b rmi=localhost
+1580839664335|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorPluginManagementCI-93686163-36f2-4f57-803d-a84960d69105 rmi=localhost
+1580839664423|GlobalRegistry processing remove fr.sorbonne_u.components.reflection.interfaces.ReflectionI-37e04639-0bbe-4d71-a333-523c6dadf86b
+1580839664523|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorCI-27c16ffc-ecb9-490b-aba5-06431b8e4ca9 rmi=localhost
+1580839664611|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionI-def3b457-b0dd-4bc2-8a6c-a1c32f9c69ba rmi=localhost
+1580839664699|GlobalRegistry processing lookup LAVELINGE_URI
+1580839664799|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorPluginManagementCI-71395762-3200-4272-87f5-c8d8fa225012 rmi=localhost
+1580839664887|GlobalRegistry processing lookup fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorPluginManagementCI-09203ad5-7d72-42b0-88e0-e5c50dc6ac0a
+1580839664979|GlobalRegistry processing remove fr.sorbonne_u.components.reflection.interfaces.ReflectionI-def3b457-b0dd-4bc2-8a6c-a1c32f9c69ba
+1580839665095|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorCI-d07d6c27-3ee9-4845-87fb-eace1655826a rmi=localhost
+1580839665183|GlobalRegistry processing lookup fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorCI-465fa02a-fa75-4280-9390-4adc94c2b0d7
+1580839665279|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionI-2bdf1b78-665e-46e1-a156-cae073de6ae9 rmi=localhost
+1580839665367|GlobalRegistry processing lookup ASPIRATEUR_URI
+1580839665459|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorPluginManagementCI-86d9d00c-a5f1-47b9-875a-607c4c5fd61a rmi=localhost
+1580839665547|GlobalRegistry processing lookup fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorPluginManagementCI-56e1bfaa-fa58-48f4-bc20-553ed5e1ba43
+1580839665635|GlobalRegistry processing remove fr.sorbonne_u.components.reflection.interfaces.ReflectionI-2bdf1b78-665e-46e1-a156-cae073de6ae9
+1580839665743|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorCI-1b2f18ef-8731-4a1c-9e61-2c681de00501 rmi=localhost
+1580839665831|GlobalRegistry processing lookup fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorCI-6449106b-0cda-4861-ab65-ef5acbc5d324
+1580839665919|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionI-ca87cd08-802d-42a6-9b00-59c40126f22c rmi=localhost
+1580839666007|GlobalRegistry processing lookup PANNEAUSOLAIRE_URI
+1580839666103|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorPluginManagementCI-748398a0-3df4-47f5-8bb2-b8c0d912bbff rmi=localhost
+1580839666191|GlobalRegistry processing lookup fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorPluginManagementCI-93692e0d-4d41-420b-98d7-c753eee8fb6a
+1580839666279|GlobalRegistry processing remove fr.sorbonne_u.components.reflection.interfaces.ReflectionI-ca87cd08-802d-42a6-9b00-59c40126f22c
+1580839666387|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorCI-022ead8f-71cb-44b3-bf4e-537a675bdf5b rmi=localhost
+1580839666475|GlobalRegistry processing lookup fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorCI-ce94a684-267f-48f2-ad93-e09d9745e7e6
+1580839666563|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionI-3200213f-e90d-4510-86b7-1ac1ea77cac9 rmi=localhost
+1580839666651|GlobalRegistry processing lookup FRIGO_URI
+1580839666743|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorPluginManagementCI-653ea318-2bbc-49e8-b6e9-938b3c6584a7 rmi=localhost
+1580839666831|GlobalRegistry processing lookup fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorPluginManagementCI-9d6a08c2-8b3c-480a-86be-1df9b4086005
+1580839666919|GlobalRegistry processing remove fr.sorbonne_u.components.reflection.interfaces.ReflectionI-3200213f-e90d-4510-86b7-1ac1ea77cac9
+1580839667023|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorCI-5a62d321-ca06-4541-850e-c44191070eef rmi=localhost
+1580839667111|GlobalRegistry processing lookup fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorCI-4cd0cab0-0753-40c9-aa89-ad5487c7f1a6
+1580839667199|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionI-38b609f3-c1bf-44b5-ad17-ee25498f0dce rmi=localhost
+1580839667287|GlobalRegistry processing lookup BATTERIE_URI
+1580839667379|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorPluginManagementCI-1fe9d03f-5bf8-4dc3-ad1c-59a093d51319 rmi=localhost
+1580839667467|GlobalRegistry processing lookup fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorPluginManagementCI-5e2e4dc4-0a23-427e-8b62-7399f57a2859
+1580839667555|GlobalRegistry processing remove fr.sorbonne_u.components.reflection.interfaces.ReflectionI-38b609f3-c1bf-44b5-ad17-ee25498f0dce
+1580839667667|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorCI-5c387285-8906-4d08-b5a0-7abafea8dd37 rmi=localhost
+1580839667755|GlobalRegistry processing lookup fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorCI-0af25e10-46c3-48c3-8b7a-f973c4013864
+1580839667871|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.EventsExchangingCI-213f972c-e682-421f-b600-b00238fb8885 rmi=localhost
+1580839667915|GlobalRegistry processing lookup fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.EventsExchangingCI-7417fc33-f9f6-4f16-a38a-e53bfdad80fa
+1580839668019|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.EventsExchangingCI-8388dcdd-6e03-4643-9562-dd33800669a1 rmi=localhost
+1580839668063|GlobalRegistry processing lookup fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.EventsExchangingCI-7417fc33-f9f6-4f16-a38a-e53bfdad80fa
+1580839668163|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.EventsExchangingCI-d3c2c252-8969-4481-af3f-4e648ce7ce09 rmi=localhost
+1580839668207|GlobalRegistry processing lookup fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.EventsExchangingCI-7417fc33-f9f6-4f16-a38a-e53bfdad80fa
+1580839668307|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.EventsExchangingCI-d624c0b5-fcc9-4999-88ed-2160865fd9f1 rmi=localhost
+1580839668351|GlobalRegistry processing lookup fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.EventsExchangingCI-7417fc33-f9f6-4f16-a38a-e53bfdad80fa
+1580839668455|GlobalRegistry processing put fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.EventsExchangingCI-5eb19a79-4e13-4c5e-aa0a-a044e2a93e5d rmi=localhost
+1580839668499|GlobalRegistry processing lookup fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.EventsExchangingCI-7417fc33-f9f6-4f16-a38a-e53bfdad80fa
+1580839668611|GlobalRegistry processing lookup fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.ParentNotificationCI-b504d1ef-10ec-4cbd-82e2-a0f333a51ec3
+1580839668659|GlobalRegistry processing lookup fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.ParentNotificationCI-b504d1ef-10ec-4cbd-82e2-a0f333a51ec3
+1580839668707|GlobalRegistry processing lookup fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.ParentNotificationCI-b504d1ef-10ec-4cbd-82e2-a0f333a51ec3
+1580839668759|GlobalRegistry processing lookup fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.ParentNotificationCI-b504d1ef-10ec-4cbd-82e2-a0f333a51ec3
+1580839668807|GlobalRegistry processing lookup fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.ParentNotificationCI-b504d1ef-10ec-4cbd-82e2-a0f333a51ec3
+1580839691691|GlobalRegistry processing remove DYNAMIC_ASSEMBLEUR_URI
+1580839691691|GlobalRegistry processing remove fr.sorbonne_u.components.reflection.interfaces.ReflectionI-5efc54c2-af0d-4e1c-a59f-2cd3134a6826
+1580839691691|GlobalRegistry processing remove fr.sorbonne_u.components.reflection.interfaces.ReflectionI-ee0770d0-0957-456c-ae31-40b529ea1bfd
+1580839691695|GlobalRegistry processing remove FRIGO_URI
+1580839691695|GlobalRegistry processing remove fr.sorbonne_u.components.reflection.interfaces.ReflectionI-fa2c5bb1-e9fb-4841-b501-159bd469d019
+1580839691699|GlobalRegistry processing remove LAVELINGE_URI
+1580839691702|GlobalRegistry processing remove BATTERIE_URI
+1580839691735|GlobalRegistry processing remove fr.sorbonne_u.components.reflection.interfaces.ReflectionI-5749fa5b-c51b-4692-bb1a-56a2ef86f76c
+1580839691739|GlobalRegistry processing remove ASPIRATEUR_URI
+null
+1580839691743|GlobalRegistry processing remove fr.sorbonne_u.components.reflection.interfaces.ReflectionI-e727a136-5767-4af1-83b0-04c31feaa895
+1580839691743|GlobalRegistry processing remove CONTROLEUR_URI
+1580839691747|GlobalRegistry processing remove fr.sorbonne_u.components.reflection.interfaces.ReflectionI-e8ffe986-eee9-4703-baea-4f243f73e347
+1580839691827|GlobalRegistry processing remove SUPERVISOR_URI
+1580839691915|GlobalRegistry processing remove COMPTEUR_URI
+1580839692003|GlobalRegistry processing remove JVM_PANNEAUSOLAIRE_URI-dcc
+1580839692003|GlobalRegistry processing remove JVM_CONTROLEUR_URI-dcc
+1580839692003|GlobalRegistry processing remove app.interfaces.production.IBatterie-2d6fa677-fb7e-4955-a5f6-1fb1af68a8dc
+1580839692003|GlobalRegistry processing remove JVM_COMPTEUR_URI-dcc
+1580839692003|GlobalRegistry processing remove app.interfaces.appareil.ILaveLinge-78bc51cd-ffa7-47d9-bb95-87532af9bdb4
+1580839692047|GlobalRegistry processing remove BATTERIE_CONTROLEUR_OP_URI
+1580839692091|GlobalRegistry processing remove app.interfaces.assembleur.IComposantDynamique-225d3a69-2a0c-410e-968a-deff76b77e02
+1580839692135|GlobalRegistry processing remove CONTROLEUR_OP_FRIGO_URI
+1580839692135|GlobalRegistry processing remove FRIGO_CONTROLEUR_OP_URI
+1580839692179|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorPluginManagementCI-93686163-36f2-4f57-803d-a84960d69105
+1580839692223|GlobalRegistry processing remove app.interfaces.assembleur.IComposantDynamique-647ee7d9-15e6-4c6f-8d0c-e483d5a39c06
+1580839692223|GlobalRegistry processing remove app.interfaces.assembleur.IComposantDynamique-e013e038-dec7-4095-aa3f-3e39d81fe274
+1580839692223|GlobalRegistry processing remove ASPIRATEUR_CONTROLEUR_OP_URI
+1580839692267|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorPluginManagementCI-71395762-3200-4272-87f5-c8d8fa225012
+1580839692311|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.EventsExchangingCI-c982a2ea-c837-43b7-bc93-c20562d2ad5a
+1580839692311|GlobalRegistry processing remove CONTROLEUR_OP_ASPIRATEUR_URI
+1580839692311|GlobalRegistry processing remove app.interfaces.assembleur.IComposantDynamique-3a4203c6-a4ce-4cf4-8220-286f08793f74
+1580839692311|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.EventsExchangingCI-e9b13d66-3add-48e3-8c2c-b495c7135377
+1580839692312|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.EventsExchangingCI-23bcdad0-4ee1-464a-83d2-7a99223396e9
+1580839692312|GlobalRegistry processing remove app.interfaces.assembleur.IComposantDynamique-1a8da38d-84c2-46d2-8af5-740d22808b1c
+1580839692355|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorPluginManagementCI-86d9d00c-a5f1-47b9-875a-607c4c5fd61a
+1580839692399|GlobalRegistry processing remove CONTROLEUR_OP_PANNEAUSOLAIRE_URI
+1580839692399|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.EventsExchangingCI-8388dcdd-6e03-4643-9562-dd33800669a1
+1580839692399|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.EventsExchangingCI-5f5bbb4d-4b35-4425-8f80-7cd048f7d58b
+1580839692399|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.EventsExchangingCI-d3c2c252-8969-4481-af3f-4e648ce7ce09
+1580839692443|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorPluginManagementCI-748398a0-3df4-47f5-8bb2-b8c0d912bbff
+1580839692487|GlobalRegistry processing remove CONTROLEUR_OP_BATTERIE_URI
+1580839692487|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorCI-4cd0cab0-0753-40c9-aa89-ad5487c7f1a6
+1580839692531|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorPluginManagementCI-653ea318-2bbc-49e8-b6e9-938b3c6584a7
+1580839692575|GlobalRegistry processing remove CONTROLEUR_OP_COMPTEUR_URI
+1580839692575|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorPluginManagementCI-09203ad5-7d72-42b0-88e0-e5c50dc6ac0a
+1580839692575|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorCI-6449106b-0cda-4861-ab65-ef5acbc5d324
+1580839692575|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorCI-ce94a684-267f-48f2-ad93-e09d9745e7e6
+1580839692575|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorPluginManagementCI-9d6a08c2-8b3c-480a-86be-1df9b4086005
+1580839692575|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorPluginManagementCI-5e2e4dc4-0a23-427e-8b62-7399f57a2859
+1580839692619|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorPluginManagementCI-1fe9d03f-5bf8-4dc3-ad1c-59a093d51319
+1580839692663|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorPluginManagementCI-93692e0d-4d41-420b-98d7-c753eee8fb6a
+1580839692663|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorPluginManagementCI-56e1bfaa-fa58-48f4-bc20-553ed5e1ba43
+1580839692663|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SupervisorNotificationCI-2268df07-95a8-4feb-a4e4-6637460aeacf
+1580839692663|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SupervisorNotificationCI-888c9920-6433-49d3-98cf-b4d8b81876b7
+1580839692663|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SupervisorNotificationCI-424b0a71-54ae-451c-9f85-f40e4c6d7407
+1580839692707|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorCI-27c16ffc-ecb9-490b-aba5-06431b8e4ca9
+1580839692751|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.ParentNotificationCI-71cc96d4-24a9-4f4a-95b7-8c471b5dae60
+1580839692751|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SupervisorNotificationCI-cb30fd69-d81f-4e57-93ab-3080e95299e3
+1580839692751|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SupervisorNotificationCI-056d064c-0629-45fb-86a3-5bce4c101808
+1580839692751|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.EventsExchangingCI-98a1aff9-4ee6-4e54-968f-7a130a654b8f
+1580839692755|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.ParentNotificationCI-f5bc6182-2372-42af-8760-6828a3edbe1d
+1580839692795|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorCI-d07d6c27-3ee9-4845-87fb-eace1655826a
+1580839692839|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorCI-3dc25251-6d75-440a-8280-cdb7e8a307f4
+1580839692839|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.ParentNotificationCI-bc3a8a29-a41d-4694-894b-7d3568627de3
+1580839692839|GlobalRegistry processing remove JVM_LAVELINGE_URI-dcc
+1580839692847|GlobalRegistry processing remove JVM_BATTERIE_URI-dcc
+1580839692849|GlobalRegistry processing remove JVM_FRIGO_URI-dcc
+1580839692883|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorCI-1b2f18ef-8731-4a1c-9e61-2c681de00501
+1580839692927|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorPluginManagementCI-b2e530fc-8965-4888-8225-4ea45175a2ed
+1580839692971|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorCI-022ead8f-71cb-44b3-bf4e-537a675bdf5b
+1580839693015|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SupervisorNotificationCI-ce2d5073-7cc2-4340-9700-15442e1df4cb
+1580839693059|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorCI-5a62d321-ca06-4541-850e-c44191070eef
+1580839693103|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.ParentNotificationCI-80eb2646-dfd4-41dd-b057-1b3f5b5b9c88
+1580839693147|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorCI-5c387285-8906-4d08-b5a0-7abafea8dd37
+1580839693235|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.ParentNotificationCI-b504d1ef-10ec-4cbd-82e2-a0f333a51ec3
+1580839693323|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorCI-582240d8-42b6-44aa-b2c6-2318046965b9
+1580839693411|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorPluginManagementCI-eb6347f8-a971-4f85-ac80-93b140bb09e8
+1580839693499|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SupervisorNotificationCI-d149bdea-1f32-4ef7-ac1f-4aac81fdbcdc
+1580839693587|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.ParentNotificationCI-847eb53a-55b9-4132-8ae8-e39a2eb98399
+1580839693675|GlobalRegistry processing remove app.interfaces.assembleur.IComposantDynamique-940759a2-0e6a-40b1-8455-236fa12c04a1
+1580839693763|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SupervisorNotificationCI-d749b235-eb76-4529-8ad6-34cde7a7d8b4
+1580839693851|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SupervisorPluginManagementCI-160b3d27-7f34-4970-92fc-d41ce484c6e2
+1580839693939|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorPluginManagementCI-d986d881-2b85-480d-8823-5e22170dec37
+1580839694027|GlobalRegistry processing remove app.interfaces.compteur.ICompteur-d6257c22-6191-4d74-9880-3c6f34f41723
+1580839694115|GlobalRegistry processing remove app.interfaces.compteur.ICompteurControleur-9b8065ad-df57-46f8-871a-9e92a91b5f92
+1580839694203|GlobalRegistry processing remove app.interfaces.assembleur.IComposantDynamique-62da6ec7-b194-47ca-912c-ea21e048d677
+1580839694291|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.EventsExchangingCI-7417fc33-f9f6-4f16-a38a-e53bfdad80fa
+1580839694379|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorCI-75e5fd3e-b5f8-4b0d-a991-465214551567
+1580839694467|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SimulatorPluginManagementCI-a81a5fc9-bec8-45b8-84ea-9b330b008ce2
+1580839694555|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.SupervisorNotificationCI-88ca0f78-4155-4a20-bb71-67f59753ac95
+1580839694647|GlobalRegistry processing remove fr.sorbonne_u.components.cyphy.plugins.devs.interfaces.ParentNotificationCI-460309e7-8e01-4483-94d4-8de262ff7b80
+1580839694779|GlobalRegistry processing shutdown
+1580839694779|GlobalRegistry processing shutdown
+1580839694779|GlobalRegistry processing shutdown
+1580839694779|GlobalRegistry processing shutdown
+1580839694779|GlobalRegistry processing shutdown
+1580839694782|Global registry shuts down!
