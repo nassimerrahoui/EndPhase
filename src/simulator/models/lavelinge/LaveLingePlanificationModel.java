@@ -136,7 +136,7 @@ public class LaveLingePlanificationModel extends AtomicES_Model{
 		
 		// event de mise en arret si aucune planification n'a ete faite
 		if(i > 1) {
-			d = new Duration((this.delai + this.meanTimeExecuteTask * (i+1) ), this.getSimulatedTimeUnit());
+			d = new Duration((this.delai + this.meanTimeExecuteTask * (i+10) ), this.getSimulatedTimeUnit());
 			this.scheduleEvent(new SetLaveLingeVeilleSIL(this.getCurrentStateTime().add(d)));
 		}
 		
